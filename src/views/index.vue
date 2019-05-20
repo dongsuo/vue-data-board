@@ -1,11 +1,9 @@
 <template>
   <div class="container">
     <img src="../assets/logo.png">
-    <h1>404</h1>
-    <h2>Page Not Found</h2>
-    <br>
+    <h1>A Data Analysis Board in Vue.</h1>
     <el-button type="success" size="large" @click="$router.push('/chartpanel/create')">
-      Go To Create.
+      Get Start
     </el-button>
   </div>
 </template>
@@ -13,16 +11,5 @@
 .container {
   text-align: center;
   padding-top: 200px;
-  img {
-    width: 200px;
-  }
-  h1 {
-    font-size: 48px;
-    color: #2566dd;
-  }
-  h2{
-    font-size: 36px;
-    color: #2566dd;
-  }
 }
 </style>

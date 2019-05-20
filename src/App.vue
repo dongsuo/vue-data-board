@@ -9,7 +9,7 @@
       active-text-color="#409EFF"
     >
       <el-menu-item index="/">
-        Your Logo Here
+        <img src="./assets/logo.png" style="height: 45px;">
       </el-menu-item>
       <el-menu-item index="/dashboard">
         Dashboard
