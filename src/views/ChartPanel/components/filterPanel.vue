@@ -3,7 +3,7 @@
     <el-tag v-for="(item,index) in currentFilters" :key="index" closable @close="handleClosefilter(index)" @click="handleEditFilter(item)">
       {{ generateFilterSentence(item) }}
     </el-tag>
-    <el-button type="primary" size="mini" style="width: 120px;" @click="visible=true">
+    <el-button :disabled="disabled" type="primary" size="mini" style="width: 120px;" @click="visible=true">
       添加筛选条件
     </el-button>
 
@@ -52,6 +52,9 @@ export default {
   props: {
     allCols: {
       reuqired: true
+    },
+    disabled: {
+      default: false
     }
   },
   data() {

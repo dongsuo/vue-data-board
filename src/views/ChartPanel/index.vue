@@ -36,10 +36,10 @@
             <el-tag v-for="(item,index) in orderByStrs" :key="index" size="mini" closable @close="handleCloseOrderBy">
               {{ item }}
             </el-tag>
-            <el-cascader v-model="orderBy" :options="orderByOption" size="mini" placeholder="选择排序方式" style="width: 120px;" @change="handleOrderByChange" />
+            <el-cascader v-model="orderBy" :disabled="!allSelected || allSelected.length===0" :options="orderByOption" size="mini" placeholder="选择排序方式" style="width: 120px;" @change="handleOrderByChange" />
           </el-form-item>
           <el-form-item label="筛选">
-            <filterPanel :all-cols="allCols" :filters.sync="currentFilters" @change="handleAddFilter" />
+            <filterPanel :all-cols="allCols" :filters.sync="currentFilters" :disabled="!allSelected || allSelected.length===0" @change="handleAddFilter" />
           </el-form-item>
           <el-form-item>
             <div class="limit-input">
