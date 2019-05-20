@@ -1,7 +1,7 @@
 <template>
   <div class="pane-container">
     <component :is="currentType.componentName" :data="chartData" :schema="schema" :chart-style="chartStyle" class="visualize-window" />
-    <div class="chart-style-panel">
+    <div v-if="isEditMode" class="chart-style-panel">
       <el-form label-position="top">
         <el-form-item label="图表类型">
           <div class="chart-type-list">
@@ -21,7 +21,7 @@ import BarChart from '@/widgets/BarChart'
 import StackBarChart from '@/widgets/StackBarChart'
 import PieChart from '@/widgets/PieChart'
 
-import { chartTypeList } from '../configs'
+import { chartTypeList } from '@/utils/configs'
 export default {
   components: { lineChart, DataTable, BarChart, StackBarChart, PieChart },
   props: {
@@ -40,6 +40,10 @@ export default {
     chartType: {
       type: String,
       default: 'table'
+    },
+    isEditMode: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
@@ -58,6 +62,7 @@ export default {
   },
   methods: {
     switchChartType(chart) {
+      this.$emit('update:chartType', chart.type)
       this.currentType = chart
     }
   }
@@ -66,6 +71,7 @@ export default {
  <style lang="scss" scoped>
  .pane-container {
    display: flex;
+   height: 100%;
    .visualize-window {
      width: 100%;
    }

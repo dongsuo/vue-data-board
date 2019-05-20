@@ -2,14 +2,15 @@
   <div>
     <el-card :style="cardStyle">
       <div v-if="widgetMeta" slot="header" style="display:flex;justify-content:space-between;">
-        <div style="font-weight:500;color:#409eff;font-size: 13px;">{{ widgetMeta.name }}</div>
-        <el-tooltip v-if="widgetMeta.data_desc" :content="widgetMeta.data_desc" class="item" effect="dark" placement="top-end" >
-          <div><i class="el-icon-question" style="color:#409eff;cursor:pointer;"/></div>
+        <div style="font-weight:500;color:#409eff;font-size: 13px;">
+          {{ widgetMeta.name }}
+        </div>
+        <el-tooltip v-if="widgetMeta.data_desc" :content="widgetMeta.data_desc" class="item" effect="dark" placement="top-end">
+          <div><i class="el-icon-question" style="color:#409eff;cursor:pointer;" /></div>
         </el-tooltip>
       </div>
 
-      <div ref="chart" :style="chartStyle"/>
-      <!-- <div :style="chartStyle" style="text-align:center;">Oops，你暂无权限查看该数据，你可前往 功能服务=>权限申请 页面申请所需的权限，如有不满请联系你领导</div> -->
+      <div ref="chart" :style="chartStyle" />
     </el-card>
   </div>
 </template>

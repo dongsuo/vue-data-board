@@ -1,75 +1,77 @@
 <template>
-  <div class="app-container" style="display: flex;">
-    <el-card style="width:300px;margin-right: 20px;text-align:center;">
-      <div slot="header" style="text-align:left;">
-        <span>数据查询面板</span>
+  <div>
+    <el-card body-style="padding:0;" style="margin-bottom: 20px;" class="panel-header">
+      <div slot="header" style="display: flex; justify-content:space-between;">
+        <span>Edit Chart</span>
+        <span>
+          <el-button size="mini" type="primary" style="float: right;margin:0 10px 0 0;" @click="handleDownload">Export Data</el-button>
+          <el-button size="mini" type="primary" style="float: right;margin:0 10px 0 0;" @click="handleSave"> Save </el-button>
+        </span>
       </div>
-      <data-panel :result-loading="resultLoading" :all-cols.sync="allCols" :all-selected="allSelected" @change="handleDataSrcChange" />
-      <!-- <el-button :disabled="resultLoading" size="mini" type="primary" @click="runSql">查询数据</el-button> -->
     </el-card>
+    <div class="app-container" style="display: flex;">
+      <el-card style="width:300px;margin-right: 20px;text-align:center;">
+        <data-panel :result-loading="resultLoading" :all-cols.sync="allCols" :all-selected="allSelected" :data-src="dataSrc" @change="handleDataSrcChange" />
+      </el-card>
 
-    <el-card style="width: 100%;" body-style="padding: 10px 20px;">
-      <div slot="header">
-        <span>数据分析面板</span>
-        <el-button size="mini" type="primary" style="float: right;margin: 0 20px;" @click="handleDownload">
-          导出数据
-        </el-button>
-      </div>
-      <el-form size="mini" class="analysis-form">
-        <el-form-item label="维度">
-          <draggable v-model="selectedDimension" :group="{name: 'col',pull: true, put: true}" class="draggable-wrapper" @change="handleDimensionChange">
-            <el-tag v-for="col in selectedDimension" :key="col.Column" class="draggable-item" size="mini" closable @close="handleCloseDimensionTag(col)">
-              {{ col.Column }}
+      <el-card style="width: 100%;" body-style="padding: 10px 20px;">
+        <el-form size="mini" class="analysis-form">
+          <el-form-item label="维度">
+            <draggable v-model="selectedDimension" :group="{name: 'col',pull: true, put: true}" class="draggable-wrapper" @change="handleDimensionChange">
+              <el-tag v-for="col in selectedDimension" :key="col.Column" class="draggable-item" size="mini" closable @close="handleCloseDimensionTag(col)">
+                {{ col.Column }}
+              </el-tag>
+            </draggable>
+          </el-form-item>
+          <el-form-item label="字段">
+            <draggable v-model="selectedCalcul" :group="{name: 'col',pull: true, put: true}" class="draggable-wrapper" @change="handleColChange">
+              <el-tag v-for="(col,index) in selectedCalcul" :key="col.Column" size="mini" closable class="selected-field" @close="handleCloseColTag(col)">
+                <el-select v-model="selectedCalcul[index].calculFunc" class="draggable-item" size="mini" closable style="background: rgba(0,0,0,0);">
+                  <el-option v-for="(item, optIndex) in col.availableFunc" :key="optIndex" :label="`${col.Column}(${item.name})`" :value="item.func" />
+                </el-select>
+              </el-tag>
+            </draggable>
+          </el-form-item>
+          <el-form-item label="排序">
+            <el-tag v-for="(item,index) in orderByStrs" :key="index" size="mini" closable @close="handleCloseOrderBy">
+              {{ item }}
             </el-tag>
-          </draggable>
-        </el-form-item>
-        <el-form-item label="字段">
-          <draggable v-model="selectedCalcul" :group="{name: 'col',pull: true, put: true}" class="draggable-wrapper" @change="handleColChange">
-            <el-tag v-for="(col,index) in selectedCalcul" :key="col.Column" closable class="selected-field" @close="handleCloseColTag(col)">
-              <el-select v-model="selectedCalcul[index].calculFunc" class="draggable-item" size="mini" closable style="background: rgba(0,0,0,0);">
-                <el-option v-for="(item, optIndex) in col.availableFunc" :key="optIndex" :label="`${col.Column}(${item.name})`" :value="item.func" />
-              </el-select>
-            </el-tag>
-          </draggable>
-        </el-form-item>
-        <el-form-item label="排序">
-          <el-tag v-for="(item,index) in orderByStrs" :key="index" closable @close="handleCloseOrderBy">
-            {{ item }}
-          </el-tag>
-          <el-cascader v-model="orderBy" :options="orderByOption" size="mini" placeholder="选择排序方式" style="width: 120px;" @change="handleOrderByChange" />
-        </el-form-item>
-        <el-form-item label="筛选">
-          <filterPanel :all-cols="allCols" @change="handleAddFilter" />
-        </el-form-item>
-        <el-form-item>
-          <div class="limit-input">
-            <span v-show="!editLimit">
-              查询前{{ limit }}条数据
-              <el-button type="text" @click="editLimit=true">修改</el-button>
-            </span>
-            <span v-show="editLimit">
-              <el-input-number v-model="limit" :disabled="resultLoading" size="mini" placeholder="数据条数" style="width:100px;" @blur="editLimit=false" />
-              <el-button size="mini" @click="editLimit=false">确认</el-button>
-            </span>
-          </div>
-        </el-form-item>
-      </el-form>
-      <visualize-panel v-loading="resultLoading" :data="result" :schema="allSelected" />
-    </el-card>
+            <el-cascader v-model="orderBy" :options="orderByOption" size="mini" placeholder="选择排序方式" style="width: 120px;" @change="handleOrderByChange" />
+          </el-form-item>
+          <el-form-item label="筛选">
+            <filterPanel :all-cols="allCols" :filters.sync="currentFilters" @change="handleAddFilter" />
+          </el-form-item>
+          <el-form-item>
+            <div class="limit-input">
+              <span v-show="!editLimit">
+                查询前{{ limit }}条数据
+                <el-button type="text" @click="editLimit=true">修改</el-button>
+              </span>
+              <span v-show="editLimit">
+                <el-input-number v-model="limit" :disabled="resultLoading" size="mini" placeholder="数据条数" style="width:100px;" @blur="editLimit=false" />
+                <el-button size="mini" @click="editLimit=false">确认</el-button>
+              </span>
+            </div>
+          </el-form-item>
+        </el-form>
+        <visualize-panel v-loading="resultLoading" :data="result" :chart-type.sync="chartType" :schema="allSelected" />
+      </el-card>
+    </div>
   </div>
 </template>
 <script>
-import visualizePanel from './components/visualizePanel'
+import visualizePanel from '@/components/visualizePanel'
 import dataPanel from './components/dataPanel'
-// import { tempMockData } from '@/mock/dataSource'
 import { parseTime } from '@/utils'
 import draggable from 'vuedraggable'
-import { sqlFunc, dataType } from './configs'
+import { sqlFunc } from '@/utils/configs'
 import filterPanel from './components/filterPanel'
 import exeSql from '@/mock/exeSql'
+import { trimColType, buildSqlSentence } from '@/utils/buildSentence'
+import { saveChart, getChartById, putChart } from '@/mock/chart'
 
 export default {
-  name: 'SqlPane',
+  name: 'SqlPanel',
   components: { visualizePanel, dataPanel, draggable, filterPanel },
   data() {
     return {
@@ -86,7 +88,9 @@ export default {
       orderByStrs: [],
       filteCol: undefined,
       filterStr: undefined,
-      editLimit: false
+      editLimit: false,
+      chartType: 'table',
+      currentFilters: []
     }
   },
   computed: {
@@ -95,39 +99,14 @@ export default {
       return fields.concat(this.selectedCalcul).concat(this.selectedDimension)
     },
     sqlSentence() {
-      const limit = this.limit
-      let fields = []
-      const groups = []
-      let groupBy
-      let orderBy
-      let where
-      fields = this.allSelected.map(field => {
-        const calculField = this.selectedCalcul.find(col => col.Column === field.Column)
-        if (calculField && calculField.calculFunc !== 'none') {
-          let colType
-          if (calculField.Type.indexOf('(') >= 0) {
-            colType = dataType.find(type => type.name === calculField.Type.split('(')[0])
-          } else {
-            colType = dataType.find(type => type.name === calculField.Type)
-          }
-          // const colType = dataType.find(type => type.name === calculField.Type.split('(')[0])
-          return `${calculField.calculFunc || colType.availableFunc[0]}(${calculField.Column}) as ${calculField.Column}`
-        } else {
-          groups.push(field.Column)
-          return field.Column
-        }
+      return buildSqlSentence({
+        dataSrc: this.dataSrc,
+        selectedCalcul: this.selectedCalcul,
+        selectedDimension: this.selectedDimension,
+        orderByStrs: this.orderByStrs,
+        filterStr: this.filterStr,
+        limit: this.limit
       })
-      if (fields.length === 0 || !this.dataSrc) return
-      if (groups.length > 0) {
-        groupBy = `GROUP BY ${groups.join()}`
-      }
-      if (this.orderByStrs.length > 0) {
-        orderBy = `ORDER BY ${this.orderByStrs.join()}`
-      }
-      if (this.filterStr) {
-        where = `where ${this.filterStr}`
-      }
-      return `SELECT ${fields.join()} FROM order_analysis ${where || ''} ${groupBy || ''} ${orderBy || ''} LIMIT ${limit}`
     },
     orderByOption() {
       return this.selectedCalcul.concat(this.selectedDimension).map(col => {
@@ -156,6 +135,20 @@ export default {
       }
     }
   },
+  created() {
+    // console.log(getChartById(this.$route.params.id))
+    if (this.$route.params.id !== 'create') {
+      const chart = getChartById(this.$route.params.id)
+      this.dataSrc = chart.dataSrc
+      this.chartType = chart.chartType
+      this.limit = chart.limit
+      this.currentFilters = chart.filters
+      this.orderByStrs = chart.orderByStrs
+      this.selectedCalcul = chart.selectedCalcul
+      this.selectedDimension = chart.selectedDimension
+    }
+    console.log(this.selectedDimension, this.selectedCalcul)
+  },
   methods: {
     fetchData(sqlSentence) {
       this.resultLoading = true
@@ -175,12 +168,7 @@ export default {
     },
     handleColChange(evt) {
       if (evt.added) {
-        let colType
-        if (evt.added.element.Type.indexOf('(') >= 0) {
-          colType = dataType.find(type => type.name === evt.added.element.Type.split('(')[0])
-        } else {
-          colType = dataType.find(type => type.name === evt.added.element.Type)
-        }
+        const colType = trimColType(evt.added.element.Type)
         const index = this.selectedCalcul.findIndex(item => item.Column === evt.added.element.Column)
         this.selectedCalcul.splice(index, 1, {
           Column: evt.added.element.Column,
@@ -232,6 +220,29 @@ export default {
     handleAddFilter(value) {
       this.filterStr = value
     },
+    handleSave() {
+      const obj = {
+        dataSrc: this.dataSrc,
+        orderByStrs: this.orderByStrs,
+        limit: this.limit,
+        selectedCalcul: this.selectedCalcul,
+        selectedDimension: this.selectedDimension,
+        chartType: this.chartType,
+        filters: this.currentFilters,
+        index: this.$route.params.id === 'create' ? undefined : this.$route.params.id
+      }
+      if (obj.index) {
+        putChart(obj)
+      } else {
+        saveChart(obj)
+      }
+      this.$message({
+        dangerouslyUseHTMLString: true,
+        type: 'success',
+        message: '保存成功，<a href="/dashboard">前往 Dashboard 查看</a>',
+        duration: 20000
+      })
+    },
     handleDownload() {
       import('@/vendor/Export2Excel').then(excel => {
         const tHeader = this.schema.map(item => item.name)
@@ -280,9 +291,25 @@ export default {
       margin: 0;
     }
 }
-.selected-field /deep/ .el-input__inner {
-  border: none;
-  background-color: rgba($color: #fff, $alpha: 0);
-  padding: 0;
+.selected-field {
+   /deep/ .el-input__inner {
+    height: 20px;
+    line-height: 20px;
+    border: none;
+    background-color: rgba($color: #fff, $alpha: 0);
+    padding: 0;
+  }
+  /deep/ .el-input__suffix {
+      right: 0px;
+    .el-input__suffix-inner {
+      display: inline-block;
+      height: 20px;
+      line-height: 20px;
+      .el-input__icon {
+        font-size: 12px;
+        line-height: 20px;
+      }
+    }
+  }
 }
 </style>

@@ -45,7 +45,8 @@
   </div>
 </template>
 <script>
-import { filterOperator, dataType } from '../configs'
+import { filterOperator, dataType } from '@/utils/configs'
+import { buildFilterSentence } from '@/utils/buildSentence'
 
 export default {
   props: {
@@ -122,24 +123,13 @@ export default {
       this.handleSubmit()
     },
     handleSubmit() {
-      const filterStrs = this.currentFilters.map(this.generateFilterSentence)
+      const filterStrs = this.currentFilters.map(buildFilterSentence)
       this.$emit('change', filterStrs.join(' and '))
+      this.$emit('update: filters', this.currentFilters)
       this.visible = false
     },
-    generateFilterSentence(filter) {
-      let filterSentence
-      let valueObj
-      if (this.needQuotation(filter.filteCol)) {
-        valueObj = this.addQuotation(filter.value)
-      }
-      if (filter.operatorParamNum === 1) {
-        filterSentence = `${filter.filteCol} ${filter.filterOperator} ${valueObj.value1}`
-      } else if (filter.operatorParamNum === 2) {
-        filterSentence = `${filter.filteCol} ${filter.filterOperator} ${valueObj.value1} and ${valueObj.value2}`
-      } else {
-        filterSentence = `${filter.filteCol} ${filter.filterOperator} ('${valueObj.arrValue.join(',')}')`
-      }
-      return filterSentence
+    generateFilterSentence(item) {
+      return buildFilterSentence(item)
     },
     operatorParamNum(operator) {
       const a = filterOperator.find(item => item.operator === operator)

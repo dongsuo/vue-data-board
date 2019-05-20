@@ -1,20 +1,44 @@
 <template>
   <div id="app">
-    <ChartPanel msg="Welcome to Your Vue.js App" />
+    <el-menu
+      :default-active="activeMenu"
+      :router="true"
+      mode="horizontal"
+      background-color="#fff"
+      text-color="#606266"
+      active-text-color="#409EFF"
+    >
+      <el-menu-item index="/">
+        Your Logo Here
+      </el-menu-item>
+      <el-menu-item index="/dashboard">
+        Dashboard
+      </el-menu-item>
+      <el-menu-item index="/chartpanel/create">
+        Chart Panel
+      </el-menu-item>
+    </el-menu>
+    <router-view />
   </div>
 </template>
 
 <script>
-import ChartPanel from './views/ChartPanel'
 
 export default {
   name: 'App',
-  components: {
-    ChartPanel
+  computed: {
+    defaultActive() {
+      console.log(this.$route.path)
+      return this.$route.path
+    },
+    activeMenu() {
+      const { meta, path } = this.$route
+      // if set path, the sidebar will highlight the path you set
+      return meta.activeMenu || path
+    }
   }
 }
 </script>
-
 <style>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
@@ -26,5 +50,13 @@ html {
 }
 *, *:before, *:after{
   box-sizing: inherit;
+}
+body,div,ul,li {
+  margin: 0;
+  padding: 0;
+}
+a,a:hover {
+  text-decoration: none;
+  color: inherit;
 }
 </style>

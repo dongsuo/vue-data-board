@@ -1,13 +1,13 @@
 <template>
   <div>
     <el-form label-position="top" class="panel" style="text-align:left;">
-      <el-form-item label="当前工作表">
-        <span style="font-size: 12px;">{{ selectedTable }}</span>
-        <el-tag size="mini" @click="dataSrcVisible=true">
-          {{ selectedTable?'修改':'选择数据源' }}
-        </el-tag>
+      <el-form-item label="Current Table">
+        <span style="font-size: 12px;margin-right: 5px;">{{ selectedTable }}</span>
+        <el-button type="text" size="mini" @click="dataSrcVisible=true">
+          {{ selectedTable?'Change':'Select Data Source' }}
+        </el-button>
       </el-form-item>
-      <el-form-item label="字段">
+      <el-form-item label="Fields">
         <draggable v-model="tableSchema" :group="{name: 'col',pull: 'clone', put: false}" :move="handleMove">
           <div v-for="col in tableSchema" :key="col.Column" class="drag-list-item">
             <i class="el-icon-rank" style="font-size: 12px;color:#409EFF;" />
@@ -17,16 +17,16 @@
       </el-form-item>
     </el-form>
 
-    <el-dialog :visible.sync="dataSrcVisible" :before-close="handleCloseDialog" title="选择数据源" width="500px">
+    <el-dialog :visible.sync="dataSrcVisible" :before-close="handleCloseDialog" title="Select Data Source" width="500px">
       <el-form label-width="150px">
-        <el-form-item label="数据源:">
-          <el-select v-model="selectedTable" size="mini" filterable placeholder="选择表" style="width:200px;" clearable @change="handleDataSrcChange">
+        <el-form-item label="Data Source:">
+          <el-select v-model="selectedTable" size="mini" filterable placeholder="Select Data Source" style="width:200px;" clearable @change="handleDataSrcChange">
             <el-option v-for="item in dataSourceList" :key="item.tableId" :label="item.name" :value="item.name" />
           </el-select>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dataSrcVisible = false">确 定</el-button>
+        <el-button type="primary" size="mini" @click="dataSrcVisible = false">Confirm</el-button>
       </span>
     </el-dialog>
   </div>
@@ -49,6 +49,9 @@ export default {
     allSelected: {
       requred: true,
       default: () => []
+    },
+    dataSrc: {
+      requred: true
     }
   },
   data() {
@@ -61,29 +64,38 @@ export default {
       existWarning: null
     }
   },
-  mounted() {
+  created() {
     this.dataSourceList = tables
-    exeSql('desc order_analysis').then(resp => {
-      this.tableSchema = resp.map(item => {
-        return {
-          Column: item.Field,
-          Type: item.Type
-        }
-      })
-    })
+    if (this.$route.params.id !== 'create') {
+      this.dataSrcVisible = false
+      this.selectedTable = this.dataSrc
+      this.fetchSchema()
+    }
   },
   methods: {
     handleDataSrcChange() {
+      this.fetchSchema()
       this.$emit('change', this.selectedTable)
+    },
+    fetchSchema() {
+      exeSql(`desc ${this.selectedTable}`).then(resp => {
+        this.tableSchema = resp.map(item => {
+          return {
+            Column: item.Field,
+            Type: item.Type
+          }
+        })
+      })
     },
     handleCloseDialog(done) {
       if (this.selectedTable) {
         done()
       } else {
         this.$message({
-          type: 'error',
-          message: '请选择数据源'
+          type: 'warning',
+          message: 'WARNING: Please Select Data Source First!'
         })
+        done()
       }
     },
     handleMove(evt, originalEvent) {
@@ -91,7 +103,7 @@ export default {
         if (!this.existWarning) {
           this.existWarning = this.$message({
             type: 'warning',
-            message: '字段已存在',
+            message: 'Field Already Existed',
             onClose: (instance) => {
               this.existWarning = null
             }
