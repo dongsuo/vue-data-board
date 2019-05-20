@@ -10,13 +10,13 @@
     <el-dialog :visible="visible" title="添加筛选项">
       <el-form label-width="150px">
         <el-form-item label="请选择筛选字段" class="el-form-item">
-          <el-select v-model="filteCol" placeholder="选择筛选字段">
+          <el-select v-model="filteCol" size="mini" placeholder="选择筛选字段">
             <el-option v-for="item in allCols" :key="item.Column" :label="item.Column" :value="item.Column" />
           </el-select>
         </el-form-item>
 
         <el-form-item label="请选择筛选方式" class="el-form-item">
-          <el-select v-model="filterOperator" placeholder="选择筛选方式">
+          <el-select v-model="filterOperator" size="mini" placeholder="选择筛选方式">
             <el-option v-for="item in filterOperatorOpts" :key="item.name" :label="item.name" :value="item.operator" />
           </el-select>
         </el-form-item>
@@ -25,21 +25,21 @@
           <el-tag v-for="(item,index) in arrValue" :key="index" closable @close="handleRemove">
             {{ item }}
           </el-tag>
-          <el-input v-model="value3" type="text" style="width: 200px;" />
-          <el-button type="primary" @click="handleAdd">
-            添加
+          <el-input v-model="value3" size="mini" type="text" style="width: 200px;" />
+          <el-button size="mini" type="primary" @click="handleAdd">
+            Add
           </el-button>
         </el-form-item>
 
         <el-form-item v-else label="请输入判断条件值" class="el-form-item">
-          <el-input v-model="value1" type="text" style="width: 200px;" />
+          <el-input v-model="value1" size="mini" type="text" style="width: 200px;" />
           <span v-show="currentOperatorParamNum===2">~</span>
           <el-input v-show="currentOperatorParamNum===2" v-model="value2" style="width: 200px;" type="text" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="visible=false">取 消</el-button>
-        <el-button type="primary" @click="handleConfirm">确 定</el-button>
+        <el-button size="mini" @click="visible=false">Cancel</el-button>
+        <el-button size="mini" type="primary" @click="handleConfirm">Confirm</el-button>
       </span>
     </el-dialog>
   </div>

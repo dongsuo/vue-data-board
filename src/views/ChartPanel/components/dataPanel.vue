@@ -8,7 +8,7 @@
         </el-button>
       </el-form-item>
       <el-form-item label="Fields">
-        <draggable v-model="tableSchema" :group="{name: 'col',pull: 'clone', put: false}" :move="handleMove">
+        <draggable v-model="tableSchema" v-loading="schemaLoading" :group="{name: 'col',pull: 'clone', put: false}" :move="handleMove">
           <div v-for="col in tableSchema" :key="col.Column" class="drag-list-item">
             <i class="el-icon-rank" style="font-size: 12px;color:#409EFF;" />
             {{ col.Column }}
@@ -56,7 +56,7 @@ export default {
   },
   data() {
     return {
-      optLoading: false,
+      schemaLoading: false,
       dataSourceList: [],
       selectedTable: undefined,
       tableSchema: undefined,
@@ -78,13 +78,21 @@ export default {
       this.$emit('change', this.selectedTable)
     },
     fetchSchema() {
+      if (!this.selectedTable) {
+        this.tableSchema = []
+        return
+      }
+      this.schemaLoading = true
       exeSql(`desc ${this.selectedTable}`).then(resp => {
-        this.tableSchema = resp.map(item => {
+        this.schemaLoading = false
+        this.tableSchema = resp.map((item, index) => {
           return {
             Column: item.Field,
-            Type: item.Type
+            Type: item.Type,
+            id: index
           }
         })
+        this.$emit('update:allCols', this.tableSchema)
       })
     },
     handleCloseDialog(done) {
@@ -93,7 +101,7 @@ export default {
       } else {
         this.$message({
           type: 'warning',
-          message: 'WARNING: Please Select Data Source First!'
+          message: 'You Need Select Data Source First.'
         })
         done()
       }

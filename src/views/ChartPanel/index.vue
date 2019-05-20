@@ -239,7 +239,7 @@ export default {
       this.$message({
         dangerouslyUseHTMLString: true,
         type: 'success',
-        message: '保存成功，<a href="/dashboard">前往 Dashboard 查看</a>',
+        message: 'Successfully Saved，<a href="/dashboard">Go Check Dashboard!</a>',
         duration: 20000
       })
     },
@@ -248,7 +248,7 @@ export default {
         const tHeader = this.schema.map(item => item.name)
         const filterVal = tHeader
         const data = this.formatJson(filterVal, this.result)
-        excel.export_json_to_excel({ header: tHeader, data, filename: 'Feast数据导出' + parseTime(Date.now(), '{m}{d}{h}{i}{s}'), autoWidth: true })
+        excel.export_json_to_excel({ header: tHeader, data, filename: 'DataExport' + parseTime(Date.now(), '{m}{d}{h}{i}{s}'), autoWidth: true })
       })
     },
     formatJson(filterVal, jsonData) {

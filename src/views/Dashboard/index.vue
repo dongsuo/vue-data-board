@@ -3,7 +3,7 @@
     <el-card body-style="padding: 0px;" class="tool-bar">
       <div slot="header" style="display: flex; justify-content:space-between;">
         <span>Default Dashboard</span>
-        <el-button type="primary" size="mini" @click="$router.push('/chartpanel')">
+        <el-button type="primary" size="mini" @click="$router.push('/chartpanel/create')">
           Add Chart
         </el-button>
       </div>
@@ -41,12 +41,12 @@
       </grid-item>
     </grid-layout>
     <div v-else v-loading="loading" class="welcome-container">
-      <el-button type="primary" size="mini" @click="$router.push('/chartpanel')">
+      <el-button type="primary" size="mini" @click="$router.push('/chartpanel/create')">
         Add Chart
       </el-button>
       <div>
         <el-link type="info" :underline="false">
-          <router-link to="/chartpanel">
+          <router-link to="/chartpanel/create">
             Dashboard Is Empty，Go Create Your First Chart!
           </router-link>
         </el-link>
@@ -84,6 +84,7 @@ export default {
       this.loading = true
       setTimeout(() => {
         this.charts = getChart()
+        this.loading = this.charts.length !== 0
         this.layout = this.charts.map((item, index) => {
           this.results.push([])
           item.allSelected = []
