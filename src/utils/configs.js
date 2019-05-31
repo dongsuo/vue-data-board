@@ -47,7 +47,12 @@ export const chartTypeList = [
   { name: '表格',
     icon: 'chart_table',
     type: 'table',
-    matchRule: null,
+    matchRule: {
+      desc: '任意维度和数值',
+      isUsable(dimensions, calculs) {
+        return true
+      }
+    },
     componentName: 'DataTable',
     dataTransfer(data, schema) {
       return data
@@ -56,7 +61,12 @@ export const chartTypeList = [
   { name: '折线图',
     icon: 'chart_line',
     type: 'line',
-    matchRule: null,
+    matchRule: {
+      desc: '1 或 2个维度;1或多个数值',
+      isUsable(dimensions, calculs) {
+        return true
+      }
+    },
     componentName: 'lineChart', dataTransfer(data, schema) {
       const chartData = data.map(item => {
         const dataItem = {}
@@ -75,7 +85,12 @@ export const chartTypeList = [
   { name: '柱状图',
     icon: 'chart_bar',
     type: 'bar',
-    matchRule: null,
+    matchRule: {
+      desc: '1 或 2个维度;1或多个数值',
+      isUsable(dimensions, calculs) {
+        return (dimensions.length === 1 || dimensions.length === 2) && (calculs.length >= 1)
+      }
+    },
     componentName: 'BarChart', dataTransfer(data, schema) {
       const chartData = data.map(item => {
         const dataItem = {}
@@ -93,7 +108,12 @@ export const chartTypeList = [
   { name: '堆积柱状图',
     icon: 'stack_bar',
     type: 'stackBar',
-    matchRule: null,
+    matchRule: {
+      desc: '1 或 2个维度;2或多个数值',
+      isUsable(dimensions, calculs) {
+        return true
+      }
+    },
     componentName: 'StackBarChart', dataTransfer(data, schema) {
       const chartData = data.map(item => {
         const dataItem = {}
@@ -111,7 +131,12 @@ export const chartTypeList = [
   { name: '饼图',
     icon: 'chart_pie',
     type: 'pie',
-    matchRule: null,
+    matchRule: {
+      desc: '1个维度1个数值;0个维度多个数值',
+      isUsable(dimensions, calculs) {
+        return true
+      }
+    },
     componentName: 'PieChart', dataTransfer(data, schema) {
       const chartData = data.map(item => {
         const dataItem = {}

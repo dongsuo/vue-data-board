@@ -35,6 +35,7 @@
 import { tables } from '@/mock/dataSource'
 import draggable from 'vuedraggable'
 import exeSql from '@/mock/exeSql'
+import store from '../store'
 
 export default {
   components: { draggable },
@@ -43,10 +44,6 @@ export default {
       default: false
     },
     allCols: {
-      requred: true,
-      default: () => []
-    },
-    allSelected: {
       requred: true,
       default: () => []
     },
@@ -62,6 +59,11 @@ export default {
       tableSchema: undefined,
       dataSrcVisible: true,
       existWarning: null
+    }
+  },
+  computed: {
+    allSelected() {
+      return store.state.caculCols.concat(store.state.dimensions)
     }
   },
   created() {

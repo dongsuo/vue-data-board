@@ -6,7 +6,7 @@
         <el-form-item label="图表类型">
           <div class="chart-type-list">
             <span v-for="item in chartTypeList" :key="item.type" @click="switchChartType(item)">
-              <svg-icon :icon-class="item.icon" />
+              <svg-icon :icon-class="isDisabled(item)? item.icon : (item.icon + '_disabled')" />
             </span>
           </div>
         </el-form-item>
@@ -22,6 +22,8 @@ import StackBarChart from '@/widgets/StackBarChart'
 import PieChart from '@/widgets/PieChart'
 
 import { chartTypeList } from '@/utils/configs'
+import store from '../store'
+
 export default {
   components: { lineChart, DataTable, BarChart, StackBarChart, PieChart },
   props: {
@@ -61,7 +63,13 @@ export default {
     this.currentType = chartTypeList.find(item => item.type === this.chartType)
   },
   methods: {
+    isDisabled(chart) {
+      return chart.matchRule.isUsable(store.state.dimensions, store.state.caculCols)
+    },
     switchChartType(chart) {
+      if (!chart.matchRule.isUsable(store.state.dimensions, store.state.caculCols)) {
+        return
+      }
       this.$emit('update:chartType', chart.type)
       this.currentType = chart
     }

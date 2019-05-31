@@ -57,7 +57,7 @@
 <script>
 import { GridLayout } from 'vue-grid-layout'
 import { GridItem } from 'vue-grid-layout'
-import visualizePanel from '@/components/visualizePanel'
+import visualizePanel from '../ChartPanel/components/visualizePanel'
 import exeSql from '@/mock/exeSql'
 import { getChart, deleteChart } from '@/mock/chart'
 import { buildSqlSentence, buildFilterSentence } from '@/utils/buildSentence'

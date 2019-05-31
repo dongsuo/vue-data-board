@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <el-form-item label="筛选">
     <el-tag v-for="(item,index) in currentFilters" :key="index" closable @close="handleClosefilter(index)" @click="handleEditFilter(item)">
       {{ generateFilterSentence(item) }}
     </el-tag>
@@ -42,7 +42,7 @@
         <el-button size="mini" type="primary" @click="handleConfirm">Confirm</el-button>
       </span>
     </el-dialog>
-  </div>
+  </el-form-item>
 </template>
 <script>
 import { filterOperator, dataType } from '@/utils/configs'
@@ -107,6 +107,7 @@ export default {
       }
       const filterObj = {
         filteCol: this.filteCol,
+        colType: this.allCols.find(item => item.Column === this.filteCol).Type,
         filterOperator: this.filterOperator,
         value: {
           value1: this.value1,

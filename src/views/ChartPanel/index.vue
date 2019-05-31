@@ -9,38 +9,36 @@
         </span>
       </div>
     </el-card>
+
     <div class="app-container" style="display: flex;">
       <el-card style="width:300px;margin-right: 20px;text-align:center;">
-        <data-panel :result-loading="resultLoading" :all-cols.sync="allCols" :all-selected="allSelected" :data-src="dataSrc" @change="handleDataSrcChange" />
+        <data-panel :result-loading="resultLoading" :all-cols.sync="allCols" :data-src="dataSrc" @change="handleDataSrcChange" />
       </el-card>
 
       <el-card style="width: 100%;" body-style="padding: 10px 20px;">
         <el-form size="mini" class="analysis-form">
           <el-form-item label="维度">
-            <draggable v-model="selectedDimension" :group="{name: 'col',pull: true, put: true}" class="draggable-wrapper" @change="handleDimensionChange">
-              <el-tag v-for="col in selectedDimension" :key="col.Column" class="draggable-item" size="mini" closable @close="handleCloseDimensionTag(col)">
+            <draggable v-model="sharedState.dimensions" :group="{name: 'col',pull: true, put: true}" class="draggable-wrapper" @change="handleDimensionChange">
+              <el-tag v-for="col in sharedState.dimensions" :key="col.Column" class="draggable-item" size="mini" closable @close="handleCloseDimensionTag(col)">
                 {{ col.Column }}
               </el-tag>
             </draggable>
           </el-form-item>
+
           <el-form-item label="字段">
-            <draggable v-model="selectedCalcul" :group="{name: 'col',pull: true, put: true}" class="draggable-wrapper" @change="handleColChange">
-              <el-tag v-for="(col,index) in selectedCalcul" :key="col.Column" size="mini" closable class="selected-field" @close="handleCloseColTag(col)">
-                <el-select v-model="selectedCalcul[index].calculFunc" class="draggable-item" size="mini" closable style="background: rgba(0,0,0,0);">
+            <draggable v-model="sharedState.caculCols" :group="{name: 'col',pull: true, put: true}" class="draggable-wrapper" @change="handleColChange">
+              <el-tag v-for="col in sharedState.caculCols" :key="col.Column" size="mini" closable class="selected-field" @close="handleCloseColTag(col)">
+                <el-select v-model="col.calculFunc" class="draggable-item" size="mini" closable style="background: rgba(0,0,0,0);">
                   <el-option v-for="(item, optIndex) in col.availableFunc" :key="optIndex" :label="`${col.Column}(${item.name})`" :value="item.func" />
                 </el-select>
               </el-tag>
             </draggable>
           </el-form-item>
-          <el-form-item label="排序">
-            <el-tag v-for="(item,index) in orderByStrs" :key="index" size="mini" closable @close="handleCloseOrderBy">
-              {{ item }}
-            </el-tag>
-            <el-cascader v-model="orderBy" :disabled="!allSelected || allSelected.length===0" :options="orderByOption" size="mini" placeholder="选择排序方式" style="width: 120px;" @change="handleOrderByChange" />
-          </el-form-item>
-          <el-form-item label="筛选">
-            <filterPanel :all-cols="allCols" :filters.sync="currentFilters" :disabled="!allSelected || allSelected.length===0" @change="handleAddFilter" />
-          </el-form-item>
+
+          <orderPanel v-model="orderByStrs" />
+
+          <filterPanel :all-cols="allCols" :filters.sync="currentFilters" :disabled="!allSelected || allSelected.length===0" @change="handleAddFilter" />
+
           <el-form-item>
             <div class="limit-input">
               <span v-show="!editLimit">
@@ -54,73 +52,55 @@
             </div>
           </el-form-item>
         </el-form>
+
         <visualize-panel v-loading="resultLoading" :data="result" :chart-type.sync="chartType" :schema="allSelected" />
       </el-card>
     </div>
   </div>
 </template>
 <script>
-import visualizePanel from '@/components/visualizePanel'
+import visualizePanel from './components/visualizePanel'
 import dataPanel from './components/dataPanel'
 import { parseTime } from '@/utils'
 import draggable from 'vuedraggable'
-import { sqlFunc } from '@/utils/configs'
 import filterPanel from './components/filterPanel'
+import orderPanel from './components/orderPanel'
 import exeSql from '@/mock/exeSql'
-import { trimColType, buildSqlSentence } from '@/utils/buildSentence'
+import { buildSqlSentence } from '@/utils/buildSentence'
 import { saveChart, getChartById, putChart } from '@/mock/chart'
+import store from './store'
 
 export default {
   name: 'SqlPanel',
-  components: { visualizePanel, dataPanel, draggable, filterPanel },
+  components: { visualizePanel, dataPanel, draggable, filterPanel, orderPanel },
   data() {
     return {
-      sqlFunc,
       resultLoading: false,
       result: [],
       schema: [],
       allCols: [],
-      selectedDimension: [],
       dataSrc: undefined,
       limit: 200,
-      selectedCalcul: [],
-      orderBy: [],
       orderByStrs: [],
-      filteCol: undefined,
       filterStr: undefined,
       editLimit: false,
       chartType: 'table',
-      currentFilters: []
+      currentFilters: [],
+      sharedState: store.state
     }
   },
   computed: {
     allSelected() {
-      const fields = []
-      return fields.concat(this.selectedCalcul).concat(this.selectedDimension)
+      return store.state.caculCols.concat(store.state.dimensions)
     },
     sqlSentence() {
       return buildSqlSentence({
         dataSrc: this.dataSrc,
-        selectedCalcul: this.selectedCalcul,
-        selectedDimension: this.selectedDimension,
+        selectedCalcul: this.sharedState.caculCols,
+        selectedDimension: this.sharedState.dimensions,
         orderByStrs: this.orderByStrs,
         filterStr: this.filterStr,
         limit: this.limit
-      })
-    },
-    orderByOption() {
-      return this.selectedCalcul.concat(this.selectedDimension).map(col => {
-        return {
-          value: col.Column,
-          label: col.Column,
-          children: [{
-            value: 'desc',
-            label: '降序'
-          }, {
-            value: 'asc',
-            label: '升序'
-          }]
-        }
       })
     }
   },
@@ -144,8 +124,8 @@ export default {
       this.limit = chart.limit
       this.currentFilters = chart.filters
       this.orderByStrs = chart.orderByStrs
-      this.selectedCalcul = chart.selectedCalcul
-      this.selectedDimension = chart.selectedDimension
+      store.setCaculColsAction(chart.selectedCalcul)
+      store.setDimensionsAction(chart.selectedDimension)
     }
     console.log(this.selectedDimension, this.selectedCalcul)
   },
@@ -163,59 +143,26 @@ export default {
     },
     handleDataSrcChange(value) {
       this.dataSrc = value
-      this.selectedCalcul = []
-      this.selectedDimension = []
+      store.setCaculColsAction([])
+      store.setDimensionsAction([])
+      this.filterStr = undefined
+      this.orderByStrs = []
     },
     handleColChange(evt) {
       if (evt.added) {
-        const colType = trimColType(evt.added.element.Type)
-        const index = this.selectedCalcul.findIndex(item => item.Column === evt.added.element.Column)
-        this.selectedCalcul.splice(index, 1, {
-          Column: evt.added.element.Column,
-          calculFunc: colType.availableFunc[0],
-          Type: evt.added.element.Type,
-          availableFunc: colType.availableFunc.map(func => {
-            return {
-              name: this.sqlFunc[func],
-              func
-            }
-          })
-        })
+        store.addCaculColAction(evt.added.element)
       }
     },
     handleDimensionChange(evt) {
       if (evt.added) {
-        const index = this.selectedDimension.findIndex(c => c.Column === evt.added.element.Column)
-        evt.added.element.isDimension = true
-        this.selectedDimension.splice(index, 1, evt.added.element)
+        store.addDimensionAction(evt.added.element)
       }
     },
     handleCloseColTag(col) {
-      const index = this.selectedCalcul.findIndex(c => c.Column === col.Column)
-      this.selectedCalcul.splice(index, 1)
-
-      const orderByIndex = this.orderByStrs.findIndex(item => item.split(' ')[0] === col.Column)
-      this.orderByStrs.splice(orderByIndex, 1)
+      store.deleteCaculColAction(col)
     },
     handleCloseDimensionTag(col) {
-      const index = this.selectedDimension.findIndex(c => c.Column === col.Column)
-      this.selectedDimension[index].isDimension = false
-      this.selectedDimension.splice(index, 1)
-
-      const orderByIndex = this.orderByStrs.findIndex(item => item.split(' ')[0] === col.Column)
-      this.orderByStrs.splice(orderByIndex, 1)
-    },
-    handleOrderByChange(value) {
-      this.orderBy = []
-      const index = this.orderByStrs.findIndex(orderBy => orderBy.indexOf(value[0]) >= 0)
-      if (index >= 0) {
-        this.orderByStrs.splice(index, 1, `${value[0]} ${value[1]}`)
-      } else {
-        this.orderByStrs.push(`${value[0]} ${value[1]}`)
-      }
-    },
-    handleCloseOrderBy(value) {
-      this.orderByStrs.splice(this.orderByStrs.indexOf(value), 1)
+      store.deleteDimensionAction(col)
     },
     handleAddFilter(value) {
       this.filterStr = value
@@ -225,8 +172,8 @@ export default {
         dataSrc: this.dataSrc,
         orderByStrs: this.orderByStrs,
         limit: this.limit,
-        selectedCalcul: this.selectedCalcul,
-        selectedDimension: this.selectedDimension,
+        selectedCalcul: this.sharedState.caculCols,
+        selectedDimension: this.sharedState.dimensions,
         chartType: this.chartType,
         filters: this.currentFilters,
         index: this.$route.params.id === 'create' ? undefined : this.$route.params.id

@@ -102,27 +102,58 @@ export default {
     },
     renderChart(data) {
       if (!this.$refs.chart) return
-      const legend = []
-      const xAxisData = []
+      let legend = []
+      let xAxisData = []
       const seriesObj = {}
-      this.schema.forEach((schema, index) => {
-        legend.push(schema.label || schema.name)
-        if (!schema.asxAxis) {
-          seriesObj[schema.name] = {
-            name: schema.label || schema.name,
-            data: [],
-            // showSymbol: false,
+      if (this.schema.filter(schema => schema.asxAxis).length === 2) {
+        const dimensions = this.schema.filter(schema => schema.asxAxis)
+        const xAxisName = dimensions[0].name
+        const legendName = dimensions[1].name
+        const valueName = this.schema.find(schema => !schema.asxAxis).name
+        xAxisData = this.data.map(item => {
+          legend.push(item[legendName])
+          return item[xAxisName]
+        })
+        xAxisData = Array.from(new Set(xAxisData))
+        legend = Array.from(new Set(legend))
+        legend = legend.map((legendItem, index) => {
+          const seriesData = xAxisData.map(xAxisValue => {
+            const item = data.find(dataItem => dataItem[legendName] === legendItem && dataItem[xAxisName] === xAxisValue)
+            if (item) {
+              return item[valueName]
+            } else {
+              return '-'
+            }
+          })
+          legendItem += ''
+          seriesObj[legendItem] = {
+            name: legendItem,
+            data: seriesData,
             type: 'bar'
           }
-        }
-        data.forEach(item => {
-          if (schema.asxAxis) {
-            xAxisData.push(item[schema.name])
-          } else {
-            seriesObj[schema.name].data.push(item[schema.name])
-          }
+          return legendItem
         })
-      })
+      } else {
+        this.schema.forEach((schema, index) => {
+          legend.push(schema.label || schema.name)
+          if (!schema.asxAxis) {
+            seriesObj[schema.name] = {
+              name: schema.label || schema.name,
+              data: [],
+              // showSymbol: false,
+              type: 'bar'
+            }
+          }
+          data.forEach(item => {
+            if (schema.asxAxis) {
+              xAxisData.push(item[schema.name])
+            } else {
+              seriesObj[schema.name].data.push(item[schema.name])
+            }
+          })
+        })
+      }
+
       const option = {
         legend: {
           type: 'scroll',
@@ -154,7 +185,7 @@ export default {
         tooltip: {
           trigger: 'axis',
           axisPointer: {
-            type: 'cross'
+            type: 'shadow'
           }
         },
         xAxis: {
@@ -166,6 +197,10 @@ export default {
             lineStyle: {
               color: '#95a4bd'
             }
+          },
+          splitArea: {
+            show: true,
+            interval: 0
           },
           data: xAxisData
         },
