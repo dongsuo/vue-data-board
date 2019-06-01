@@ -5,8 +5,10 @@
       <el-form label-position="top">
         <el-form-item label="图表类型">
           <div class="chart-type-list">
-            <span v-for="item in chartTypeList" :key="item.type" @click="switchChartType(item)">
-              <svg-icon :icon-class="isDisabled(item)? item.icon : (item.icon + '_disabled')" />
+            <span v-for="item in chartTypeList" :key="item.type" :class="{activedIcon :item.type===chartType, disabledIcon: !isUsable(item)}" @click="switchChartType(item)">
+              <el-tooltip :content="item.matchRule.desc" placement="top">
+                <svg-icon class="icon" :icon-class="isUsable(item)? item.icon : (item.icon + '_disabled')" />
+              </el-tooltip>
             </span>
           </div>
         </el-form-item>
@@ -63,7 +65,7 @@ export default {
     this.currentType = chartTypeList.find(item => item.type === this.chartType)
   },
   methods: {
-    isDisabled(chart) {
+    isUsable(chart) {
       return chart.matchRule.isUsable(store.state.dimensions, store.state.caculCols)
     },
     switchChartType(chart) {
@@ -91,13 +93,36 @@ export default {
        display: grid;
        justify-items: center;
        grid-template-columns: repeat(4, 1fr);
+       grid-auto-rows: 1fr;
        grid-gap: 10px;
        span {
+         line-height: initial;
+         height: 100%;
          font-size: 22px;
          cursor: pointer;
          text-align: center;
-         grid-template-columns: 1fr;
          width: 100%;
+         position: relative;
+         .icon {
+           position: absolute;
+           top: 0;
+           left: 0;
+           right: 0;
+           bottom:0;
+           margin: auto;
+         }
+       }
+       span::before {
+          content: '';
+          width: 100%;
+          padding-bottom: 100%;
+          display: block;
+        }
+        .disabledIcon {
+          cursor: not-allowed;
+        }
+       .activedIcon {
+         background: #c9c9c9;
        }
      }
    }

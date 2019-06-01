@@ -43,10 +43,6 @@ export default {
     resultLoading: {
       default: false
     },
-    allCols: {
-      requred: true,
-      default: () => []
-    },
     dataSrc: {
       requred: true
     }
@@ -77,6 +73,7 @@ export default {
   methods: {
     handleDataSrcChange() {
       this.fetchSchema()
+      store.setAllColsAction([])
       this.$emit('change', this.selectedTable)
     },
     fetchSchema() {
@@ -94,7 +91,7 @@ export default {
             id: index
           }
         })
-        this.$emit('update:allCols', this.tableSchema)
+        store.setAllColsAction(this.tableSchema)
       })
     },
     handleCloseDialog(done) {

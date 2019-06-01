@@ -5,7 +5,8 @@ const store = {
   debug: true,
   state: {
     dimensions: [],
-    caculCols: []
+    caculCols: [],
+    allCols: []
   },
   // dimensions actions
   addDimensionAction(col) {
@@ -48,6 +49,11 @@ const store = {
   setCaculColsAction(caculCols) {
     if (this.debug) console.log('setCaculColsAction triggered')
     this.state.caculCols = caculCols
+  },
+  // allCols action
+  setAllColsAction(allCols) {
+    if (this.debug) console.log('setAllColsAction triggered width', allCols)
+    this.state.allCols = allCols
   }
 }
 

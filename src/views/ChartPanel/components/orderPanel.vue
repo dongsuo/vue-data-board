@@ -1,7 +1,7 @@
 <template>
   <el-form-item label="排序">
     <draggable v-model="orderByStrs" :group="{name: 'orderBy',pull: false, put: false}" style="display: inline-block;">
-      <el-tag v-for="(item,index) in orderByStrs" :key="index" closable @close="handleCloseOrderBy">
+      <el-tag v-for="(item,index) in orderByStrs" :key="index" closable size="small" @close="handleCloseOrderBy">
         {{ item }}
       </el-tag>
     </draggable>

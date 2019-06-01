@@ -11,7 +11,7 @@
       <el-form label-width="150px">
         <el-form-item label="请选择筛选字段" class="el-form-item">
           <el-select v-model="filteCol" size="mini" placeholder="选择筛选字段">
-            <el-option v-for="item in allCols" :key="item.Column" :label="item.Column" :value="item.Column" />
+            <el-option v-for="item in sharedState.allCols" :key="item.Column" :label="item.Column" :value="item.Column" />
           </el-select>
         </el-form-item>
 
@@ -47,12 +47,10 @@
 <script>
 import { filterOperator, dataType } from '@/utils/configs'
 import { buildFilterSentence } from '@/utils/buildSentence'
+import store from '../store'
 
 export default {
   props: {
-    allCols: {
-      reuqired: true
-    },
     disabled: {
       default: false
     }
@@ -68,7 +66,8 @@ export default {
       value2: undefined,
       value3: undefined,
       arrValue: [],
-      currentFilters: []
+      currentFilters: [],
+      sharedState: store.state
     }
   },
   computed: {
@@ -107,7 +106,7 @@ export default {
       }
       const filterObj = {
         filteCol: this.filteCol,
-        colType: this.allCols.find(item => item.Column === this.filteCol).Type,
+        colType: this.sharedState.allCols.find(item => item.Column === this.filteCol).Type,
         filterOperator: this.filterOperator,
         value: {
           value1: this.value1,
@@ -140,7 +139,7 @@ export default {
       return a ? a.paramNum : 1
     },
     needQuotation(col) {
-      const colType = this.allCols.find(item => item.Column === col).Type
+      const colType = this.sharedState.allCols.find(item => item.Column === col).Type
       if (colType.indexOf('(') >= 0) {
         return dataType.find(type => type.name === colType.split('(')[0].toLowerCase()).needQuotation
       } else {

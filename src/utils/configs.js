@@ -64,7 +64,7 @@ export const chartTypeList = [
     matchRule: {
       desc: '1 或 2个维度;1或多个数值',
       isUsable(dimensions, calculs) {
-        return true
+        return (dimensions.length === 1 || dimensions.length === 2) && (calculs.length >= 1)
       }
     },
     componentName: 'lineChart', dataTransfer(data, schema) {
@@ -111,7 +111,7 @@ export const chartTypeList = [
     matchRule: {
       desc: '1 或 2个维度;2或多个数值',
       isUsable(dimensions, calculs) {
-        return true
+        return (dimensions.length === 1 || dimensions.length === 2) && (calculs.length >= 2)
       }
     },
     componentName: 'StackBarChart', dataTransfer(data, schema) {
@@ -134,7 +134,7 @@ export const chartTypeList = [
     matchRule: {
       desc: '1个维度1个数值;0个维度多个数值',
       isUsable(dimensions, calculs) {
-        return true
+        return (dimensions.length === 1 && calculs.length === 1) || (dimensions.length === 0 && calculs.length >= 1)
       }
     },
     componentName: 'PieChart', dataTransfer(data, schema) {

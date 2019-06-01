@@ -103,36 +103,68 @@ export default {
     renderChart(data) {
       if (!this.$refs.chart) return
       const legend = []
-      const seriesObj = {
-        name: '',
-        type: 'pie',
-        radius: '55%',
-        center: ['50%', '60%'],
-        data: [],
-        tooltip: {
-          formatter: (params) => {
-            return `${params.name}: ${params.percent}%`
-          }
-        },
-        itemStyle: {
-          emphasis: {
-            shadowBlur: 10,
-            shadowOffsetX: 0,
-            shadowColor: 'rgba(0, 0, 0, 0.5)'
+      let seriesObj = {}
+      if (this.schema.filter(schema => schema.asxAxis).length === 0) {
+        seriesObj = {
+          name: '',
+          type: 'pie',
+          radius: '55%',
+          center: ['50%', '60%'],
+          data: [],
+          tooltip: {
+            formatter: (params) => {
+              return `${params.name}: ${params.percent}%`
+            }
+          },
+          itemStyle: {
+            emphasis: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
           }
         }
-      }
-      this.schema.forEach((schema, index) => {
-        data.forEach((item, dataIndex) => {
-          seriesObj.data[dataIndex] = seriesObj.data[dataIndex] || {}
-          if (schema.asxAxis) {
-            legend.push(item[schema.name])
-            seriesObj.data[dataIndex].name = item[schema.name]
-          } else {
-            seriesObj.data[dataIndex].value = item[schema.name]
-          }
+        // only one row in data if no dimensions
+        data = data[0]
+        this.schema.forEach((schema, index) => {
+          legend.push(schema.name)
+          seriesObj.data[index] = seriesObj.data[index] || {}
+          seriesObj.data[index].name = schema.name
+          seriesObj.data[index].value = data[schema.name]
         })
-      })
+      } else {
+        seriesObj = {
+          name: '',
+          type: 'pie',
+          radius: '55%',
+          center: ['50%', '60%'],
+          data: [],
+          tooltip: {
+            formatter: (params) => {
+              return `${params.name}: ${params.percent}%`
+            }
+          },
+          itemStyle: {
+            emphasis: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+          }
+        }
+        this.schema.forEach((schema, index) => {
+          data.forEach((item, dataIndex) => {
+            seriesObj.data[dataIndex] = seriesObj.data[dataIndex] || {}
+            if (schema.asxAxis) {
+              legend.push(item[schema.name])
+              seriesObj.data[dataIndex].name = item[schema.name]
+            } else {
+              seriesObj.data[dataIndex].value = item[schema.name]
+            }
+          })
+        })
+      }
+
       const option = {
         legend: {
           type: 'scroll',

@@ -12,14 +12,14 @@
 
     <div class="app-container" style="display: flex;">
       <el-card style="width:300px;margin-right: 20px;text-align:center;">
-        <data-panel :result-loading="resultLoading" :all-cols.sync="allCols" :data-src="dataSrc" @change="handleDataSrcChange" />
+        <data-panel :result-loading="loading" :data-src="dataSrc" @change="handleDataSrcChange" />
       </el-card>
 
       <el-card style="width: 100%;" body-style="padding: 10px 20px;">
         <el-form size="mini" class="analysis-form">
           <el-form-item label="维度">
             <draggable v-model="sharedState.dimensions" :group="{name: 'col',pull: true, put: true}" class="draggable-wrapper" @change="handleDimensionChange">
-              <el-tag v-for="col in sharedState.dimensions" :key="col.Column" class="draggable-item" size="mini" closable @close="handleCloseDimensionTag(col)">
+              <el-tag v-for="col in sharedState.dimensions" :key="col.Column" class="draggable-item" size="small" closable @close="handleCloseDimensionTag(col)">
                 {{ col.Column }}
               </el-tag>
             </draggable>
@@ -27,7 +27,7 @@
 
           <el-form-item label="字段">
             <draggable v-model="sharedState.caculCols" :group="{name: 'col',pull: true, put: true}" class="draggable-wrapper" @change="handleColChange">
-              <el-tag v-for="col in sharedState.caculCols" :key="col.Column" size="mini" closable class="selected-field" @close="handleCloseColTag(col)">
+              <el-tag v-for="col in sharedState.caculCols" :key="col.Column" size="small" closable class="selected-field" @close="handleCloseColTag(col)">
                 <el-select v-model="col.calculFunc" class="draggable-item" size="mini" closable style="background: rgba(0,0,0,0);">
                   <el-option v-for="(item, optIndex) in col.availableFunc" :key="optIndex" :label="`${col.Column}(${item.name})`" :value="item.func" />
                 </el-select>
@@ -37,7 +37,7 @@
 
           <orderPanel v-model="orderByStrs" />
 
-          <filterPanel :all-cols="allCols" :filters.sync="currentFilters" :disabled="!allSelected || allSelected.length===0" @change="handleAddFilter" />
+          <filterPanel :filters.sync="currentFilters" :disabled="!allSelected || allSelected.length===0" @change="handleAddFilter" />
 
           <el-form-item>
             <div class="limit-input">
@@ -46,14 +46,14 @@
                 <el-button type="text" @click="editLimit=true">修改</el-button>
               </span>
               <span v-show="editLimit">
-                <el-input-number v-model="limit" :disabled="resultLoading" size="mini" placeholder="数据条数" style="width:100px;" @blur="editLimit=false" />
+                <el-input-number v-model="limit" :disabled="loading" size="mini" placeholder="数据条数" style="width:100px;" @blur="editLimit=false" />
                 <el-button size="mini" @click="editLimit=false">确认</el-button>
               </span>
             </div>
           </el-form-item>
         </el-form>
 
-        <visualize-panel v-loading="resultLoading" :data="result" :chart-type.sync="chartType" :schema="allSelected" />
+        <visualize-panel v-loading="loading" :data="result" :chart-type.sync="chartType" :schema="allSelected" />
       </el-card>
     </div>
   </div>
@@ -71,14 +71,13 @@ import { saveChart, getChartById, putChart } from '@/mock/chart'
 import store from './store'
 
 export default {
-  name: 'SqlPanel',
+  name: 'ChartPanel',
   components: { visualizePanel, dataPanel, draggable, filterPanel, orderPanel },
   data() {
     return {
-      resultLoading: false,
+      loading: false,
       result: [],
       schema: [],
-      allCols: [],
       dataSrc: undefined,
       limit: 200,
       orderByStrs: [],
@@ -116,7 +115,6 @@ export default {
     }
   },
   created() {
-    // console.log(getChartById(this.$route.params.id))
     if (this.$route.params.id !== 'create') {
       const chart = getChartById(this.$route.params.id)
       this.dataSrc = chart.dataSrc
@@ -131,15 +129,11 @@ export default {
   },
   methods: {
     fetchData(sqlSentence) {
-      this.resultLoading = true
+      this.loading = true
       exeSql(sqlSentence).then(resp => {
-        this.resultLoading = false
+        this.loading = false
         this.result = resp
       })
-      // this.result = tempMockData.data
-      // this.schema = tempMockData.schema.fields.filter(item => {
-      //   return item.name !== 'index'
-      // })
     },
     handleDataSrcChange(value) {
       this.dataSrc = value
