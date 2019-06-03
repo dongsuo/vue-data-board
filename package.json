@@ -11,12 +11,14 @@
     "axios": "^0.18.0",
     "core-js": "^2.6.5",
     "echarts": "4.1.0",
-    "element-ui": "^2.8.2",
+    "element-ui": "^2.9.1",
     "file-saver": "^2.0.1",
+    "js-cookie": "^2.2.0",
     "vue": "^2.6.10",
     "vue-grid-layout": "^2.3.4",
     "vue-router": "^3.0.6",
-    "vuedraggable": "^2.20.0",
+    "vuedraggable": "^2.21.0",
+    "vuex": "^3.1.1",
     "xlsx": "^0.14.3"
   },
   "devDependencies": {

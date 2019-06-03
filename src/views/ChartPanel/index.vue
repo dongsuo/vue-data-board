@@ -132,7 +132,7 @@ export default {
       this.loading = true
       exeSql(sqlSentence).then(resp => {
         this.loading = false
-        this.result = resp
+        this.result = resp.data
       })
     },
     handleDataSrcChange(value) {

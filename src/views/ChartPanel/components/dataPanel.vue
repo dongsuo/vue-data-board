@@ -84,7 +84,7 @@ export default {
       this.schemaLoading = true
       exeSql(`desc ${this.selectedTable}`).then(resp => {
         this.schemaLoading = false
-        this.tableSchema = resp.map((item, index) => {
+        this.tableSchema = resp.data.map((item, index) => {
           return {
             Column: item.Field,
             Type: item.Type,

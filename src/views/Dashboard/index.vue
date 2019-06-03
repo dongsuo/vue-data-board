@@ -131,7 +131,7 @@ export default {
     exeSql(sqlSentence, item, index) {
       exeSql(sqlSentence).then(resp => {
         this.loading = false
-        this.results.splice(index, 1, resp)
+        this.results.splice(index, 1, resp.data)
       })
     }
   }
