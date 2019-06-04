@@ -4,6 +4,7 @@
       <div slot="header" style="display: flex; justify-content:space-between;">
         <span>Edit Chart</span>
         <span>
+          <el-button size="mini" type="primary" style="float: right;margin:0 10px 0 0;" @click="$router.push('/dashboard')">Dashboard</el-button>
           <el-button size="mini" type="primary" style="float: right;margin:0 10px 0 0;" @click="handleDownload">Export Data</el-button>
           <el-button size="mini" type="primary" style="float: right;margin:0 10px 0 0;" @click="handleSave"> Save </el-button>
         </span>
@@ -180,7 +181,7 @@ export default {
       this.$message({
         dangerouslyUseHTMLString: true,
         type: 'success',
-        message: 'Successfully Saved，<a href="/dashboard">Go Check Dashboard!</a>',
+        message: 'Successfully Saved，Go Check Your Dashboard!',
         duration: 20000
       })
     },

@@ -1,7 +1,8 @@
 import { getToken, setToken, removeToken } from '@/utils/auth'
 const user = {
   state: {
-    token: getToken()
+    token: getToken(),
+    avatar: 'https://wpimg.wallstcn.com/3fce7247-d863-4e3d-a0de-d30aaef7358a'
   },
   mutations: {
     SET_TOKEN: (state, token) => {

@@ -7,3 +7,11 @@ export function login(data) {
     data
   })
 }
+
+export function signup(data) {
+  return fetch({
+    url: '/user/signup',
+    method: 'POST',
+    data
+  })
+}
