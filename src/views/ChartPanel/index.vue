@@ -162,7 +162,7 @@ export default {
   watch: {
     sqlSentence(value) {
       if (value) {
-        console.log(value)
+        // console.log(value)
         this.fetchData(value)
       } else {
         this.result = []
@@ -251,7 +251,7 @@ export default {
         })
       } else {
         createChart(data).then(resp => {
-          console.log(resp)
+          // console.log(resp)
           this.$router.push(`/chartpanel/${resp.data.id}`)
           this.$message({
             type: 'success',
@@ -286,7 +286,7 @@ export default {
       })
     },
     switchChart(chart) {
-      console.log(chart)
+      // console.log(chart)
       this.$confirm('确定要离开当前页面吗?系统可能不会保存您所做的更改。', '提示').then(() => {
         this.$router.push(`/chartpanel/${chart.chart_id}`)
         this.showMyCharts = false

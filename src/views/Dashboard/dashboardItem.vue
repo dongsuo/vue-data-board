@@ -150,7 +150,7 @@ export default {
           return this.charts.find(chart => chart.objectId === item.id)
         })
         this.handleLayoutChange()
-        console.log('generated', layout)
+        // console.log('generated', layout)
       })
     },
     generatePosition(chart, layout, index) {
@@ -173,7 +173,7 @@ export default {
           return (b.yOffSet) - (a.yOffSet)
         })
         const endElement = layout[0]
-        console.log('generating', layout)
+        // console.log('generating', layout)
         const secondElementH = layout[1] ? layout[1].yOffSet : 0
 
         const isNewline = endElement.xOffSet > 12 || (endElement.yOffSet - secondElementH) < 5
@@ -185,7 +185,7 @@ export default {
           h: isNewline ? 9 : endElement.yOffSet - secondElementH,
           i: chart.objectId
         }
-        console.log(endElement.xOffSet, endElement.yOffSet, secondElementH, isNewline, posObj.id, posObj.x, posObj.y, posObj.w, posObj.h)
+        // console.log(endElement.xOffSet, endElement.yOffSet, secondElementH, isNewline, posObj.id, posObj.x, posObj.y, posObj.w, posObj.h)
       }
       layout.push(posObj)
     },
@@ -240,7 +240,7 @@ export default {
       this.dashboard.content = this.dashboard.content || {}
       this.dashboard.content.layout = this.layout
       updateDashboard(this.dashboard).then(() => {
-        console.log('save layout success')
+        console.log('layout saved')
       })
     },
     handleResize(i, newH, newW, newHPx, newWPx) {

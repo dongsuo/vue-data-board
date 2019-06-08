@@ -20,7 +20,6 @@ const whiteList = ['/login', '/auth-redirect', '/signup']
 
 router.beforeEach((to, from, next) => {
   if (getToken()) {
-    console.log(to.path)
     if (to.path === '/login') {
       next({ path: '/' })
     }
