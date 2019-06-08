@@ -35,7 +35,7 @@
         :i="item.i"
         @resized="handleResize"
       >
-        <el-card class="visualize-card">
+        <el-card class="visualize-card" body-style="padding: 10px;">
           <div slot="header" class="operation-bar">
             <div>
               <span style="float:left;">{{ charts[index].chart_name }}</span>
@@ -48,7 +48,7 @@
               </el-tooltip>
             </div>
           </div>
-          <visualize-panel :key="item.index" :ref="`chartInstance${item.i}`" :data="results[index]" :schema="charts[index].content.allSelected" :chart-type.sync="charts[index].content.chartType" :is-edit-mode="false" :chart-style="{height: `${item.h*30 + 10 * (item.h-1) - 80}px`}" />
+          <visualize-panel :key="item.index" :ref="`chartInstance${item.i}`" :data="results[index]" :schema="charts[index].content.allSelected" :chart-type.sync="charts[index].content.chartType" :is-edit-mode="false" :chart-style="{height: `${item.h*30 + 10 * (item.h-1) - 60}px`}" />
         </el-card>
       </grid-item>
     </grid-layout>
