@@ -71,9 +71,9 @@
       <el-table :data="myChartList">
         <el-table-column label="名称" width="200" prop="chart_name" />
         <el-table-column label="描述" prop="desc" />
-        <el-table-column label="操作">
+        <el-table-column label="操作" align="center">
           <template slot-scope="scope">
-            <el-button size="mini" type="primary" @click="linkChart(scope.row)">
+            <el-button size="mini" type="primary" :disabled="isExisted(scope.row)" @click="linkChart(scope.row)">
               Add
             </el-button>
           </template>
@@ -217,6 +217,9 @@ export default {
           message: '添加成功！'
         })
       })
+    },
+    isExisted(chart) {
+      return this.charts.find(item => item.objectId === chart.chart_id)
     },
     handleEdit(chart) {
       this.$router.push(`/chartpanel/${chart.objectId}`)
