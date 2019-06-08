@@ -1,18 +1,5 @@
 <template>
-  <div>
-    <el-card :style="cardStyle">
-      <div v-if="widgetMeta" slot="header" style="display:flex;justify-content:space-between;">
-        <div style="font-weight:500;color:#409eff;font-size: 13px;">
-          {{ widgetMeta.name }}
-        </div>
-        <el-tooltip v-if="widgetMeta.data_desc" :content="widgetMeta.data_desc" class="item" effect="dark" placement="top-end">
-          <div><i class="el-icon-question" style="color:#409eff;cursor:pointer;" /></div>
-        </el-tooltip>
-      </div>
-
-      <div ref="chart" :style="chartStyle" />
-    </el-card>
-  </div>
+  <div ref="chart" :style="chartStyle" />
 </template>
 <script>
 import echarts from 'echarts'
@@ -43,16 +30,6 @@ export default {
       default: () => {
         return {
           height: '500px'
-        }
-      }
-    },
-    cardStyle: {
-      require: false,
-      type: Object,
-      default: () => {
-        return {
-          height: '100%',
-          width: '100%'
         }
       }
     }

@@ -35,12 +35,21 @@
         :i="item.i"
         @resized="handleResize"
       >
-        <div class="operation-bar">
-          <span style="float:left;">{{ charts[index].chart_name }}</span>
-          <i class="el-icon-edit" @click="handleEdit(charts[index])" />
-          <i class="el-icon-delete" @click="handleDelete(charts[index])" />
-        </div>
-        <visualize-panel :key="item.index" :ref="`chartInstance${item.i}`" :data="results[index]" :schema="charts[index].content.allSelected" :chart-type.sync="charts[index].content.chartType" :is-edit-mode="false" :chart-style="{height: `${item.h*30 + 10 * (item.h-1) - 40}px`}" />
+        <el-card class="visualize-card">
+          <div slot="header" class="operation-bar">
+            <div>
+              <span style="float:left;">{{ charts[index].chart_name }}</span>
+            </div>
+            <div>
+              <i class="el-icon-edit" @click="handleEdit(charts[index])" />
+              <i class="el-icon-delete" @click="handleDelete(charts[index])" />
+              <el-tooltip :content="charts[index].desc" class="item" effect="dark" placement="top-end">
+                <i class="el-icon-info" style="color:#409eff;cursor:pointer;" />
+              </el-tooltip>
+            </div>
+          </div>
+          <visualize-panel :key="item.index" :ref="`chartInstance${item.i}`" :data="results[index]" :schema="charts[index].content.allSelected" :chart-type.sync="charts[index].content.chartType" :is-edit-mode="false" :chart-style="{height: `${item.h*30 + 10 * (item.h-1) - 80}px`}" />
+        </el-card>
       </grid-item>
     </grid-layout>
     <div v-else v-loading="loading" class="welcome-container">
@@ -287,18 +296,23 @@ export default {
   }
 
 }
-.operation-bar {
-  position: absolute;
-  top:0;
-  right:0;
-  left:0;
-  padding: 10px 10px 0 0;
-  z-index: 9;
-  i {
-    float: right;
-    margin-right: 10px;
-    color: #409EFF;
-    cursor: pointer;
+.visualize-card {
+  /deep/ .el-card__header {
+    padding: 0;
+    .operation-bar {
+      font-size: 14px;
+      display: flex;
+      justify-content: space-between;
+      height: 35px;
+      padding: 0 10px;
+      line-height: 35px;
+      z-index: 9;
+      i {
+        margin-right: 10px;
+        color: #409EFF;
+        cursor: pointer;
+      }
+    }
   }
 }
 .welcome-container {
