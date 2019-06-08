@@ -92,7 +92,8 @@ a,a:hover {
 .nav-bar {
   display: flex;
   justify-content: space-between;
-  height: 60px;
+  height: 61px;
+  border-bottom: 1px solid #EBEEF5;
   .avatar-container {
     align-self: center;
     margin-right: 15px;

@@ -1,76 +1,72 @@
 <template>
-  <div>
-    <el-card body-style="padding: 0px;" class="tool-bar">
-      <div slot="header" style="display: flex; justify-content:space-between;">
-        <span>Default Dashboard</span>
-        <el-button type="primary" size="mini" @click="$router.push('/chartpanel/create')">
-          Add Chart
-        </el-button>
+  <div class="container">
+    <el-card body-style="padding: 0px;" class="dashboard-list" shadow="never">
+      <div slot="header">
+        <span>仪表盘</span>
+        <i class="el-icon-plus" @click="addDashboard" />
       </div>
+      <ul>
+        <li v-for="item in dashboardList" :key="item.objectId" :class="{'dashboard-list-item': true, 'high-light-dashboard': currentDashboard.objectId === item.objectId}">
+          <span @click="switchDb(item)">
+            <i class="el-icon-document" />
+            <span>{{ item.name }}</span>
+          </span>
+          <el-dropdown szie="mini" trigger="click" @command="handleCommand">
+            <span class="el-dropdown-link">
+              <i class="el-icon-more" />
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item
+                :command="{
+                  type: 'edit',
+                  target: item
+                }"
+              >
+                编辑
+              </el-dropdown-item>
+              <el-dropdown-item
+                :command="{
+                  type: 'delete',
+                  target: item
+                }"
+              >
+                删除
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+
+          <!-- {{ item.desc }} -->
+        </li>
+      </ul>
     </el-card>
-    <grid-layout
-      v-if="charts.length!==0"
-      v-loading="loading"
-      :layout="layout || []"
-      :col-num="24"
-      :row-height="30"
-      :is-draggable="mode === 'edit'"
-      :is-resizable="mode === 'edit'"
-      :is-mirrored="false"
-      :vertical-compact="true"
-      :pane-container="false"
-      :margin="[10, 10]"
-      :use-css-transforms="true"
-      style="min-height: 500px;"
-    >
-      <grid-item
-        v-for="(item, index) in layout || []"
-        :key="item.index"
-        :x="item.x"
-        :y="item.y"
-        :w="item.w"
-        :h="item.h"
-        :i="item.i"
-        @resized="handleResize"
-      >
-        <div class="operation-bar">
-          <i class="el-icon-edit" @click="handleEdit(charts[index].index)" />
-          <i class="el-icon-delete" @click="handleDelete(charts[index].index)" />
-        </div>
-        <visualize-panel :key="item.index" :ref="`chartInstance${index}`" :data="results[index]" :schema="charts[index].allSelected" :chart-type.sync="charts[index].chartType" :is-edit-mode="false" :chart-style="{height: `${item.h*30 + 10 * (item.h-1) - 40}px`}" />
-      </grid-item>
-    </grid-layout>
-    <div v-else v-loading="loading" class="welcome-container">
-      <el-button type="primary" size="mini" @click="$router.push('/chartpanel/create')">
-        Add Chart
-      </el-button>
-      <div>
-        <el-link type="info" :underline="false">
-          <router-link to="/chartpanel/create">
-            Dashboard Is Empty，Go Create Your First Chart!
-          </router-link>
-        </el-link>
-      </div>
-    </div>
+    <dashboardItem :dashboard="currentDashboard" />
+    <el-dialog title="编辑/新建 Dashboard" :visible.sync="editDialogVisible">
+      <el-form label-width="100px;">
+        <el-form-item label=" Dashboard 名称：">
+          <el-input v-model="dbObj.name" size="small" style="width: 250px;" placeholder="请输入 Dashboard 名称" />
+        </el-form-item>
+        <el-form-item label=" Dashboard 描述：">
+          <el-input v-model="dbObj.desc" size="small" style="width: 250px;" placeholder="请输入描述" />
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" size="small" @click="editDialogVisible = false">取消</el-button>
+        <el-button type="primary" size="small" @click="handleSubmit">确定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
-import { GridLayout } from 'vue-grid-layout'
-import { GridItem } from 'vue-grid-layout'
-import visualizePanel from '../ChartPanel/components/visualizePanel'
-import exeSql from '@/mock/exeSql'
-import { getChart, deleteChart } from '@/mock/chart'
-import { buildSqlSentence, buildFilterSentence } from '@/utils/buildSentence'
-
+import dashboardItem from './dashboardItem'
+import { addDashboard, updateDashboard, dashboardList } from '@/api/dashboard'
 export default {
-  components: { GridLayout, GridItem, visualizePanel },
+  components: { dashboardItem },
   data() {
     return {
-      charts: [],
-      results: [],
-      loading: false,
-      mode: 'edit',
-      layout: []
+      dashboardList: [],
+      currentDashboard: undefined,
+      editDialogVisible: false,
+      dbObj: {}
     }
   },
   created() {
@@ -78,86 +74,96 @@ export default {
   },
   methods: {
     getList() {
-      // init
-      this.charts = []
-      this.layout = []
-      this.loading = true
-      setTimeout(() => {
-        this.charts = getChart()
-        this.loading = this.charts.length !== 0
-        this.layout = this.charts.map((item, index) => {
-          this.results.push([])
-          item.allSelected = []
-          item.allSelected = item.allSelected.concat(item.selectedCalcul).concat(item.selectedDimension)
-          console.log(item.allSelected)
-          const filterStrs = item.filters.map(buildFilterSentence)
-
-          const sqlSentence = buildSqlSentence({
-            dataSrc: item.dataSrc,
-            selectedCalcul: item.selectedCalcul,
-            selectedDimension: item.selectedDimension,
-            orderByStrs: item.orderByStrs,
-            filterStr: filterStrs.join(' and '),
-            limit: item.limit
-          })
-          this.exeSql(sqlSentence, item, index)
-          return {
-            id: index, x: index % 2 === 0 ? 0 : 12, y: Math.floor(index / 2), w: 12, h: 9, i: index
-          }
-        })
-      }, 1000)
-    },
-    handleEdit(index) {
-      console.log(index)
-      this.$router.push(`/chartpanel/${index}`)
-    },
-    handleDelete(index) {
-      this.$confirm('确认从该 Dashboard 中删除该图表?', '提示', {
-        confirmButtonText: 'Confirm',
-        cancelButtonText: 'Cancel',
-        type: 'warning'
-      }).then(() => {
-        deleteChart(index)
-        this.getList()
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
-        })
+      dashboardList().then(resp => {
+        this.dashboardList = resp.data
+        if (this.$route.query.id) {
+          this.currentDashboard = this.dashboardList.find(item => item.objectId === this.$route.query.id)
+        } else {
+          this.currentDashboard = this.dashboardList[0]
+        }
+        this.$router.push(`/dashboard?id=${this.currentDashboard.objectId}`)
       })
     },
-    handleResize(i, newH, newW, newHPx, newWPx) {
-      this.$refs[`chartInstance${i}`][0].$children[0].$emit('resized')
-    },
-    exeSql(sqlSentence, item, index) {
-      exeSql(sqlSentence).then(resp => {
-        this.loading = false
-        this.results.splice(index, 1, resp.data)
+    switchDb(db) {
+      this.$confirm('确定要离开当前页面吗?系统可能不会保存您所做的更改。', '提示').then(() => {
+        this.currentDashboard = db
+        this.$router.push(`/dashboard?id=${this.currentDashboard.objectId}`)
       })
+    },
+    addDashboard() {
+      this.dbObj = {}
+      this.editDialogVisible = true
+    },
+    editDashboard(db) {
+      this.dbObj = Object.assign({}, db)
+      this.editDialogVisible = true
+    },
+    handleCommand(cmd) {
+      if (cmd.type === 'edit') {
+        this.editDashboard(cmd.target)
+      } else {
+        this.deleteDashboard(cmd.target)
+      }
+    },
+    handleSubmit() {
+      if (this.dbObj.objectId) {
+        updateDashboard(this.dbObj).then(resp => {
+          this.getList()
+          this.editDialogVisible = false
+        })
+      } else {
+        addDashboard(this.dbObj).then(resp => {
+          this.getList()
+          this.editDialogVisible = false
+        })
+      }
+    },
+    deleteDashboard(db) {
+      console.log(db)
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.operation-bar {
-  position: absolute;
-  top:0;
-  right:0;
-  padding: 10px 10px 0 0;
-  z-index: 9;
-  i {
-    margin-right: 10px;
-    color: #409EFF;
-    cursor: pointer;
+.container {
+  display: flex;
+  height: calc(100vh - 62px);
+  align-items: stretch;
+  .dashboard-list {
+    width: 250px;
+    height: 100%;
+    padding: 20px 10px;
+    /deep/ .el-card__header {
+      div {
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+        color: #606266;
+        i {
+          cursor: pointer;
+        }
+      }
+      padding: 5px 0px;
+    }
+    .dashboard-list-item {
+      display: flex;
+      justify-content: space-between;
+      line-height: 35px;
+      font-size: 14px;
+      cursor: pointer;
+      color: #606266;
+      i {
+        margin-right: 10px;
+        line-height: 35px;
+      }
+    }
+    .high-light-dashboard {
+      color: #205cd8;
+    }
   }
-}
-.welcome-container {
-  text-align: center;
-  height: 500px;
-  color:#C0C4CC;
-  /deep/ .el-button {
-    margin-top: 200px;
-    margin-bottom: 25px;
+  .dashboard-wrapper {
+    width: 100%;
   }
 }
 </style>

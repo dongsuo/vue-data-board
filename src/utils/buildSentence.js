@@ -38,7 +38,7 @@ export function buildSqlSentence({ dataSrc, selectedCalcul, selectedDimension, o
     where = `where ${filterStr}`
   }
 
-  return `SELECT ${fields.join()} FROM ${dataSrc} ${where || ''} ${groupBy || ''} ${orderBy || ''} LIMIT ${limit}`
+  return `SELECT ${fields.join()} FROM ${dataSrc} ${where || ''} ${groupBy || ''} ${orderBy || ''} LIMIT ${limit || 200}`
 }
 
 export function buildFilterSentence(filter) {

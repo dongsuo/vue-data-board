@@ -53,7 +53,7 @@ export default {
       dataSourceList: [],
       selectedTable: undefined,
       tableSchema: undefined,
-      dataSrcVisible: true,
+      dataSrcVisible: this.$route.params.id === 'create',
       existWarning: null
     }
   },
@@ -64,13 +64,12 @@ export default {
   },
   created() {
     this.dataSourceList = tables
-    if (this.$route.params.id !== 'create') {
-      this.dataSrcVisible = false
-      this.selectedTable = this.dataSrc
-      this.fetchSchema()
-    }
   },
   methods: {
+    initWithDataSrc(dataSrc) {
+      this.selectedTable = dataSrc
+      this.fetchSchema()
+    },
     handleDataSrcChange() {
       this.fetchSchema()
       store.setAllColsAction([])

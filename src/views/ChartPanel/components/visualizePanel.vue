@@ -2,8 +2,8 @@
   <div class="pane-container">
     <component :is="currentType.componentName" :data="chartData" :schema="schema" :chart-style="chartStyle" class="visualize-window" />
     <div v-if="isEditMode" class="chart-style-panel">
-      <el-form label-position="top">
-        <el-form-item label="图表类型">
+      <el-form label-position="top" size="mini">
+        <el-form-item label="图表类型:">
           <div class="chart-type-list">
             <span v-for="item in chartTypeList" :key="item.type" :class="{activedIcon :item.type===chartType, disabledIcon: !isUsable(item)}" @click="switchChartType(item)">
               <el-tooltip :content="item.matchRule.desc" placement="top">
@@ -52,17 +52,16 @@ export default {
   },
   data() {
     return {
-      chartTypeList,
-      currentType: {}
+      chartTypeList
     }
   },
   computed: {
     chartData() {
       return this.currentType.dataTransfer ? this.currentType.dataTransfer(this.data, this.schema) : this.data
+    },
+    currentType() {
+      return chartTypeList.find(item => item.type === this.chartType)
     }
-  },
-  mounted() {
-    this.currentType = chartTypeList.find(item => item.type === this.chartType)
   },
   methods: {
     isUsable(chart) {
@@ -73,7 +72,6 @@ export default {
         return
       }
       this.$emit('update:chartType', chart.type)
-      this.currentType = chart
     }
   }
 }
