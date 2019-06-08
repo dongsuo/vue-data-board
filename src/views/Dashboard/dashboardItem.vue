@@ -219,7 +219,7 @@ export default {
       })
     },
     isExisted(chart) {
-      return this.charts.find(item => item.objectId === chart.chart_id)
+      return this.charts.findIndex(item => item.objectId === chart.chart_id) >= 0
     },
     handleEdit(chart) {
       this.$router.push(`/chartpanel/${chart.objectId}`)
