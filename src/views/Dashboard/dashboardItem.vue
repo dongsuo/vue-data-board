@@ -5,9 +5,14 @@
         <span class="db-name">{{ dashboard.name }}</span>
         <span>{{ dashboard.desc }}</span>
       </div>
-      <el-button type="primary" size="mini" @click="handleLinkChart">
-        Add Chart
-      </el-button>
+      <div>
+        <el-button type="primary" size="mini" @click="handleLinkChart">
+          Add Chart
+        </el-button>
+        <el-button type="primary" size="mini" @click="handleCaculPos">
+          计算
+        </el-button>
+      </div>
     </div>
     <grid-layout
       v-if="charts.length!==0"
@@ -26,7 +31,7 @@
       @layout-updated="handleLayoutChange"
     >
       <grid-item
-        v-for="(item, index) in layout || []"
+        v-for="item in layout || []"
         :key="item.index"
         :x="item.x"
         :y="item.y"
@@ -38,17 +43,18 @@
         <el-card class="visualize-card" body-style="padding: 10px;">
           <div slot="header" class="operation-bar">
             <div>
-              <span style="float:left;">{{ charts[index].chart_name }}</span>
+              <span>{{ getChartItem(item.i).chart_name }}</span>
+              <span>{{ getChartItem(item.i).objectId }}</span>
             </div>
             <div>
-              <i class="el-icon-edit" @click="handleEdit(charts[index])" />
-              <i class="el-icon-delete" @click="handleDelete(charts[index])" />
-              <el-tooltip :content="charts[index].desc" class="item" effect="dark" placement="top-end">
+              <i class="el-icon-edit" @click="handleEdit(getChartItem(item.i))" />
+              <i class="el-icon-delete" @click="handleDelete(getChartItem(item.i))" />
+              <el-tooltip :content="getChartItem(item.i).desc" class="item" effect="dark" placement="top-end">
                 <i class="el-icon-info" style="color:#409eff;cursor:pointer;" />
               </el-tooltip>
             </div>
           </div>
-          <visualize-panel :key="item.index" :ref="`chartInstance${item.i}`" :data="results[index]" :schema="charts[index].content.allSelected" :chart-type.sync="charts[index].content.chartType" :is-edit-mode="false" :chart-style="{height: `${item.h*30 + 10 * (item.h-1) - 60}px`}" />
+          <visualize-panel :key="item.index" :ref="`chartInstance${item.i}`" :data="results[item.i]" :schema="getChartItem(item.i).content.allSelected" :chart-type.sync="getChartItem(item.i).content.chartType" :is-edit-mode="false" :chart-style="{height: `${item.h*30 + 10 * (item.h-1) - 60}px`}" />
         </el-card>
       </grid-item>
     </grid-layout>
@@ -94,6 +100,33 @@ import { chartByDashboard, updateDashboard, addChartToDB, unMapChartDb } from '@
 import { chartList } from '@/api/chart'
 import { buildSqlSentence, buildFilterSentence } from '@/utils/buildSentence'
 
+function isLineOverLap(line1, line2) {
+  const start1 = {
+    x: line1[0][0],
+    y: line1[0][1]
+  }
+  const end1 = {
+    x: line1[1][0],
+    y: line1[1][1]
+  }
+  const start2 = {
+    x: line2[0][0],
+    y: line2[0][1]
+  }
+  const end2 = {
+    x: line2[1][0],
+    y: line2[1][1]
+  }
+  if (start1.y === start2.y && end1.y === end2.y) {
+    if (start1.x >= start2.x && start1.x <= end2.x) {
+      return true
+    } else {
+      return false
+    }
+  } else {
+    return false
+  }
+}
 export default {
   components: { GridLayout, GridItem, visualizePanel },
   props: {
@@ -108,7 +141,7 @@ export default {
   data() {
     return {
       charts: [],
-      results: [],
+      results: {},
       loading: false,
       mode: 'edit',
       layout: [],
@@ -136,7 +169,8 @@ export default {
         let filterStrs = []
         const layout = (this.dashboard.content && this.dashboard.content.layout) || []
         this.charts.forEach((chart, index) => {
-          this.results.push([])
+          this.$set(this.results, chart.objectId, [])
+
           chart.content.allSelected = []
           chart.content.allSelected = chart.content.allSelected.concat(chart.content.selectedCalcul).concat(chart.content.selectedDimension)
           if (chart.content.filters) {
@@ -162,6 +196,28 @@ export default {
         // console.log('generated', layout)
       })
     },
+    getChartItem(id) {
+      return this.charts.find(chart => chart.objectId === id)
+    },
+    handleCaculPos(layout) {
+      // const layout = JSON.parse(JSON.stringify(layout))
+      const bottomItems = []
+      layout.forEach(i => {
+        i.yOffSet = i.y + i.h
+        i.xOffSet = i.x + i.w
+        i.bottomLine = [[i.x, i.yOffSet], [i.xOffSet, i.yOffSet]]
+        i.topLine = [[i.x, i.y], [i.xOffSet, i.y]]
+      })
+      layout.forEach(i => {
+        const flag = layout.every(j => {
+          return !isLineOverLap(i.bottomLine, j.topLine)
+        })
+        if (flag) {
+          bottomItems.push(i)
+        }
+      })
+      return bottomItems
+    },
     generatePosition(chart, layout, index) {
       let posObj
       if (layout.length === 0) {
@@ -174,28 +230,23 @@ export default {
           i: chart.objectId
         }
       } else {
-        layout.forEach(item => {
-          item.yOffSet = item.h + item.y
-          item.xOffSet = item.x + item.w
-        })
-        layout.sort((a, b) => {
-          return (b.yOffSet) - (a.yOffSet)
-        })
-        const endElement = layout[0]
-        // console.log('generating', layout)
-        const secondElementH = layout[1] ? layout[1].yOffSet : 0
-
-        const isNewline = endElement.xOffSet > 12 || (endElement.yOffSet - secondElementH) < 5
+        const bottomItems = this.handleCaculPos(layout)
+        const highestItem = bottomItems.reduce((result, item) => {
+          if (result.bottomLine[0][1] > item.bottomLine[0][1]) {
+            result = item
+          }
+          return result
+        }, bottomItems[0])
         posObj = {
           id: chart.objectId,
-          x: isNewline ? 0 : endElement.xOffSet,
-          y: isNewline ? endElement.yOffSet : endElement.y,
-          w: 12,
-          h: isNewline ? 9 : endElement.yOffSet - secondElementH,
+          x: highestItem.x,
+          y: highestItem.yOffSet,
+          w: highestItem.w,
+          h: 9,
           i: chart.objectId
         }
-        // console.log(endElement.xOffSet, endElement.yOffSet, secondElementH, isNewline, posObj.id, posObj.x, posObj.y, posObj.w, posObj.h)
       }
+
       layout.push(posObj)
     },
     handleLinkChart() {
@@ -261,7 +312,7 @@ export default {
     exeSql(sqlSentence, item, index) {
       exeSql(sqlSentence).then(resp => {
         this.loading = false
-        this.results.splice(index, 1, resp.data)
+        this.$set(this.results, item.objectId, resp.data)
       })
     }
   }
@@ -288,16 +339,6 @@ export default {
     font-size: 0.8em;
     margin-left: 10px;
   }
-  .el-button {
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    margin: auto;
-    height: 28px;
-    margin-right: 20px;
-  }
-
 }
 .visualize-card {
   /deep/ .el-card__header {
