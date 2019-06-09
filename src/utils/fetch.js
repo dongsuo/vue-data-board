@@ -4,7 +4,7 @@ import Cookies from 'js-cookie'
 import store from '../store'
 
 const fetchInstance = axios.create({
-  baseURL: 'http://dongsuo.leanapp.cn'
+  baseURL: 'https://dongsuo.leanapp.cn'
   // timeout: 2000,
 })
 
