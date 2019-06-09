@@ -1,9 +1,15 @@
 <template>
   <div>
     <el-form label-position="top" class="panel" style="text-align:left;">
-      <el-form-item label="Current Table">
+      <el-form-item v-show="dataSrcVisible" label="Data Source:">
+        <el-select v-model="selectedTable" size="mini" filterable placeholder="Select Data Source" style="width:200px;" clearable @change="handleDataSrcChange">
+          <el-option v-for="item in dataSourceList" :key="item.tableId" :label="item.name" :value="item.name" />
+        </el-select>
+      </el-form-item>
+
+      <el-form-item v-show="!dataSrcVisible" label="Current Table">
         <span style="font-size: 12px;margin-right: 5px;">{{ selectedTable }}</span>
-        <el-button type="text" size="mini" @click="dataSrcVisible=true">
+        <el-button type="text" size="mini" @click="editDataSrc">
           {{ selectedTable?'Change':'Select Data Source' }}
         </el-button>
       </el-form-item>
@@ -16,19 +22,6 @@
         </draggable>
       </el-form-item>
     </el-form>
-
-    <el-dialog :visible.sync="dataSrcVisible" :before-close="handleCloseDialog" title="Select Data Source" width="500px">
-      <el-form label-width="150px">
-        <el-form-item label="Data Source:">
-          <el-select v-model="selectedTable" size="mini" filterable placeholder="Select Data Source" style="width:200px;" clearable @change="handleDataSrcChange">
-            <el-option v-for="item in dataSourceList" :key="item.tableId" :label="item.name" :value="item.name" />
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" size="mini" @click="dataSrcVisible = false">Confirm</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 <script>
@@ -70,7 +63,12 @@ export default {
       this.selectedTable = dataSrc
       this.fetchSchema()
     },
+    editDataSrc() {
+      this.dataSrcVisible = true
+      this.selectedTable = undefined
+    },
     handleDataSrcChange() {
+      this.dataSrcVisible = false
       this.fetchSchema()
       store.setAllColsAction([])
       this.$emit('change', this.selectedTable)

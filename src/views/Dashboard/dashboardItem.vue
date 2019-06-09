@@ -9,9 +9,6 @@
         <el-button type="primary" size="mini" @click="handleLinkChart">
           Add Chart
         </el-button>
-        <el-button type="primary" size="mini" @click="handleCaculPos">
-          计算
-        </el-button>
       </div>
     </div>
     <grid-layout
