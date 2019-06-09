@@ -9,7 +9,7 @@
       <el-form-item>
         <el-input v-model="user.password" type="password" placeholder="请输入密码" />
       </el-form-item>
-      <el-button type="primary" @click="handleLogin">
+      <el-button :loading="loading" type="primary" @click="handleLogin">
         登录
       </el-button>
       <el-divider />
@@ -24,6 +24,7 @@ import { login } from '@/mock/user'
 export default {
   data() {
     return {
+      loading: false,
       user: {
         userName: 'dongsuo',
         password: '123456'
@@ -32,7 +33,9 @@ export default {
   },
   methods: {
     handleLogin() {
+      this.loading = true
       login(this.user).then(resp => {
+        this.loading = false
         this.$store.dispatch('Login', resp.data.token).then(() => {
           this.$router.push(this.$route.query.redirect || '/')
         })

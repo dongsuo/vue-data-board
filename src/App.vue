@@ -101,6 +101,7 @@ a,a:hover {
     height: 45px;
     width: 45px;
     .avatar-wrapper {
+      cursor: pointer;
       img {
         height: 100%;
         width: 100%;
