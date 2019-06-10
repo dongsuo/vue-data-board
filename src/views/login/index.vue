@@ -13,9 +13,14 @@
         登录
       </el-button>
       <el-divider />
-      <el-button type="text" size="mini" @click="$router.push('/signup')">
-        没有账号？去注册
-      </el-button>
+      <div style="display: flex;">
+        <el-button type="text" size="mini" style="text-align:left;" @click="useTestAccount">
+          不想注册？点我使用测试账号
+        </el-button>
+        <el-button type="text" size="mini" style="text-align:right;" @click="$router.push('/signup')">
+          没有账号？去注册<i class="el-icon-right" />
+        </el-button>
+      </div>
     </el-form>
   </div>
 </template>
@@ -26,8 +31,8 @@ export default {
     return {
       loading: false,
       user: {
-        userName: 'dongsuo',
-        password: '123456'
+        userName: undefined,
+        password: undefined
       }
     }
   },
@@ -40,6 +45,12 @@ export default {
           this.$router.push(this.$route.query.redirect || '/')
         })
       })
+    },
+    useTestAccount() {
+      this.user = {
+        userName: 'dongsuo',
+        password: '123456'
+      }
     }
   }
 }
