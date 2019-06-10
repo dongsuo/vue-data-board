@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div v-loading="loading" class="container">
     <el-card body-style="padding: 0px;" class="dashboard-list" shadow="never">
       <div slot="header">
         <span>仪表盘</span>
@@ -66,7 +66,8 @@ export default {
       dashboardList: [],
       currentDashboard: undefined,
       editDialogVisible: false,
-      dbObj: {}
+      dbObj: {},
+      loading: false
     }
   },
   created() {
@@ -74,14 +75,18 @@ export default {
   },
   methods: {
     getList() {
+      this.loading = true
       dashboardList().then(resp => {
+        this.loading = false
         this.dashboardList = resp.data
         if (this.$route.query.id) {
           this.currentDashboard = this.dashboardList.find(item => item.objectId === this.$route.query.id)
         } else {
           this.currentDashboard = this.dashboardList[0]
         }
-        this.$router.push(`/dashboard?id=${this.currentDashboard.objectId}`)
+        if (this.currentDashboard) {
+          this.$router.push(`/dashboard?id=${this.currentDashboard.objectId}`)
+        }
       })
     },
     switchDb(db) {

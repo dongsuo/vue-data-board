@@ -37,7 +37,7 @@
         :i="item.i"
         @resized="handleResize"
       >
-        <el-card class="visualize-card" body-style="padding: 10px;">
+        <el-card v-loading="chartLoading[item.i]" class="visualize-card" body-style="padding: 10px;">
           <div slot="header" class="operation-bar">
             <div>
               <span>{{ getChartItem(item.i).chart_name }}</span>
@@ -143,7 +143,8 @@ export default {
       mode: 'edit',
       layout: [],
       myChartList: [],
-      showChartList: false
+      showChartList: false,
+      chartLoading: {}
     }
   },
   watch: {
@@ -167,7 +168,7 @@ export default {
         const layout = (this.dashboard.content && this.dashboard.content.layout) || []
         this.charts.forEach((chart, index) => {
           this.$set(this.results, chart.objectId, [])
-
+          this.$set(this.chartLoading, chart.objectId, false)
           chart.content.allSelected = []
           chart.content.allSelected = chart.content.allSelected.concat(chart.content.selectedCalcul).concat(chart.content.selectedDimension)
           if (chart.content.filters) {
@@ -190,7 +191,6 @@ export default {
           return this.charts.find(chart => chart.objectId === item.id)
         })
         this.handleLayoutChange()
-        // console.log('generated', layout)
       })
     },
     getChartItem(id) {
@@ -307,8 +307,9 @@ export default {
       this.$refs[`chartInstance${i}`][0].$children[0].$emit('resized')
     },
     exeSql(sqlSentence, item, index) {
+      this.$set(this.chartLoading, item.objectId, true)
       exeSql(sqlSentence).then(resp => {
-        this.loading = false
+        this.$set(this.chartLoading, item.objectId, false)
         this.$set(this.results, item.objectId, resp.data)
       })
     }
