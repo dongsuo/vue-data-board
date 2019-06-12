@@ -27,7 +27,7 @@
 <script>
 import { tables } from '@/mock/dataSource'
 import draggable from 'vuedraggable'
-import exeSql from '@/mock/exeSql'
+import exeSql from '@/api/exeSql'
 import store from '../store'
 
 export default {

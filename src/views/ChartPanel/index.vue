@@ -119,7 +119,7 @@ import { buildSqlSentence } from '@/utils/buildSentence'
 import { createChart, updateChart, getChartById, chartList, deleteChart } from '@/api/chart'
 import { dashboardList, addChartToDB } from '@/api/dashboard'
 
-import exeSql from '@/mock/exeSql'
+import exeSql from '@/api/exeSql'
 
 import store from './store'
 

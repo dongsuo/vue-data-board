@@ -94,7 +94,7 @@
 import { GridLayout } from 'vue-grid-layout'
 import { GridItem } from 'vue-grid-layout'
 import visualizePanel from '../ChartPanel/components/visualizePanel'
-import exeSql from '@/mock/exeSql'
+import exeSql from '@/api/exeSql'
 import { chartByDashboard, updateDashboard, addChartToDB, unMapChartDb } from '@/api/dashboard'
 import { chartList } from '@/api/chart'
 import { buildSqlSentence, buildFilterSentence } from '@/utils/buildSentence'

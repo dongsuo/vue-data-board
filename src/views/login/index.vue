@@ -25,7 +25,7 @@
   </div>
 </template>
 <script>
-import { login } from '@/mock/user'
+import { login } from '@/api/user'
 export default {
   data() {
     return {

@@ -23,7 +23,7 @@
   </div>
 </template>
 <script>
-import { signup } from '@/mock/user'
+import { signup } from '@/api/user'
 export default {
   data() {
     return {
