@@ -3,15 +3,16 @@
     <el-card body-style="padding:0;" style="margin-bottom: 20px;" class="panel-header">
       <div slot="header" style="display: flex; justify-content:space-between;">
         <span>
-          Editing Chart
-          <el-button size="mini" type="text" @click="viewAllChart">
-            查看全部图表
+          <span v-if="this.$route.params.id !== 'create'">编辑图表</span>
+          <span v-else>创建图表</span>
+          <el-button size="mini" type="text" style="margin-left:10px;" @click="viewAllChart">
+            全部图表
           </el-button>
         </span>
         <span>
           <el-button size="mini" type="primary" style="float: right;margin:0 10px 0 0;" icon="el-icon-download" @click="handleDownload" />
           <el-button v-if="this.$route.params.id !== 'create'" size="mini" type="primary" style="float: right;margin:0 10px 0 0;" @click="handleLinkDB">添加到仪表盘</el-button>
-          <el-button size="mini" type="primary" style="float: right;margin:0 10px 0 0;" icon="el-icon-save" @click="handleSave"> Save </el-button>
+          <el-button size="mini" type="primary" style="float: right;margin:0 10px 0 0;" icon="el-icon-save" @click="handleSave">保存 </el-button>
         </span>
       </div>
     </el-card>
@@ -76,16 +77,19 @@
       <el-table :data="myChartList">
         <el-table-column label="名称" width="200" prop="chart_name" />
         <el-table-column label="描述" prop="desc" />
-        <el-table-column label="操作">
+        <el-table-column label="操作" width="200" align="center">
           <template slot-scope="scope">
-            <el-button size="mini" type="primary" @click="switchChart(scope.row)">
+            <el-button size="mini" type="primary" icon="el-icon-edit" @click="switchChart(scope.row)">
               Edit
+            </el-button>
+            <el-button size="mini" type="danger" icon="el-icon-delete" @click="deleteChart(scope.row)">
+              Delete
             </el-button>
           </template>
         </el-table-column>
       </el-table>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="showMyCharts = false">关 闭</el-button>
+        <el-button type="primary" size="mini" @click="showMyCharts = false">关 闭</el-button>
       </span>
     </el-dialog>
 
@@ -112,7 +116,7 @@ import dataPanel from './components/dataPanel'
 
 import { parseTime } from '@/utils'
 import { buildSqlSentence } from '@/utils/buildSentence'
-import { createChart, updateChart, getChartById, chartList } from '@/api/chart'
+import { createChart, updateChart, getChartById, chartList, deleteChart } from '@/api/chart'
 import { dashboardList, addChartToDB } from '@/api/dashboard'
 
 import exeSql from '@/mock/exeSql'
@@ -226,6 +230,13 @@ export default {
       this.filterStr = value
     },
     handleSave() {
+      if (!this.chartName) {
+        this.$message({
+          type: 'warning',
+          message: '保存失败，请输入图表名称'
+        })
+        return
+      }
       const chartId = this.$route.params.id === 'create' ? undefined : this.$route.params.id
       const obj = {
         dataSrc: this.dataSrc,
@@ -290,6 +301,18 @@ export default {
       this.$confirm('确定要离开当前页面吗?系统可能不会保存您所做的更改。', '提示').then(() => {
         this.$router.push(`/chartpanel/${chart.chart_id}`)
         this.showMyCharts = false
+      })
+    },
+    deleteChart(chart) {
+      this.$confirm(`确定要删除图表：${chart.chart_name}？`, '提示').then(() => {
+        console.log(chart)
+        deleteChart({ id: chart.chart_id }).then(() => {
+          this.viewAllChart()
+          this.$message({
+            type: 'success',
+            message: '删除成功！'
+          })
+        })
       })
     },
     handleDownload() {

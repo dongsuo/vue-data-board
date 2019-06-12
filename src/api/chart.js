@@ -22,6 +22,14 @@ export function getChartById(id) {
   })
 }
 
+export function deleteChart(data) {
+  return fetch({
+    url: `/chart`,
+    method: 'DELETE',
+    data
+  })
+}
+
 export function chartList() {
   return fetch({
     url: `/chart/list`

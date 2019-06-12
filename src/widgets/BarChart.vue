@@ -128,12 +128,15 @@ export default {
 
       const option = {
         legend: {
+          bottom: 0,
           type: 'scroll',
           data: legend
         },
         // color: ['#4097ff'],
         toolbox: {
           show: true,
+          top: 0,
+          itemSize: 12,
           feature: {
             saveAsImage: {
               show: true
@@ -150,9 +153,10 @@ export default {
           }
         },
         grid: {
-          top: '10%',
+          top: '10px',
           left: '80px',
-          bottom: '10%'
+          right: '0',
+          bottom: '45px'
         },
         tooltip: {
           trigger: 'axis',

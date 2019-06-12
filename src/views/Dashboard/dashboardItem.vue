@@ -7,7 +7,7 @@
       </div>
       <div>
         <el-button type="primary" size="mini" @click="handleLinkChart">
-          Add Chart
+          添加图表
         </el-button>
       </div>
     </div>
@@ -41,7 +41,6 @@
           <div slot="header" class="operation-bar">
             <div>
               <span>{{ getChartItem(item.i).chart_name }}</span>
-              <span>{{ getChartItem(item.i).objectId }}</span>
             </div>
             <div>
               <i class="el-icon-edit" @click="handleEdit(getChartItem(item.i))" />
@@ -57,7 +56,7 @@
     </grid-layout>
     <div v-else v-loading="loading" class="welcome-container">
       <el-button type="primary" size="mini" @click="handleLinkChart">
-        Add Chart
+        添加图表
       </el-button>
       <div>
         <el-link type="info" :underline="false">
@@ -77,7 +76,10 @@
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button size="mini" type="primary" :disabled="isExisted(scope.row)" @click="linkChart(scope.row)">
-              Add
+              添加
+            </el-button>
+            <el-button size="mini" type="warning" @click="$router.push(`/chartpanel/${scope.row.chart_id}`)">
+              编辑
             </el-button>
           </template>
         </el-table-column>
@@ -213,6 +215,7 @@ export default {
           bottomItems.push(i)
         }
       })
+      console.log(bottomItems)
       return bottomItems
     },
     generatePosition(chart, layout, index) {

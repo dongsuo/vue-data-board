@@ -109,7 +109,7 @@ export default {
           name: '',
           type: 'pie',
           radius: '55%',
-          center: ['50%', '60%'],
+          center: ['50%', '40%'],
           data: [],
           tooltip: {
             formatter: (params) => {
@@ -141,10 +141,11 @@ export default {
         legend: {
           type: 'scroll',
           data: legend,
-          top: 30
+          bottom: 0
         },
         toolbox: {
           show: true,
+          itemSize: 12,
           feature: {
             saveAsImage: {
               show: true
@@ -159,6 +160,13 @@ export default {
               show: true
             }
           }
+        },
+        grid: {
+          // show: true,
+          top: '10px',
+          left: '80px',
+          right: '0',
+          bottom: '45px'
         },
         tooltip: {
           trigger: 'item'

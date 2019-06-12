@@ -13,10 +13,10 @@
           <img src="./assets/logo-simple.png" style="height: 45px;">
         </el-menu-item>
         <el-menu-item index="/dashboard">
-          Dashboard
+          仪表盘
         </el-menu-item>
         <el-menu-item index="/chartpanel/create">
-          Chart Panel
+          图表
         </el-menu-item>
       </el-menu>
       <el-dropdown class="avatar-container right-menu-item" szie="mini" trigger="hover">

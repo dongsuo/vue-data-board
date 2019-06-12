@@ -58,7 +58,7 @@
 </template>
 <script>
 import dashboardItem from './dashboardItem'
-import { addDashboard, updateDashboard, dashboardList } from '@/api/dashboard'
+import { addDashboard, updateDashboard, dashboardList, deleteDashboard } from '@/api/dashboard'
 export default {
   components: { dashboardItem },
   data() {
@@ -79,8 +79,9 @@ export default {
       dashboardList().then(resp => {
         this.loading = false
         this.dashboardList = resp.data
-        if (this.$route.query.id) {
-          this.currentDashboard = this.dashboardList.find(item => item.objectId === this.$route.query.id)
+        const dashboard = this.dashboardList.find(item => item.objectId === this.$route.query.id)
+        if (dashboard) {
+          this.currentDashboard = dashboard
         } else {
           this.currentDashboard = this.dashboardList[0]
         }
@@ -90,10 +91,14 @@ export default {
       })
     },
     switchDb(db) {
-      this.$confirm('确定要离开当前页面吗?系统可能不会保存您所做的更改。', '提示').then(() => {
-        this.currentDashboard = db
-        this.$router.push(`/dashboard?id=${this.currentDashboard.objectId}`)
-      })
+      if (db.objectId === this.currentDashboard.objectId) {
+        this.getList()
+        return
+      }
+      // this.$confirm('确定要离开当前页面吗?系统可能不会保存您所做的更改。', '提示').then(() => {
+      this.currentDashboard = db
+      this.$router.push(`/dashboard?id=${this.currentDashboard.objectId}`)
+      // })
     },
     addDashboard() {
       this.dbObj = {}
@@ -124,7 +129,15 @@ export default {
       }
     },
     deleteDashboard(db) {
-      console.log(db)
+      this.$confirm(`确定要删除${db.name}仪表盘吗？`, '提示').then(() => {
+        deleteDashboard({ id: db.objectId }).then(() => {
+          this.getList()
+          this.$message({
+            type: 'success',
+            message: '删除成功！'
+          })
+        })
+      })
     }
   }
 }

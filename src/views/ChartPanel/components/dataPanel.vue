@@ -1,19 +1,19 @@
 <template>
   <div>
     <el-form label-position="top" class="panel" style="text-align:left;">
-      <el-form-item v-show="dataSrcVisible" label="Data Source:">
-        <el-select v-model="selectedTable" size="mini" filterable placeholder="Select Data Source" style="width:200px;" clearable @change="handleDataSrcChange">
+      <el-form-item v-show="dataSrcVisible" label="数据源:">
+        <el-select v-model="selectedTable" size="mini" filterable placeholder="选择数据源" style="width:200px;" clearable @change="handleDataSrcChange">
           <el-option v-for="item in dataSourceList" :key="item.tableId" :label="item.name" :value="item.name" />
         </el-select>
       </el-form-item>
 
-      <el-form-item v-show="!dataSrcVisible" label="Current Table">
+      <el-form-item v-show="!dataSrcVisible" label="当前表：">
         <span style="font-size: 12px;margin-right: 5px;">{{ selectedTable }}</span>
         <el-button type="text" size="mini" @click="editDataSrc">
-          {{ selectedTable?'Change':'Select Data Source' }}
+          修改
         </el-button>
       </el-form-item>
-      <el-form-item label="Fields">
+      <el-form-item label="字段：">
         <draggable v-model="tableSchema" v-loading="schemaLoading" :group="{name: 'col',pull: 'clone', put: false}" :move="handleMove">
           <div v-for="col in tableSchema" :key="col.Column" class="drag-list-item">
             <i class="el-icon-rank" style="font-size: 12px;color:#409EFF;" />

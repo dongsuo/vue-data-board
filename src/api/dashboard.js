@@ -22,6 +22,14 @@ export function getdDashboardById(id) {
   })
 }
 
+export function deleteDashboard(data) {
+  return fetch({
+    url: '/dashboard',
+    method: 'DELETE',
+    data
+  })
+}
+
 export function dashboardList() {
   return fetch({
     url: `/dashboard/list`
