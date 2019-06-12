@@ -50,6 +50,12 @@ export function chartByDashboard(id) {
   })
 }
 
+export function dbByChart(id) {
+  return fetch({
+    url: `/chartdashmap/dbbychart?id=${id}`
+  })
+}
+
 export function unMapChartDb(data) {
   return fetch({
     url: '/chartdashmap/unmap',

@@ -96,7 +96,7 @@
     <el-dialog title="Dashboard 列表" :visible.sync="showDashboards">
       <div style="text-align:center;">
         <el-select v-model="selectedDb" size="small">
-          <el-option v-for="item in dashboardList" :key="item.objectId" :label="item.name" :value="item.objectId" />
+          <el-option v-for="item in dashboardList" :key="item.objectId" :label="item.name" :disabled="isDbDisbaled(item)" :value="item.objectId" />
         </el-select>
       </div>
       <span slot="footer" class="dialog-footer">
@@ -117,7 +117,7 @@ import dataPanel from './components/dataPanel'
 import { parseTime } from '@/utils'
 import { buildSqlSentence } from '@/utils/buildSentence'
 import { createChart, updateChart, getChartById, chartList, deleteChart } from '@/api/chart'
-import { dashboardList, addChartToDB } from '@/api/dashboard'
+import { dashboardList, addChartToDB, dbByChart } from '@/api/dashboard'
 
 import exeSql from '@/api/exeSql'
 
@@ -177,6 +177,7 @@ export default {
       immediate: true,
       handler() {
         if (this.$route.params.id !== 'create') {
+          this.getDbByChart(this.$route.params.id)
           getChartById(this.$route.params.id).then(resp => {
             const chart = resp.data
             this.chartName = chart.chart_name
@@ -277,6 +278,14 @@ export default {
         this.dashboardList = resp.data
       })
     },
+    getDbByChart(id) {
+      dbByChart(id).then(resp => {
+        this.linkedDbList = resp.data
+      })
+    },
+    isDbDisbaled(db) {
+      return this.linkedDbList.find(item => item.objectId === db.objectId)
+    },
     linkDb() {
       const data = {
         chart_id: this.$route.params.id,
@@ -284,6 +293,7 @@ export default {
       }
       addChartToDB(data).then(resp => {
         this.showDashboards = false
+        this.getDbByChart(this.$route.params.id)
         this.$message({
           type: 'success',
           message: '添加成功！'
