@@ -10,6 +10,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "core-js": "^2.6.5",
+    "driver.js": "^0.9.6",
     "echarts": "4.1.0",
     "element-ui": "^2.9.1",
     "file-saver": "^2.0.1",

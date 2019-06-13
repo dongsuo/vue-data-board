@@ -3025,6 +3025,11 @@ dotenv@^7.0.0:
   resolved "https://registry.npm.taobao.org/dotenv/download/dotenv-7.0.0.tgz#a2be3cd52736673206e8a85fb5210eea29628e7c"
   integrity sha1-or481Sc2ZzIG6KhftSEO6ilijnw=
 
+driver.js@^0.9.6:
+  version "0.9.6"
+  resolved "https://registry.yarnpkg.com/driver.js/-/driver.js-0.9.6.tgz#1a94d8c16104e05e62d3e467cae3570f999887f1"
+  integrity sha512-pJfX2aKQrhOFxHycXePXFPcZeL8jYwTWfboMq84R10xDS9vo/0s3CHEDyGn8xPRkcepzssrx4dKbuxAON1hm8Q==
+
 duplexer@^0.1.1:
   version "0.1.1"
   resolved "https://registry.npm.taobao.org/duplexer/download/duplexer-0.1.1.tgz#ace6ff808c1ce66b57d1ebf97977acb02334cfc1"

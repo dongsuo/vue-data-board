@@ -18,14 +18,14 @@
     </el-card>
 
     <div class="app-container" style="display: flex;">
-      <el-card style="width:300px;margin-right: 20px;text-align:center;">
+      <el-card id="dataPanel" style="width:300px;margin-right: 20px;text-align:center;">
         <data-panel ref="dataPanel" :result-loading="loading" :data-src="dataSrc" @change="handleDataSrcChange" />
       </el-card>
 
       <el-card style="width: 100%;" body-style="padding: 10px 20px;">
         <div class="form-wrapper">
-          <el-form size="mini" class="analysis-form">
-            <el-form-item label="维度">
+          <el-form id="formPanel" size="mini" class="analysis-form">
+            <el-form-item id="dimensionInput" label="维度">
               <draggable v-model="sharedState.dimensions" :group="{name: 'col',pull: true, put: true}" class="draggable-wrapper" @change="handleDimensionChange">
                 <el-tag v-for="col in sharedState.dimensions" :key="col.Column" class="draggable-item" size="small" closable @close="handleCloseDimensionTag(col)">
                   {{ col.Column }}
@@ -33,7 +33,7 @@
               </draggable>
             </el-form-item>
 
-            <el-form-item label="字段">
+            <el-form-item id="fieldInput" label="字段">
               <draggable v-model="sharedState.caculCols" :group="{name: 'col',pull: true, put: true}" class="draggable-wrapper" @change="handleColChange">
                 <el-tag v-for="col in sharedState.caculCols" :key="col.Column" size="small" closable class="selected-field" @close="handleCloseColTag(col)">
                   <el-select v-model="col.calculFunc" class="draggable-item" size="mini" closable style="background: rgba(0,0,0,0);">
@@ -70,7 +70,7 @@
           </el-form>
         </div>
 
-        <visualize-panel v-loading="loading" :data="result" :chart-type.sync="chartType" :schema="allSelected" />
+        <visualize-panel id="vizPanel" v-loading="loading" :data="result" :chart-type.sync="chartType" :schema="allSelected" />
       </el-card>
     </div>
     <el-dialog title="我的图表" :visible.sync="showMyCharts">
@@ -104,24 +104,40 @@
         <el-button type="primary" size="small" @click="linkDb">确定</el-button>
       </span>
     </el-dialog>
+    <!-- <el-tooltip content="帮助中心" placement="top"> -->
+    <el-dropdown class="help-center-wrapper" placement="top" size="mini" @command="handleHelp">
+      <div class="help-center">
+        <i class="el-icon-question" />
+      </div>
+      <el-dropdown-menu slot="dropdown" size="mini">
+        <el-dropdown-item command="guide">
+          开启新手引导
+        </el-dropdown-item>
+      </el-dropdown-menu>
+    </el-dropdown>
+    <!-- </el-tooltip> -->
   </div>
 </template>
 <script>
 import draggable from 'vuedraggable'
+import Driver from 'driver.js' // import driver.js
+import 'driver.js/dist/driver.min.css' // import driver.js css
 
 import filterPanel from './components/filterPanel'
 import orderPanel from './components/orderPanel'
 import visualizePanel from './components/visualizePanel'
 import dataPanel from './components/dataPanel'
 
-import { parseTime } from '@/utils'
-import { buildSqlSentence } from '@/utils/buildSentence'
 import { createChart, updateChart, getChartById, chartList, deleteChart } from '@/api/chart'
 import { dashboardList, addChartToDB, dbByChart } from '@/api/dashboard'
-
 import exeSql from '@/api/exeSql'
+import { parseTime } from '@/utils'
+import { buildSqlSentence } from '@/utils/buildSentence'
 
+import steps from './guideSteps'
 import store from './store'
+
+const driver = new Driver()
 
 export default {
   name: 'ChartPanel',
@@ -150,7 +166,7 @@ export default {
   },
   computed: {
     allSelected() {
-      return store.state.caculCols.concat(store.state.dimensions)
+      return store.state.dimensions.concat(store.state.caculCols)
     },
     sqlSentence() {
       return buildSqlSentence({
@@ -191,6 +207,14 @@ export default {
             store.setCaculColsAction(content.selectedCalcul)
             store.setDimensionsAction(content.selectedDimension)
             this.$refs.dataPanel.initWithDataSrc(this.dataSrc)
+          })
+        } else {
+          this.chartName = undefined
+          this.chartDesc = undefined
+          store.setCaculColsAction([])
+          store.setDimensionsAction([])
+          this.$nextTick(() => {
+            this.$refs.dataPanel.initWithDataSrc()
           })
         }
       }
@@ -325,6 +349,13 @@ export default {
         })
       })
     },
+    handleHelp(command) {
+      console.log(command)
+      if (command === 'guide') {
+        driver.defineSteps(steps)
+        driver.start()
+      }
+    },
     handleDownload() {
       import('@/vendor/Export2Excel').then(excel => {
         const tHeader = this.schema.map(item => item.name)
@@ -405,4 +436,27 @@ export default {
     }
   }
 }
+.help-center-wrapper {
+  cursor: pointer;
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  .help-center {
+    width: 45px;
+    height: 45px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+    line-height: 45px;
+    font-size: 20px;
+    color: #205cd8;
+    text-align: center;
+    /deep/ .el-dropdown {
+      font-size: 20px;
+      color: #205cd8;
+    }
+
+  }
+}
+
 </style>

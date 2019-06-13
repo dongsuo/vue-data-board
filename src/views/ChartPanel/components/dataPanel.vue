@@ -52,7 +52,7 @@ export default {
   },
   computed: {
     allSelected() {
-      return store.state.caculCols.concat(store.state.dimensions)
+      return store.state.dimensions.concat(store.state.caculCols)
     }
   },
   created() {
@@ -60,8 +60,14 @@ export default {
   },
   methods: {
     initWithDataSrc(dataSrc) {
-      this.selectedTable = dataSrc
-      this.fetchSchema()
+      if (dataSrc) {
+        this.selectedTable = dataSrc
+        this.fetchSchema()
+      } else {
+        this.selectedTable = dataSrc
+        this.tableSchema = []
+        this.dataSrcVisible = true
+      }
     },
     editDataSrc() {
       this.dataSrcVisible = true
