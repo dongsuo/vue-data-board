@@ -6,40 +6,41 @@
         <i class="el-icon-plus" @click="addDashboard" />
       </div>
       <ul>
-        <li v-for="item in dashboardList" :key="item.objectId" :class="{'dashboard-list-item': true, 'high-light-dashboard': currentDashboard.objectId === item.objectId}">
-          <span @click="switchDb(item)">
-            <i class="el-icon-document" />
-            <span>{{ item.name }}</span>
-          </span>
-          <el-dropdown szie="mini" trigger="click" @command="handleCommand">
-            <span class="el-dropdown-link">
-              <i class="el-icon-more" />
+        <draggable v-model="dashboardList" :group="{name: 'dashboard',pull: true}" class="draggable-wrapper" @change="handleOrderChange">
+          <li v-for="item in dashboardList" :key="item.objectId" :class="{'dashboard-list-item': true, 'high-light-dashboard': currentDashboard.objectId === item.objectId}">
+            <span @click="switchDb(item)">
+              <i class="el-icon-document" />
+              <span>{{ item.name }}</span>
             </span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item
-                :command="{
-                  type: 'edit',
-                  target: item
-                }"
-              >
-                编辑
-              </el-dropdown-item>
-              <el-dropdown-item
-                :command="{
-                  type: 'delete',
-                  target: item
-                }"
-              >
-                删除
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-
+            <el-dropdown szie="mini" trigger="click" @command="handleCommand">
+              <span class="el-dropdown-link">
+                <i class="el-icon-more" />
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item
+                  :command="{
+                    type: 'edit',
+                    target: item
+                  }"
+                >
+                  编辑
+                </el-dropdown-item>
+                <el-dropdown-item
+                  :command="{
+                    type: 'delete',
+                    target: item
+                  }"
+                >
+                  删除
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
           <!-- {{ item.desc }} -->
-        </li>
+          </li>
+        </draggable>
       </ul>
     </el-card>
-    <dashboardItem :dashboard="currentDashboard" />
+    <dashboardItem :dashboard="currentDashboard" mode="edit" />
     <el-dialog title="编辑/新建 Dashboard" :visible.sync="editDialogVisible">
       <el-form label-width="100px;">
         <el-form-item label=" Dashboard 名称：">
@@ -57,17 +58,20 @@
   </div>
 </template>
 <script>
+import draggable from 'vuedraggable'
 import dashboardItem from './dashboardItem'
-import { addDashboard, updateDashboard, dashboardList, deleteDashboard } from '@/api/dashboard'
+import { addDashboard, updateDashboard, dashboardList, deleteDashboard, dbOrder } from '@/api/dashboard'
+
 export default {
-  components: { dashboardItem },
+  components: { dashboardItem, draggable },
   data() {
     return {
       dashboardList: [],
       currentDashboard: undefined,
       editDialogVisible: false,
       dbObj: {},
-      loading: false
+      loading: false,
+      isCollapse: false
     }
   },
   created() {
@@ -78,7 +82,10 @@ export default {
       this.loading = true
       dashboardList().then(resp => {
         this.loading = false
-        this.dashboardList = resp.data
+        this.dashboardList = []
+        resp.data.order.forEach(id => {
+          this.dashboardList.push(resp.data.dashboards.find(item => item.objectId === id))
+        })
         const dashboard = this.dashboardList.find(item => item.objectId === this.$route.query.id)
         if (dashboard) {
           this.currentDashboard = dashboard
@@ -127,6 +134,14 @@ export default {
           this.editDialogVisible = false
         })
       }
+    },
+    handleOrderChange(evt) {
+      const data = {
+        order: this.dashboardList.map(item => item.objectId)
+      }
+      dbOrder(data).then(() => {
+        console.log('order')
+      })
     },
     deleteDashboard(db) {
       this.$confirm(`确定要删除${db.name}仪表盘吗？`, '提示').then(() => {

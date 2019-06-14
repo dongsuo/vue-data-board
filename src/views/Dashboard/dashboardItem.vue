@@ -5,7 +5,7 @@
         <span class="db-name">{{ dashboard.name }}</span>
         <span>{{ dashboard.desc }}</span>
       </div>
-      <div>
+      <div v-show="mode === 'edit'">
         <el-button type="primary" size="mini" @click="handleLinkChart">
           添加图表
         </el-button>
@@ -43,8 +43,8 @@
               <span>{{ getChartItem(item.i).chart_name }}</span>
             </div>
             <div>
-              <i class="el-icon-edit" @click="handleEdit(getChartItem(item.i))" />
-              <i class="el-icon-delete" @click="handleDelete(getChartItem(item.i))" />
+              <i v-show="mode === 'edit'" class="el-icon-edit" @click="handleEdit(getChartItem(item.i))" />
+              <i v-show="mode === 'edit'" class="el-icon-delete" @click="handleDelete(getChartItem(item.i))" />
               <el-tooltip :content="getChartItem(item.i).desc" class="item" effect="dark" placement="top-end">
                 <i class="el-icon-info" style="color:#409eff;cursor:pointer;" />
               </el-tooltip>
@@ -135,6 +135,11 @@ export default {
       default: () => {
         return {}
       }
+    },
+    mode: {
+      required: false,
+      type: String,
+      default: 'view'
     }
   },
   data() {
@@ -142,7 +147,6 @@ export default {
       charts: [],
       results: {},
       loading: false,
-      mode: 'edit',
       layout: [],
       myChartList: [],
       showChartList: false,

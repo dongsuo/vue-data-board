@@ -7,6 +7,7 @@ const routes = [
   { path: '/', component: () => import('@/views/index') },
   { path: '/dashboard', component: () => import('@/views/Dashboard') },
   { path: '/chartpanel/:id', component: () => import('@/views/ChartPanel'), meta: { activeMenu: '/chartpanel/create' }},
+  { path: '/fullscreendb/:id', component: () => import('@/views/Dashboard/fullScreenDb') },
   { path: '*', component: () => import('@/views/NotFound') }
 ]
 

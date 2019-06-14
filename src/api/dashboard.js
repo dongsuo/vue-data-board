@@ -63,3 +63,11 @@ export function unMapChartDb(data) {
     data
   })
 }
+
+export function dbOrder(data) {
+  return fetch({
+    url: '/dashboard/order',
+    method: 'POST',
+    data
+  })
+}
