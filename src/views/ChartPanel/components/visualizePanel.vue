@@ -56,11 +56,24 @@ export default {
     }
   },
   computed: {
+    allSelected() {
+      return store.state.caculCols.concat(store.state.dimensions)
+    },
     chartData() {
       return this.currentType.dataTransfer ? this.currentType.dataTransfer(this.data, this.schema) : this.data
     },
     currentType() {
       return chartTypeList.find(item => item.type === this.chartType)
+    }
+  },
+  watch: {
+    allSelected: {
+      deep: true,
+      handler() {
+        if (!this.currentType.matchRule.isUsable(store.state.dimensions, store.state.caculCols)) {
+          this.$emit('update:chartType', 'table')
+        }
+      }
     }
   },
   methods: {

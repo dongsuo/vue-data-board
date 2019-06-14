@@ -38,7 +38,7 @@
               </draggable>
             </el-form-item>
 
-            <el-form-item id="fieldInput" label="字段">
+            <el-form-item id="fieldInput" label="数值">
               <draggable v-model="sharedState.caculCols" :group="{name: 'col',pull: true, put: true}" class="draggable-wrapper" @change="handleColChange">
                 <el-tag v-for="col in sharedState.caculCols" :key="col.Column" size="small" closable class="selected-field" @close="handleCloseColTag(col)">
                   <el-select v-model="col.calculFunc" class="draggable-item" size="mini" closable style="background: rgba(0,0,0,0);">

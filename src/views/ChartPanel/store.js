@@ -2,7 +2,7 @@ import { trimColType } from '@/utils/buildSentence'
 import { sqlFunc } from '@/utils/configs'
 
 const store = {
-  debug: true,
+  debug: process.env.NODE_ENV === 'development',
   state: {
     dimensions: [],
     caculCols: [],
