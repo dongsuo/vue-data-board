@@ -23,7 +23,7 @@ import BarChart from '@/widgets/BarChart'
 import StackBarChart from '@/widgets/StackBarChart'
 import PieChart from '@/widgets/PieChart'
 
-import { chartTypeList } from '@/utils/configs'
+import chartTypeList from '@/utils/chartTypeList'
 import store from '../store'
 
 export default {
