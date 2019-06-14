@@ -3,6 +3,10 @@
     <el-card body-style="padding:0;" style="margin-bottom: 20px;" class="panel-header">
       <div slot="header" style="display: flex; justify-content:space-between;">
         <span>
+          <span class="back-button" @click="$router.go(-1)">
+            <i class="el-icon-back" />
+            <span>返回</span>
+          </span>
           <span v-if="this.$route.params.id !== 'create'">编辑图表</span>
           <span v-else>创建图表</span>
           <el-button size="mini" type="text" style="margin-left:10px;" @click="viewAllChart">
@@ -13,6 +17,7 @@
           <el-button size="mini" type="primary" style="float: right;margin:0 10px 0 0;" icon="el-icon-download" @click="handleDownload" />
           <el-button v-if="this.$route.params.id !== 'create'" size="mini" type="primary" style="float: right;margin:0 10px 0 0;" @click="handleLinkDB">添加到仪表盘</el-button>
           <el-button size="mini" type="primary" style="float: right;margin:0 10px 0 0;" icon="el-icon-save" @click="handleSave">保存 </el-button>
+          <el-button v-if="this.$route.params.id !== 'create'" size="mini" type="primary" style="float: right;margin:0 10px 0 0;" @click="$router.replace(`/chartpanel/create`)">新建图表</el-button>
         </span>
       </div>
     </el-card>
@@ -80,10 +85,10 @@
         <el-table-column label="操作" width="200" align="center">
           <template slot-scope="scope">
             <el-button size="mini" type="primary" icon="el-icon-edit" @click="switchChart(scope.row)">
-              Edit
+              编辑
             </el-button>
             <el-button size="mini" type="danger" icon="el-icon-delete" @click="deleteChart(scope.row)">
-              Delete
+              删除
             </el-button>
           </template>
         </el-table-column>
@@ -288,7 +293,7 @@ export default {
       } else {
         createChart(data).then(resp => {
           // console.log(resp)
-          this.$router.push(`/chartpanel/${resp.data.id}`)
+          this.$router.replace(`/chartpanel/${resp.data.id}`)
           this.$message({
             type: 'success',
             message: '保存成功！'
@@ -325,15 +330,15 @@ export default {
       })
     },
     viewAllChart() {
+      this.showMyCharts = true
       chartList().then(resp => {
         this.myChartList = resp.data
-        this.showMyCharts = true
       })
     },
     switchChart(chart) {
       // console.log(chart)
       this.$confirm('确定要离开当前页面吗?系统可能不会保存您所做的更改。', '提示').then(() => {
-        this.$router.push(`/chartpanel/${chart.chart_id}`)
+        this.$router.replace(`/chartpanel/${chart.chart_id}`)
         this.showMyCharts = false
       })
     },
@@ -383,6 +388,16 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.back-button {
+  display: inline-block;
+  padding-right: 10px;
+  margin-right: 10px;
+  border-right: 1px solid #909090;
+  span {
+    padding: 5px;
+    font-size: 14px;
+  }
+}
 .analysis-form {
   width: 100%;
   padding-right: 20px;

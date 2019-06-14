@@ -219,7 +219,6 @@ export default {
           bottomItems.push(i)
         }
       })
-      console.log(bottomItems)
       return bottomItems
     },
     generatePosition(chart, layout, index) {

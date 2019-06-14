@@ -41,12 +41,12 @@
       </ul>
     </el-card>
     <dashboardItem :dashboard="currentDashboard" mode="edit" />
-    <el-dialog title="编辑/新建 Dashboard" :visible.sync="editDialogVisible">
+    <el-dialog title="编辑/新建看板" :visible.sync="editDialogVisible">
       <el-form label-width="100px;">
-        <el-form-item label=" Dashboard 名称：">
-          <el-input v-model="dbObj.name" size="small" style="width: 250px;" placeholder="请输入 Dashboard 名称" />
+        <el-form-item label=" 看板名称：">
+          <el-input v-model="dbObj.name" size="small" style="width: 250px;" placeholder="请输入看板名称" />
         </el-form-item>
-        <el-form-item label=" Dashboard 描述：">
+        <el-form-item label=" 看板描述：">
           <el-input v-model="dbObj.desc" size="small" style="width: 250px;" placeholder="请输入描述" />
         </el-form-item>
       </el-form>
