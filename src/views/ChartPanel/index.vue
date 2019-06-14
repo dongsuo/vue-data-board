@@ -299,7 +299,7 @@ export default {
     handleLinkDB() {
       this.showDashboards = true
       dashboardList().then(resp => {
-        this.dashboardList = resp.data
+        this.dashboardList = resp.data.dashboards
       })
     },
     getDbByChart(id) {
@@ -308,15 +308,15 @@ export default {
       })
     },
     isDbDisbaled(db) {
-      return this.linkedDbList.find(item => item.objectId === db.objectId)
+      return !!this.linkedDbList.find(item => item.objectId === db.objectId)
     },
     linkDb() {
       const data = {
         chart_id: this.$route.params.id,
         dashboard_id: this.selectedDb
       }
+      this.showDashboards = false
       addChartToDB(data).then(resp => {
-        this.showDashboards = false
         this.getDbByChart(this.$route.params.id)
         this.$message({
           type: 'success',
