@@ -26,6 +26,7 @@
   - Custom databoard layout by drag and drop.
   <img src="https://wpimg.wallstcn.com/fec26f67-f7bd-44c5-9899-3712835f21ad.gif"/>
   <img src="https://wpimg.wallstcn.com/0b158a49-2437-4cfb-a846-0ec76716cc61.gif"/>
+
 ## Install
 
 ```sh
