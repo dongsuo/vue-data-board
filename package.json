@@ -1,11 +1,29 @@
 {
   "name": "vue-data-board",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "private": true,
+  "description": "A Data Analysis Board. A magical DIY databoard tool built with Vue.js. An out-of-box data solution for enterprise data analysis. Support self defined databoard and data report.",
+  "author": "DongSuo <xuxiaofei1.0@outlook.com>",
+  "homepage": "https://islasher.com/vue-data-board/",
+  "license": "MIT",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
+  },
+  "keywords": [
+    "vue",
+    "databoard",
+    "element-ui",
+    "boilerplate",
+    "data-analysis"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dongsuo/vue-data-board.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dongsuo/vue-data-board/issues"
   },
   "dependencies": {
     "axios": "^0.18.0",

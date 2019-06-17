@@ -393,6 +393,7 @@ export default {
   padding-right: 10px;
   margin-right: 10px;
   border-right: 1px solid #909090;
+  cursor: pointer;
   span {
     padding: 5px;
     font-size: 14px;
