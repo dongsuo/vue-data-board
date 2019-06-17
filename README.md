@@ -21,11 +21,15 @@
 ## ✨ Demo
   - Generate graphic by drag and grop.
   <img src="https://wpimg.wallstcn.com/46f4b137-7c26-4d14-8a3f-ba4184bc6f54.gif"/>
+ 
   - Add graphic to databoard.
-  <img src="https://wpimg.wallstcn.com/d0d3a24b-6898-474c-8e6d-510a70165fc7.gif"/>
+
+  ![db](https://user-images.githubusercontent.com/12962696/59582463-f0f80f80-910a-11e9-8fa7-9f2b849b6c29.gif)
+
   - Custom databoard layout by drag and drop.
   <img src="https://wpimg.wallstcn.com/fec26f67-f7bd-44c5-9899-3712835f21ad.gif"/>
-  <img src="https://wpimg.wallstcn.com/0b158a49-2437-4cfb-a846-0ec76716cc61.gif"/>
+  
+  ![drag drop](https://user-images.githubusercontent.com/12962696/59582605-606dff00-910b-11e9-99ad-d24308cb8429.gif)
 
 ## Install
 
