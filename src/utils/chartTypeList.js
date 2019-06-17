@@ -104,7 +104,31 @@ const chartTypeList = [
         return dataItem
       })
       return chartData
-    } }
+    }
+  },
+  { name: '条形图',
+    icon: 'horizontal_bar',
+    type: 'horizontalBar',
+    matchRule: {
+      desc: '1个维度;1或多个数值',
+      isUsable(dimensions, calculs) {
+        return (dimensions.length === 1 || dimensions.length === 2) && (calculs.length >= 1)
+      }
+    },
+    componentName: 'HorizontalBar', dataTransfer(data, schema) {
+      const chartData = data.map(item => {
+        const dataItem = {}
+        schema.forEach(column => {
+          column.name = column.Column
+          column.lable = column.Column
+          column.asxAxis = column.isDimension
+          dataItem[column.Column] = item[column.Column]
+        })
+        return dataItem
+      })
+      return chartData
+    }
+  }
 ]
 
 export default chartTypeList
