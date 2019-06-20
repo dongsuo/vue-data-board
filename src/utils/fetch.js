@@ -24,11 +24,20 @@ fetchInstance.interceptors.response.use(
   response => {
     const res = response.data
     if (res.code !== 20000) {
-      Message({
-        message: res.message,
-        type: 'error',
-        duration: 5 * 1000
-      })
+      if (res.code === 429) {
+        Message({
+          message: '请求过于频繁，请稍后再试',
+          type: 'error',
+          duration: 5 * 1000
+        })
+      } else {
+        Message({
+          message: res.message,
+          type: 'error',
+          duration: 5 * 1000
+        })
+      }
+
       // 40003:登录失败
       if (res.code === 40003) {
         MessageBox.confirm('你已被登出，可以取消继续留在该页面，或者重新登录', '确定登出', {
