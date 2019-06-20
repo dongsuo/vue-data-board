@@ -6,6 +6,9 @@
         <span>{{ dashboard.desc }}</span>
       </div>
       <div v-show="mode === 'edit'">
+        <el-button type="primary" size="mini" @click="handleShare">
+          分享
+        </el-button>
         <el-button type="primary" size="mini" @click="handleLinkChart">
           添加图表
         </el-button>
@@ -54,7 +57,7 @@
         </el-card>
       </grid-item>
     </grid-layout>
-    <div v-else v-loading="loading" class="welcome-container">
+    <div v-if="charts.length === 0 && mode === 'edit'" v-loading="loading" class="welcome-container">
       <el-button type="primary" size="mini" @click="handleLinkChart">
         添加图表
       </el-button>
@@ -251,6 +254,16 @@ export default {
       }
 
       layout.push(posObj)
+    },
+    handleShare() {
+      const h = this.$createElement
+      const link = `http://localhost:8080/vue-data-board#/fullscreendb/${this.dashboard.objectId}`
+      this.$msgbox({
+        title: '分享链接',
+        message: h('p', null, [
+          h('a', { style: 'color: #205cd8', attrs: { href: link, target: '_blank' }}, link)
+        ])
+      })
     },
     handleLinkChart() {
       chartList().then(resp => {
