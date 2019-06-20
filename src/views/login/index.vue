@@ -44,6 +44,8 @@ export default {
         this.$store.dispatch('Login', resp.data.token).then(() => {
           this.$router.push(this.$route.query.redirect || '/')
         })
+      }).catch(() => {
+        this.loading = false
       })
     },
     useTestAccount() {
