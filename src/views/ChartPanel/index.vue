@@ -151,7 +151,6 @@ export default {
     return {
       loading: false,
       result: [],
-      schema: [],
       dataSrc: undefined,
       limit: 200,
       orderByStrs: [],
@@ -191,7 +190,6 @@ export default {
         this.fetchData(value)
       } else {
         this.result = []
-        this.schema = []
       }
     },
     '$route.params.id': {
@@ -363,7 +361,7 @@ export default {
     },
     handleDownload() {
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = this.schema.map(item => item.name)
+        const tHeader = this.allSelected.map(item => item.Column)
         const filterVal = tHeader
         const data = this.formatJson(filterVal, this.result)
         excel.export_json_to_excel({ header: tHeader, data, filename: 'DataExport' + parseTime(Date.now(), '{m}{d}{h}{i}{s}'), autoWidth: true })
