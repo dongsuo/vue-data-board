@@ -1,3 +1,24 @@
+import { sqlFunc } from './configs'
+
+function dataTransfer(data, schema) {
+  const chartData = data.map(item => {
+    const dataItem = {}
+    schema.forEach(column => {
+      // hasxAxis = hasxAxis || column.asxAxis
+      if (column.calculFunc) {
+        column.name = `${column.Column}(${sqlFunc[column.calculFunc]})`
+      } else {
+        column.name = `${column.Column}`
+      }
+      column.lable = column.Column
+      column.asxAxis = column.isDimension
+      dataItem[column.Column] = item[column.Column]
+    })
+    return dataItem
+  })
+  return chartData
+}
+
 const chartTypeList = [
   { name: '表格',
     icon: 'chart_table',
@@ -10,7 +31,19 @@ const chartTypeList = [
     },
     componentName: 'DataTable',
     dataTransfer(data, schema) {
-      return data
+      const chartData = data.map(item => {
+        const dataItem = {}
+        schema.forEach(column => {
+          if (column.calculFunc) {
+            column.name = `${column.Column}(${sqlFunc[column.calculFunc]})`
+          } else {
+            column.name = `${column.Column}`
+          }
+          dataItem[column.Column] = item[column.Column]
+        })
+        return dataItem
+      })
+      return chartData
     }
   },
   { name: '折线图',
@@ -22,20 +55,7 @@ const chartTypeList = [
         return (dimensions.length === 1 || dimensions.length === 2) && (calculs.length >= 1)
       }
     },
-    componentName: 'lineChart', dataTransfer(data, schema) {
-      const chartData = data.map(item => {
-        const dataItem = {}
-        schema.forEach(column => {
-          // hasxAxis = hasxAxis || column.asxAxis
-          column.name = column.Column
-          column.lable = column.Column
-          column.asxAxis = column.isDimension
-          dataItem[column.Column] = item[column.Column]
-        })
-        return dataItem
-      })
-      return chartData
-    }
+    componentName: 'lineChart', dataTransfer
   },
   { name: '柱状图',
     icon: 'chart_bar',
@@ -46,19 +66,8 @@ const chartTypeList = [
         return (dimensions.length === 1 || dimensions.length === 2) && (calculs.length >= 1)
       }
     },
-    componentName: 'BarChart', dataTransfer(data, schema) {
-      const chartData = data.map(item => {
-        const dataItem = {}
-        schema.forEach(column => {
-          column.name = column.Column
-          column.lable = column.Column
-          column.asxAxis = column.isDimension
-          dataItem[column.Column] = item[column.Column]
-        })
-        return dataItem
-      })
-      return chartData
-    }
+    componentName: 'BarChart',
+    dataTransfer
   },
   { name: '堆积柱状图',
     icon: 'stack_bar',
@@ -69,19 +78,8 @@ const chartTypeList = [
         return (dimensions.length === 1 || dimensions.length === 2) && (calculs.length >= 2)
       }
     },
-    componentName: 'StackBarChart', dataTransfer(data, schema) {
-      const chartData = data.map(item => {
-        const dataItem = {}
-        schema.forEach(column => {
-          column.name = column.Column
-          column.lable = column.Column
-          column.asxAxis = column.isDimension
-          dataItem[column.Column] = item[column.Column]
-        })
-        return dataItem
-      })
-      return chartData
-    }
+    componentName: 'StackBarChart',
+    dataTransfer
   },
   { name: '饼图',
     icon: 'chart_pie',
@@ -92,19 +90,8 @@ const chartTypeList = [
         return (dimensions.length === 1 && calculs.length === 1) || (dimensions.length === 0 && calculs.length >= 1)
       }
     },
-    componentName: 'PieChart', dataTransfer(data, schema) {
-      const chartData = data.map(item => {
-        const dataItem = {}
-        schema.forEach(column => {
-          column.name = column.Column
-          column.lable = column.Column
-          column.asxAxis = column.isDimension
-          dataItem[column.Column] = item[column.Column]
-        })
-        return dataItem
-      })
-      return chartData
-    }
+    componentName: 'PieChart',
+    dataTransfer
   },
   { name: '条形图',
     icon: 'horizontal_bar',
@@ -115,19 +102,8 @@ const chartTypeList = [
         return (dimensions.length === 1 || dimensions.length === 2) && (calculs.length >= 1)
       }
     },
-    componentName: 'HorizontalBar', dataTransfer(data, schema) {
-      const chartData = data.map(item => {
-        const dataItem = {}
-        schema.forEach(column => {
-          column.name = column.Column
-          column.lable = column.Column
-          column.asxAxis = column.isDimension
-          dataItem[column.Column] = item[column.Column]
-        })
-        return dataItem
-      })
-      return chartData
-    }
+    componentName: 'HorizontalBar',
+    dataTransfer
   }
 ]
 

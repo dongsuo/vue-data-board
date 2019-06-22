@@ -1,6 +1,6 @@
 <template>
   <el-table :data="data" :style="chartStyle" :height="chartStyle.height" highlight-current-row border stripe :header-cell-style="{padding: '5px 0'}" :cell-style="{padding: '5px 0'}">
-    <el-table-column v-for="item in schema" :key="item.Column" :prop="item.Column" :label="item.Column" align="center" />
+    <el-table-column v-for="item in schema" :key="item.Column" :prop="item.Column" :label="item.name" align="center" />
   </el-table>
 </template>
 <script>
