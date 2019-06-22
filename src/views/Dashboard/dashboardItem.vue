@@ -330,6 +330,8 @@ export default {
       exeSql(sqlSentence).then(resp => {
         this.$set(this.chartLoading, item.objectId, false)
         this.$set(this.results, item.objectId, resp.data)
+      }).catch(() => {
+        this.$set(this.chartLoading, item.objectId, false)
       })
     }
   }
