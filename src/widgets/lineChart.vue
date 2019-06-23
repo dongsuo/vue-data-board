@@ -4,6 +4,7 @@
 <script>
 import echarts from 'echarts'
 require('echarts/theme/macarons')
+import { labelFormatter } from './chartUtils'
 
 export default {
   props: {
@@ -129,7 +130,7 @@ export default {
         grid: {
           // show: true,
           top: '10px',
-          left: '80px',
+          left: '45px',
           right: '0',
           bottom: '45px'
         },
@@ -154,7 +155,8 @@ export default {
         yAxis: {
           axisLabel: {
             show: true,
-            color: '#95a4bd'
+            color: '#95a4bd',
+            formatter: labelFormatter
           },
           axisLine: {
             lineStyle: {

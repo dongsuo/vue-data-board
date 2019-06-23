@@ -53,6 +53,9 @@ export default {
   props: {
     disabled: {
       default: false
+    },
+    filters: {
+      type: Array
     }
   },
   data() {
@@ -74,6 +77,14 @@ export default {
     currentOperatorParamNum() {
       const a = filterOperator.find(item => item.operator === this.filterOperator)
       return a ? a.paramNum : 1
+    }
+  },
+  watch: {
+    filters: {
+      deep: true,
+      handler(value) {
+        this.currentFilters = value
+      }
     }
   },
   methods: {
