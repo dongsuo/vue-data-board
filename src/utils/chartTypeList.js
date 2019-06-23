@@ -6,11 +6,11 @@ function dataTransfer(data, schema) {
     schema.forEach(column => {
       // hasxAxis = hasxAxis || column.asxAxis
       if (column.calculFunc) {
-        column.name = `${column.Column}(${sqlFunc[column.calculFunc]})`
+        column.lable = `${column.Column}(${sqlFunc[column.calculFunc]})`
       } else {
-        column.name = `${column.Column}`
+        column.lable = `${column.Column}`
       }
-      column.lable = column.Column
+      column.name = column.Column
       column.asxAxis = column.isDimension
       dataItem[column.Column] = item[column.Column]
     })
