@@ -26,10 +26,10 @@
     "url": "https://github.com/dongsuo/vue-data-board/issues"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "0.18.1",
     "core-js": "^2.6.5",
     "driver.js": "^0.9.6",
-    "echarts": "4.1.0",
+    "echarts": "^4.2.1",
     "element-ui": "^2.9.1",
     "file-saver": "^2.0.1",
     "js-cookie": "^2.2.0",
