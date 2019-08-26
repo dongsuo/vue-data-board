@@ -257,7 +257,7 @@ export default {
     },
     handleShare() {
       const h = this.$createElement
-      const link = `https://islasher.com/vue-data-board#/fullscreendb/${this.dashboard.objectId}`
+      const link = `${location.host}/vue-data-board#/fullscreendb/${this.dashboard.objectId}`
       this.$msgbox({
         title: '分享链接',
         message: h('p', null, [
