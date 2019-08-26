@@ -101,6 +101,7 @@ import exeSql from '@/api/exeSql'
 import { chartByDashboard, updateDashboard, addChartToDB, unMapChartDb } from '@/api/dashboard'
 import { chartList } from '@/api/chart'
 import { buildSqlSentence, buildFilterSentence } from '@/utils/buildSentence'
+
 function isLineOverLap(line1, line2) {
   const start1 = {
     x: line1[0][0],
@@ -251,6 +252,7 @@ export default {
           i: chart.objectId
         }
       }
+
       layout.push(posObj)
     },
     handleShare() {
