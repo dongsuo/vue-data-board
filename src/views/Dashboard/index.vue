@@ -168,11 +168,11 @@ export default {
 <style lang="scss" scoped>
 .container {
   display: flex;
-  height: calc(100vh - 62px);
+  min-height: calc(100vh - 62px);
   align-items: stretch;
   .dashboard-list {
     width: 250px;
-    height: 100%;
+    min-height: 100%;
     padding: 20px 10px;
     /deep/ .el-card__header {
       div {
