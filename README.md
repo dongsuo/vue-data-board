@@ -36,6 +36,10 @@
 ```sh
 npm install
 ```
+## Document
+
+* [如何启动项目(How to start this project.)](https://www.yuque.com/slasher/ys2kwd/wkai3d)
+
 
 ## Author
 
