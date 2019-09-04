@@ -73,7 +73,7 @@ export default {
       }
     },
     renderChart(data) {
-      if (!this.$refs.chart) return
+      if (!this.$refs.chart || !data[0]) return
       const legend = []
       let seriesObj = {}
       if (this.schema.filter(schema => schema.asxAxis).length === 0) {

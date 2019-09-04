@@ -327,6 +327,11 @@ export default {
     },
     exeSql(sqlSentence, item, index) {
       this.$set(this.chartLoading, item.objectId, true)
+      if (!sqlSentence) {
+        this.$message.warning(`图表：${item.chart_name} 查询语句异常`)
+        this.$set(this.chartLoading, item.objectId, false)
+        return
+      }
       exeSql(sqlSentence).then(resp => {
         this.$set(this.chartLoading, item.objectId, false)
         this.$set(this.results, item.objectId, resp.data)
