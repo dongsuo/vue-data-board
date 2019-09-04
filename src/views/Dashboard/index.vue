@@ -83,9 +83,16 @@ export default {
       dashboardList().then(resp => {
         this.loading = false
         this.dashboardList = []
-        resp.data.order.forEach(id => {
-          this.dashboardList.push(resp.data.dashboards.find(item => item.objectId === id))
+        resp.data.order.forEach((id, index) => {
+          const itemIndex = resp.data.dashboards.findIndex(item => item.objectId === id)
+          if (itemIndex >= 0) {
+            this.dashboardList.push(resp.data.dashboards[itemIndex])
+            resp.data.dashboards.splice(itemIndex, 1)
+          } else {
+            console.log(id, index)
+          }
         })
+        this.dashboardList = this.dashboardList.concat(resp.data.dashboards)
         const dashboard = this.dashboardList.find(item => item.objectId === this.$route.query.id)
         if (dashboard) {
           this.currentDashboard = dashboard
