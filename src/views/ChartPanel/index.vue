@@ -307,7 +307,7 @@ export default {
     },
     getDbByChart(id) {
       dbByChart(id).then(resp => {
-        this.linkedDbList = resp.data
+        this.linkedDbList = resp.data || []
       })
     },
     isDbDisbaled(db) {
