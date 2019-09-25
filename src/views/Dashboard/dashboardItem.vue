@@ -172,7 +172,7 @@ export default {
       this.loading = true
       chartByDashboard(this.dashboard.objectId).then(resp => {
         this.loading = false
-        this.charts = resp.data
+        this.charts = resp.data || []
         let filterStrs = []
         const layout = (this.dashboard.content && this.dashboard.content.layout) || []
         this.charts.forEach((chart, index) => {
