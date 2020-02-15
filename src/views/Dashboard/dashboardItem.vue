@@ -257,7 +257,7 @@ export default {
     },
     handleShare() {
       const h = this.$createElement
-      const link = `${location.host}/vue-data-board#/fullscreendb/${this.dashboard.objectId}`
+      const link = `http://${location.host}/#/fullscreendb/${this.dashboard.objectId}`
       this.$msgbox({
         title: '分享链接',
         message: h('p', null, [

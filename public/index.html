@@ -12,6 +12,12 @@
       <strong>We're sorry but vue-data-board doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
     <div id="app"></div>
+    <script>
+      console.log(window.location.host)
+      if(window.location.host==='islasher.com') {
+        window.location.href = 'https://vislib.best'
+      }
+    </script>
     <!-- built files will be auto injected -->
   </body>
 </html>

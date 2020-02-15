@@ -5,7 +5,7 @@ function resolve(dir) {
 }
 
 module.exports = {
-  publicPath: '/vue-data-board/',
+  publicPath: '/',
   outputDir: 'docs',
   chainWebpack(config) {
     // set svg-sprite-loader
