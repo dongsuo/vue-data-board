@@ -4,11 +4,11 @@
   "private": true,
   "description": "A Data Analysis Board. A magical DIY databoard tool built with Vue.js. An out-of-box data solution for enterprise data analysis. Support self defined databoard and data report.",
   "author": "DongSuo <xuxiaofei1.0@outlook.com>",
-  "homepage": "https://islasher.com/vue-data-board/",
+  "homepage": "https://vislib.best",
   "license": "MIT",
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build --modern",
     "lint": "vue-cli-service lint"
   },
   "keywords": [
@@ -45,8 +45,8 @@
     "@vue/cli-plugin-eslint": "^4.2.3",
     "@vue/cli-service": "^4.2.3",
     "babel-eslint": "^10.0.1",
-    "eslint": "^5.16.0",
-    "eslint-plugin-vue": "^5.2.2",
+    "eslint": "^6.8.0",
+    "eslint-plugin-vue": "^6.2.1",
     "node-sass": "^4.13.1",
     "sass-loader": "^8.0.2",
     "script-loader": "^0.7.2",
