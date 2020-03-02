@@ -19,21 +19,29 @@
           图表
         </el-menu-item>
       </el-menu>
-      <el-dropdown class="avatar-container right-menu-item" szie="mini" trigger="hover">
-        <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
-        </div>
-        <el-dropdown-menu slot="dropdown">
-          <router-link to="/">
-            <el-dropdown-item>
-              首页
+      <div class="nav-bar-left">
+        <a class="nav-bar-link" target="_blank" href="https://github.com/dongsuo/vue-data-board">
+          源码
+        </a>
+        <a class="nav-bar-link" target="_blank" href="https://docs.vislib.best">
+          文档
+        </a>
+        <el-dropdown class="avatar-container right-menu-item" szie="mini" trigger="hover">
+          <div class="avatar-wrapper">
+            <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+          </div>
+          <el-dropdown-menu slot="dropdown">
+            <router-link to="/">
+              <el-dropdown-item>
+                首页
+              </el-dropdown-item>
+            </router-link>
+            <el-dropdown-item divided>
+              <span style="display:block;" @click="logout">退出登录</span>
             </el-dropdown-item>
-          </router-link>
-          <el-dropdown-item divided>
-            <span style="display:block;" @click="logout">退出登录</span>
-          </el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
     </div>
 
     <router-view />
@@ -97,12 +105,29 @@ a,a:hover {
   justify-content: space-between;
   height: 61px;
   border-bottom: 1px solid #EBEEF5;
+  align-items: center;
+  .nav-bar-left {
+      display: flex;
+      align-items: center;
+  }
+  .nav-bar-link {
+    display: inline-block;
+    padding: 0 22px;
+    height: 61px;
+    line-height: 61px;
+    text-align: center;
+    color: rgb(96, 98, 102);
+    font-size: 14px;
+    &:hover {
+      background-color: #ccc;
+    }
+  }
   .avatar-container {
     align-self: center;
-    margin-right: 15px;
     height: 100%;
     height: 45px;
     width: 45px;
+    margin: 0 22px;
     .avatar-wrapper {
       cursor: pointer;
       img {
