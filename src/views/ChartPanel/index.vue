@@ -165,7 +165,8 @@ export default {
       myChartList: [],
       showDashboards: false,
       dashboardList: [],
-      selectedDb: undefined
+      selectedDb: undefined,
+      linkedDbIds: []
     }
   },
   computed: {
@@ -196,7 +197,6 @@ export default {
       immediate: true,
       handler() {
         if (this.$route.params.id !== 'create') {
-          this.getDbByChart(this.$route.params.id)
           getChartById(this.$route.params.id).then(resp => {
             const chart = resp.data
             this.chartName = chart.chart_name
@@ -301,17 +301,18 @@ export default {
     },
     handleLinkDB() {
       this.showDashboards = true
+      this.getDbByChart(this.$route.params.id)
       dashboardList().then(resp => {
         this.dashboardList = resp.data.dashboards
       })
     },
     getDbByChart(id) {
       dbByChart(id).then(resp => {
-        this.linkedDbList = resp.data || []
+        this.linkedDbIds = resp.data || []
       })
     },
     isDbDisbaled(db) {
-      return !!this.linkedDbList.find(item => item.objectId === db.objectId)
+      return !!this.linkedDbIds.find(id => id === db.objectId)
     },
     linkDb() {
       const data = {
