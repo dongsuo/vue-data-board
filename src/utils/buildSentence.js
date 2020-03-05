@@ -43,7 +43,7 @@ export function buildSqlSentence({ dataSrc, selectedCalcul, selectedDimension, o
 
 export function buildFilterSentence(filter) {
   let filterSentence
-  let valueObj
+  let valueObj = filter.value
   if (trimColType(filter.colType).needQuotation) {
     valueObj = addQuotation(filter.value)
   }
