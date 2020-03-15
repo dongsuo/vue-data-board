@@ -2,7 +2,7 @@ import axios from 'axios'
 import { Message, MessageBox } from 'element-ui'
 import Cookies from 'js-cookie'
 import store from '../store'
-
+console.log(process.env.VUE_APP_BASE_API)
 const fetchInstance = axios.create({
   baseURL: process.env.VUE_APP_BASE_API
   // timeout: 2000,

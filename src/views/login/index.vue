@@ -41,9 +41,8 @@ export default {
       this.loading = true
       login(this.user).then(resp => {
         this.loading = false
-        this.$store.dispatch('Login', resp.data.token).then(() => {
-          this.$router.push(this.$route.query.redirect || '/')
-        })
+        console.log(resp)
+        this.$router.push(this.$route.query.redirect || '/')
       }).catch(() => {
         this.loading = false
       })

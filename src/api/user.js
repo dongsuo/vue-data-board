@@ -15,3 +15,17 @@ export function signup(data) {
     data
   })
 }
+
+export function getUserInfo() {
+  return fetch({
+    url: '/user/info',
+    method: 'GET'
+  })
+}
+
+export function logUserOut() {
+  return fetch({
+    url: 'user/logout',
+    method: 'GET'
+  })
+}

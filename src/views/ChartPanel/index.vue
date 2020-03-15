@@ -201,7 +201,7 @@ export default {
             const chart = resp.data
             this.chartName = chart.chart_name
             this.chartDesc = chart.desc
-            const content = chart.content || {}
+            const content = JSON.parse(chart.content) || {}
             this.dataSrc = content.dataSrc
             this.chartType = content.chartType
             this.limit = content.limit || 200
@@ -343,8 +343,7 @@ export default {
     },
     deleteChart(chart) {
       this.$confirm(`确定要删除图表：${chart.chart_name}？`, '提示').then(() => {
-        console.log(chart)
-        deleteChart({ id: chart.chart_id }).then(() => {
+        deleteChart({ chart_id: chart.chart_id }).then(() => {
           this.viewAllChart()
           this.$message({
             type: 'success',
@@ -354,7 +353,6 @@ export default {
       })
     },
     handleHelp(command) {
-      console.log(command)
       if (command === 'guide') {
         driver.defineSteps(steps)
         driver.start()

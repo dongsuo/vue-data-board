@@ -2,7 +2,7 @@ import fetch from '@/utils/fetch'
 
 export function addDashboard(data) {
   return fetch({
-    url: '/dashboard',
+    url: '/dashboard/create',
     method: 'POST',
     data
   })
@@ -10,22 +10,22 @@ export function addDashboard(data) {
 
 export function updateDashboard(data) {
   return fetch({
-    url: '/dashboard',
-    method: 'PUT',
+    url: '/dashboard/update',
+    method: 'POST',
     data
   })
 }
 
 export function getdDashboardById(id) {
   return fetch({
-    url: `/dashboard?id=${id}`
+    url: `/dashboard/${id}`
   })
 }
 
 export function deleteDashboard(data) {
   return fetch({
-    url: '/dashboard',
-    method: 'DELETE',
+    url: `/dashboard/delete`,
+    method: 'post',
     data
   })
 }
@@ -38,7 +38,7 @@ export function dashboardList() {
 
 export function addChartToDB(data) {
   return fetch({
-    url: '/chartdashmap',
+    url: '/chartboard/map',
     method: 'POST',
     data
   })
@@ -46,19 +46,19 @@ export function addChartToDB(data) {
 
 export function chartByDashboard(id) {
   return fetch({
-    url: `/chartdashmap/chartbydashboard?id=${id}`
+    url: `/chartboardmap/chartbydashboard?dashboard_id=${id}`
   })
 }
 
 export function dbByChart(id) {
   return fetch({
-    url: `/chartdashmap/dbbychart?id=${id}`
+    url: `/chartboardmap/boardbychart?chart_id=${id}`
   })
 }
 
 export function unMapChartDb(data) {
   return fetch({
-    url: '/chartdashmap/unmap',
+    url: '/chartboard/unmap',
     method: 'POST',
     data
   })

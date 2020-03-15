@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div v-if="token && showNavBar()" class="nav-bar">
+    <div v-if="username && showNavBar()" class="nav-bar">
       <el-menu
         :default-active="activeMenu"
         :router="true"
@@ -56,7 +56,7 @@ export default {
   computed: {
     ...mapGetters([
       'avatar',
-      'token'
+      'username'
     ]),
     defaultActive() {
       console.log(this.$route.path)
