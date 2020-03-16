@@ -16,6 +16,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import lineChart from '@/widgets/lineChart'
 import DataTable from '@/widgets/DataTable'

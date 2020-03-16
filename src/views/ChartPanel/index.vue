@@ -166,7 +166,8 @@ export default {
       showDashboards: false,
       dashboardList: [],
       selectedDb: undefined,
-      linkedDbIds: []
+      linkedDbIds: [],
+      execInstance: null
     }
   },
   computed: {
@@ -225,8 +226,12 @@ export default {
   },
   methods: {
     fetchData(sqlSentence) {
+      if (this.loading) {
+        this.execInstance && this.execInstance.cancel()
+      }
       this.loading = true
-      exeSql(sqlSentence).then(resp => {
+      this.execInstance = exeSql()
+      this.execInstance.fetch(sqlSentence).then(resp => {
         this.loading = false
         this.result = resp.data
       })
@@ -344,7 +349,12 @@ export default {
     deleteChart(chart) {
       this.$confirm(`确定要删除图表：${chart.chart_name}？`, '提示').then(() => {
         deleteChart({ chart_id: chart.chart_id }).then(() => {
-          this.viewAllChart()
+          if (this.$route.params.id === chart.chart_id) {
+            this.$router.push('/chartpanel/create')
+            this.showMyCharts = false
+          } else {
+            this.viewAllChart()
+          }
           this.$message({
             type: 'success',
             message: '删除成功！'
