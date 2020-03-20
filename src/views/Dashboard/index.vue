@@ -7,7 +7,7 @@
       </div>
       <ul>
         <draggable v-model="dashboardList" :group="{name: 'dashboard',pull: true}" class="draggable-wrapper" @change="handleOrderChange">
-          <li v-for="item in dashboardList" :key="item.objectId" :class="{'dashboard-list-item': true, 'high-light-dashboard': currentDashboard.objectId === item.objectId}">
+          <li v-for="item in dashboardList" :key="item.dashboard_id" :class="{'dashboard-list-item': true, 'high-light-dashboard': currentDashboard.dashboard_id === item.dashboard_id}">
             <span @click="switchDb(item)">
               <i class="el-icon-document" />
               <span>{{ item.name }}</span>
@@ -84,7 +84,7 @@ export default {
         this.loading = false
         this.dashboardList = []
         resp.data.order.forEach((id, index) => {
-          const itemIndex = resp.data.dashboards.findIndex(item => item.objectId === id)
+          const itemIndex = resp.data.dashboards.findIndex(item => item.dashboard_id === id)
           if (itemIndex >= 0) {
             this.dashboardList.push(resp.data.dashboards[itemIndex])
             resp.data.dashboards.splice(itemIndex, 1)
@@ -93,25 +93,25 @@ export default {
           }
         })
         this.dashboardList = this.dashboardList.concat(resp.data.dashboards)
-        const dashboard = this.dashboardList.find(item => item.objectId === this.$route.query.id)
+        const dashboard = this.dashboardList.find(item => item.dashboard_id === this.$route.query.id)
         if (dashboard) {
           this.currentDashboard = dashboard
         } else {
           this.currentDashboard = this.dashboardList[0]
         }
         if (this.currentDashboard) {
-          this.$router.push(`/dashboard?id=${this.currentDashboard.objectId}`)
+          this.$router.push(`/dashboard?id=${this.currentDashboard.dashboard_id}`)
         }
       })
     },
     switchDb(db) {
-      if (db.objectId === this.currentDashboard.objectId) {
+      if (db.dashboard_id === this.currentDashboard.dashboard_id) {
         this.getList()
         return
       }
       // this.$confirm('确定要离开当前页面吗?系统可能不会保存您所做的更改。', '提示').then(() => {
       this.currentDashboard = db
-      this.$router.push(`/dashboard?id=${this.currentDashboard.objectId}`)
+      this.$router.push(`/dashboard?id=${this.currentDashboard.dashboard_id}`)
       // })
     },
     addDashboard() {
@@ -130,7 +130,7 @@ export default {
       }
     },
     handleSubmit() {
-      if (this.dbObj.objectId) {
+      if (this.dbObj.dashboard_id) {
         updateDashboard(this.dbObj).then(resp => {
           this.getList()
           this.editDialogVisible = false
@@ -144,7 +144,7 @@ export default {
     },
     handleOrderChange(evt) {
       const data = {
-        order: this.dashboardList.map(item => item.objectId)
+        order: this.dashboardList.map(item => item.dashboard_id)
       }
       dbOrder(data).then(() => {
         console.log('order')
@@ -152,7 +152,7 @@ export default {
     },
     deleteDashboard(db) {
       this.$confirm(`确定要删除${db.name}仪表盘吗？`, '提示').then(() => {
-        deleteDashboard({ id: db.objectId }).then(() => {
+        deleteDashboard({ dashboard_id: db.dashboard_id }).then(() => {
           this.getList()
           this.$message({
             type: 'success',

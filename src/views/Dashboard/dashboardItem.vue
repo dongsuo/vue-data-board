@@ -157,7 +157,7 @@ export default {
     }
   },
   watch: {
-    'dashboard.objectId': {
+    'dashboard.dashboard_id': {
       immediate: true,
       handler(value) {
         if (!value) return
@@ -170,14 +170,15 @@ export default {
       this.charts = []
       this.layout = []
       this.loading = true
-      chartByDashboard(this.dashboard.objectId).then(resp => {
+      chartByDashboard(this.dashboard.dashboard_id).then(resp => {
         this.loading = false
         this.charts = resp.data || []
         let filterStrs = []
         const layout = (this.dashboard.content && this.dashboard.content.layout) || []
         this.charts.forEach((chart, index) => {
-          this.$set(this.results, chart.objectId, [])
-          this.$set(this.chartLoading, chart.objectId, false)
+          this.$set(this.results, chart.chart_id, [])
+          this.$set(this.chartLoading, chart.chart_id, false)
+          chart.content = JSON.parse(chart.content)
           chart.content.allSelected = []
           chart.content.allSelected = chart.content.allSelected.concat(chart.content.selectedCalcul).concat(chart.content.selectedDimension)
           if (chart.content.filters) {
@@ -192,18 +193,18 @@ export default {
             limit: chart.content.limit
           })
           this.exeSql(sqlSentence, chart, index)
-          if (!layout.find(layoutItem => layoutItem.id === chart.objectId)) {
+          if (!layout.find(layoutItem => layoutItem.id === chart.chart_id)) {
             this.generatePosition(chart, layout, index)
           }
         })
         this.layout = layout.filter(item => {
-          return this.charts.find(chart => chart.objectId === item.id)
+          return this.charts.find(chart => chart.chart_id === item.id)
         })
         this.handleLayoutChange()
       })
     },
     getChartItem(id) {
-      return this.charts.find(chart => chart.objectId === id)
+      return this.charts.find(chart => chart.chart_id === id)
     },
     handleCaculPos(layout) {
       // const layout = JSON.parse(JSON.stringify(layout))
@@ -228,12 +229,12 @@ export default {
       let posObj
       if (layout.length === 0) {
         posObj = {
-          id: chart.objectId,
+          id: chart.chart_id,
           x: 0,
           y: 0,
           w: 12,
           h: 9,
-          i: chart.objectId
+          i: chart.chart_id
         }
       } else {
         const bottomItems = this.handleCaculPos(layout)
@@ -244,12 +245,12 @@ export default {
           return result
         }, bottomItems[0])
         posObj = {
-          id: chart.objectId,
+          id: chart.chart_id,
           x: highestItem.x,
           y: highestItem.yOffSet,
           w: highestItem.w,
           h: 9,
-          i: chart.objectId
+          i: chart.chart_id
         }
       }
 
@@ -257,7 +258,7 @@ export default {
     },
     handleShare() {
       const h = this.$createElement
-      const link = `http://${location.host}/#/fullscreendb/${this.dashboard.objectId}`
+      const link = `http://${location.host}/#/fullscreendb/${this.dashboard.dashboard_id}`
       this.$msgbox({
         title: '分享链接',
         message: h('p', null, [
@@ -274,7 +275,7 @@ export default {
     linkChart(chart) {
       const data = {
         chart_id: chart.chart_id,
-        dashboard_id: this.dashboard.objectId
+        dashboard_id: this.dashboard.dashboard_id
       }
       addChartToDB(data).then(resp => {
         this.showChartList = false
@@ -286,10 +287,10 @@ export default {
       })
     },
     isExisted(chart) {
-      return this.charts.findIndex(item => item.objectId === chart.chart_id) >= 0
+      return this.charts.findIndex(item => item.chart_id === chart.chart_id) >= 0
     },
     handleEdit(chart) {
-      this.$router.push(`/chartpanel/${chart.objectId}`)
+      this.$router.push(`/chartpanel/${chart.chart_id}`)
     },
     handleDelete(chart) {
       this.$confirm('该操作将从该 Dashboard 中删除该图表，并不会删除原图表，确认继续?', '提示', {
@@ -298,13 +299,13 @@ export default {
         type: 'warning'
       }).then(() => {
         // deleteChart(index)
-        const deleteChartIndex = this.layout.findIndex(item => item.id === chart.objectId)
+        const deleteChartIndex = this.layout.findIndex(item => item.id === chart.chart_id)
         const layout = JSON.parse(JSON.stringify(this.layout))
         layout.splice(deleteChartIndex, 1)
         this.dashboard.content.layout = layout
         const data = {
-          chart_id: chart.objectId,
-          dashboard_id: this.dashboard.objectId
+          chart_id: chart.chart_id,
+          dashboard_id: this.dashboard.dashboard_id
         }
         Promise.all([updateDashboard(this.dashboard), unMapChartDb(data)]).then(resp => {
           this.getList()
@@ -326,17 +327,17 @@ export default {
       this.$refs[`chartInstance${i}`][0].$children[0].$emit('resized')
     },
     exeSql(sqlSentence, item, index) {
-      this.$set(this.chartLoading, item.objectId, true)
+      this.$set(this.chartLoading, item.chart_id, true)
       if (!sqlSentence) {
         this.$message.warning(`图表：${item.chart_name} 查询语句异常`)
-        this.$set(this.chartLoading, item.objectId, false)
+        this.$set(this.chartLoading, item.chart_id, false)
         return
       }
-      exeSql(sqlSentence).then(resp => {
-        this.$set(this.chartLoading, item.objectId, false)
-        this.$set(this.results, item.objectId, resp.data)
+      exeSql().fetch(sqlSentence).then(resp => {
+        this.$set(this.chartLoading, item.chart_id, false)
+        this.$set(this.results, item.chart_id, resp.data)
       }).catch(() => {
-        this.$set(this.chartLoading, item.objectId, false)
+        this.$set(this.chartLoading, item.chart_id, false)
       })
     }
   }

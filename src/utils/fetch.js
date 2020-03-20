@@ -58,7 +58,7 @@ fetchInstance.interceptors.response.use(
         type: 'error',
         duration: 5 * 1000
       })
-    } else {
+    } else if (error.message !== 'cancel') {
       console.log('err:' + error)// for debug
       Message({
         message: error.message,

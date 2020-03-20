@@ -44,6 +44,8 @@ export default {
           message: '注册成功，请登录'
         })
         this.$router.push('/login')
+      }).catch(() => {
+        this.loading = false
       })
     }
   }
