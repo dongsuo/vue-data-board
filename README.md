@@ -38,7 +38,7 @@ npm install
 ```
 ## Document
 
-* [如何启动项目(How to start this project.)](https://www.yuque.com/slasher/ys2kwd/kqqi2k)
+* [Document](https://docs.vislib.best)
 
 
 ## Author
