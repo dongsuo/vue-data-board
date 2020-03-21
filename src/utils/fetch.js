@@ -13,6 +13,7 @@ fetchInstance.interceptors.request.use(config => {
   if (store.getters.token) {
     config.headers['DS-Token'] = Cookies.get('DS-Token')
   }
+  config.withCredentials = true
   return config
 }, error => {
   console.log(error) // for debug
