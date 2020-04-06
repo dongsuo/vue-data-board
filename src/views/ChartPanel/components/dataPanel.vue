@@ -7,11 +7,10 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item v-show="!dataSrcVisible" label="当前表：">
+      <el-form-item v-show="!dataSrcVisible" class="data-src" label="当前表：">
         <span style="font-size: 12px;margin-right: 5px;">{{ selectedTable }}</span>
-        <el-button type="text" size="mini" @click="editDataSrc">
-          修改
-        </el-button>
+        <i class="el-icon el-icon-edit" @click="editDataSrc" />
+        <svg-icon icon-class="chart_table" class="data-src-icon" @click.native="viewData" />
       </el-form-item>
       <el-form-item label="字段：">
         <draggable v-model="tableSchema" v-loading="schemaLoading" :group="{name: 'col',pull: 'clone', put: false}" :move="handleMove">
@@ -22,6 +21,12 @@
         </draggable>
       </el-form-item>
     </el-form>
+    <el-dialog title="查看数据" :visible.sync="dialogVisible" width="1000px">
+      <DataTable :data="chartData" :schema="tableSchema" />
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialogVisible = false">关 闭</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -29,9 +34,10 @@ import { tables } from '@/mock/dataSource'
 import draggable from 'vuedraggable'
 import exeSql from '@/api/exeSql'
 import store from '../store'
+import DataTable from '@/widgets/DataTable'
 
 export default {
-  components: { draggable },
+  components: { draggable, DataTable },
   props: {
     resultLoading: {
       default: false
@@ -47,7 +53,9 @@ export default {
       selectedTable: undefined,
       tableSchema: undefined,
       dataSrcVisible: this.$route.params.id === 'create',
-      existWarning: null
+      existWarning: null,
+      dialogVisible: false,
+      chartData: []
     }
   },
   computed: {
@@ -91,22 +99,17 @@ export default {
           return {
             Column: item.Field,
             Type: item.Type,
-            id: index
+            id: index,
+            name: item.Field
           }
         })
         store.setAllColsAction(this.tableSchema)
       })
     },
-    handleCloseDialog(done) {
-      if (this.selectedTable) {
-        done()
-      } else {
-        this.$message({
-          type: 'warning',
-          message: 'You Need Select Data Source First.'
-        })
-        done()
-      }
+    async viewData() {
+      this.dialogVisible = true
+      const { data } = await exeSql().fetch(`select * from ${this.selectedTable} limit 200`)
+      this.chartData = data
     },
     handleMove(evt, originalEvent) {
       if (this.allSelected.find(item => item.Column === evt.draggedContext.element.Column)) {
@@ -127,6 +130,25 @@ export default {
 </script>
 <style lang="scss" scoped>
 .panel {
+  .data-src {
+    .data-src-icon {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      margin: auto;
+      cursor: pointer;
+    }
+    .el-icon-edit {
+      cursor: pointer;
+      font-size: 12px;
+      bottom: -1px;
+      position: relative;
+      &:hover {
+        color: #409EFF;
+      }
+    }
+  }
   /deep/ .el-form-item__label {
     line-height: initial;
   }

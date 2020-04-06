@@ -3,7 +3,7 @@
     <el-card body-style="padding:0;" style="margin-bottom: 20px;" class="panel-header">
       <div slot="header" style="display: flex; justify-content:space-between;">
         <span>
-          <span class="back-button" @click="$router.go(-1)">
+          <span class="back-button" @click="$router.back()">
             <i class="el-icon-back" />
             <span>返回</span>
           </span>
@@ -264,10 +264,11 @@ export default {
     },
     handleSave() {
       if (!this.chartName) {
-        this.$message({
-          type: 'warning',
-          message: '保存失败，请输入图表名称'
-        })
+        this.$message.error('保存失败，请输入图表名称')
+        return
+      }
+      if (this.sharedState.caculCols.length === 0 && this.sharedState.dimensions.length === 0) {
+        this.$message.error('保存失败，请选择数据')
         return
       }
       const chartId = this.$route.params.id === 'create' ? undefined : this.$route.params.id
