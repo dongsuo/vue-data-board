@@ -18,6 +18,9 @@
         <el-menu-item index="/chartpanel/create">
           图表
         </el-menu-item>
+        <el-menu-item index="/source">
+          数据源
+        </el-menu-item>
       </el-menu>
       <div class="nav-bar-left">
         <a class="nav-bar-link" target="_blank" href="https://github.com/dongsuo/vue-data-board">

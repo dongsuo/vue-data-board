@@ -10,6 +10,7 @@ const routes = [
   { path: '/dashboard', component: () => import('@/views/Dashboard') },
   { path: '/chartpanel/:id', component: () => import('@/views/ChartPanel'), meta: { activeMenu: '/chartpanel/create' }},
   { path: '/fullscreendb/:id', component: () => import('@/views/Dashboard/fullScreenDb') },
+  { path: '/source', component: () => import('@/views/source/index') },
   { path: '*', component: () => import('@/views/NotFound') }
 ]
 
