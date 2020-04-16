@@ -85,7 +85,7 @@ export default {
         return
       }
       this.schemaLoading = true
-      exeSql().fetch(`desc ${this.selectedTable}`).then(resp => {
+      exeSql().fetch({ source_id: '', sql: `desc ${this.selectedTable}` }).then(resp => {
         this.schemaLoading = false
         this.tableSchema = resp.data.map((item, index) => {
           return {

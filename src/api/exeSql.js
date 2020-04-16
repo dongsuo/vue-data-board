@@ -7,10 +7,12 @@ export default function() {
     cancel() {
       source.cancel('cancel')
     },
-    fetch(sql) {
+    fetch(data) {
       return fetch({
-        url: `/exesql?sql=${sql}`,
-        cancelToken: source.token
+        url: `/exesql`,
+        cancelToken: source.token,
+        method: 'POST',
+        data
       })
     }
   }

@@ -30,3 +30,18 @@ export function sourceList() {
     method: 'get'
   })
 }
+
+export function tablesByBase(sourceId) {
+  return fetch({
+    url: `source/tables/${sourceId}`,
+    method: 'get'
+  })
+}
+
+export function saveTableConfig(data) {
+  return fetch({
+    url: 'source/tables/save',
+    method: 'POST',
+    data
+  })
+}

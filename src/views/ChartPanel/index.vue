@@ -231,7 +231,7 @@ export default {
       }
       this.loading = true
       this.execInstance = exeSql()
-      this.execInstance.fetch(sqlSentence).then(resp => {
+      this.execInstance.fetch({ source_id: '', sql: sqlSentence }).then(resp => {
         this.loading = false
         this.result = resp.data
       })
