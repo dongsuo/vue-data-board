@@ -45,3 +45,10 @@ export function saveTableConfig(data) {
     data
   })
 }
+
+export function linkedTablesByBase(sourceId) {
+  return fetch({
+    url: `source/tables/${sourceId}/linked`,
+    method: 'get'
+  })
+}

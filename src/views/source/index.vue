@@ -58,12 +58,12 @@
 
     <el-dialog title="Manage Tables" :visible.sync="showTableDialog">
       <el-table :data="tables">
-        <el-table-column label="Table" prop="table" />
-        <el-table-column label="Table" prop="table">
+        <el-table-column label="Table Name" prop="table">
           <template slot-scope="scope">
             <el-input v-model="scope.row.table_alias" size="mini" placeholder="" />
           </template>
         </el-table-column>
+        <el-table-column label="Table" prop="table" />
         <el-table-column label="Linked">
           <template slot-scope="scope">
             <el-switch v-model="scope.row.status" active-text="开启" inactive-text="关闭" />

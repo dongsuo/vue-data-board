@@ -333,7 +333,7 @@ export default {
         this.$set(this.chartLoading, item.chart_id, false)
         return
       }
-      exeSql().fetch({ source_id: '', sql: sqlSentence }).then(resp => {
+      exeSql().fetch({ source_id: item.source_id, sql: sqlSentence }).then(resp => {
         this.$set(this.chartLoading, item.chart_id, false)
         this.$set(this.results, item.chart_id, resp.data)
       }).catch(() => {
