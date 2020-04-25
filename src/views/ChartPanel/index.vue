@@ -151,7 +151,7 @@ export default {
     return {
       loading: false,
       result: [],
-      dataSrc: undefined,
+      dataSrc: {},
       limit: 200,
       orderByStrs: [],
       filterStr: undefined,
@@ -175,8 +175,9 @@ export default {
       return store.state.dimensions.concat(store.state.caculCols)
     },
     sqlSentence() {
+      console.log(this.dataSrc.table)
       return buildSqlSentence({
-        dataSrc: this.dataSrc,
+        dataSrc: this.dataSrc.table,
         selectedCalcul: this.sharedState.caculCols,
         selectedDimension: this.sharedState.dimensions,
         orderByStrs: this.orderByStrs,
@@ -188,7 +189,7 @@ export default {
   watch: {
     sqlSentence(value) {
       if (value) {
-        // console.log(value)
+        console.log(value)
         this.fetchData(value)
       } else {
         this.result = []
@@ -203,7 +204,8 @@ export default {
             this.chartName = chart.chart_name
             this.chartDesc = chart.desc
             const content = JSON.parse(chart.content) || {}
-            this.dataSrc = content.dataSrc
+            this.dataSrc.table = content.dataSrc
+            this.dataSrc.source_id = chart.source_id
             this.chartType = content.chartType
             this.limit = content.limit || 200
             this.currentFilters = content.filters
@@ -231,7 +233,7 @@ export default {
       }
       this.loading = true
       this.execInstance = exeSql()
-      this.execInstance.fetch(sqlSentence).then(resp => {
+      this.execInstance.fetch({ source_id: this.dataSrc.source_id, sql: sqlSentence }).then(resp => {
         this.loading = false
         this.result = resp.data
       })
@@ -272,7 +274,8 @@ export default {
       }
       const chartId = this.$route.params.id === 'create' ? undefined : this.$route.params.id
       const obj = {
-        dataSrc: this.dataSrc,
+        dataSrc: this.dataSrc.table,
+        source_id: this.dataSrc.source_id,
         orderByStrs: this.orderByStrs,
         limit: this.limit,
         selectedCalcul: this.sharedState.caculCols,
@@ -283,6 +286,7 @@ export default {
       const data = {
         id: chartId,
         chart_name: this.chartName,
+        source_id: this.dataSrc.source_id,
         desc: this.chartDesc,
         content: obj
       }
