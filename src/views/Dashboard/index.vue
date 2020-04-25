@@ -100,7 +100,7 @@ export default {
           this.currentDashboard = this.dashboardList[0]
         }
         if (this.currentDashboard) {
-          this.$router.push(`/dashboard?id=${this.currentDashboard.dashboard_id}`)
+          this.$router.push(`/dashboard?id=${this.currentDashboard.dashboard_id}`).catch(_ => {})
         }
       })
     },
