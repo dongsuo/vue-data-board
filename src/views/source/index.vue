@@ -79,7 +79,7 @@
 </template>
 
 <script>
-import { addSource, sourceList, updateSource, deleteSource, tablesByBase, saveTableConfig } from '@/api/source'
+import { addSource, sourceList, updateSource, tablesByBase, saveTableConfig } from '@/api/source'
 import { parseTime } from '@/utils'
 
 export default {
@@ -114,8 +114,9 @@ export default {
     },
     handleDelete(row) {
       this.$confirm('删除后不可撤销，确定要删除该Base的接入?', '确认').then(async() => {
-        await deleteSource({ source_id: row.source_id })
+        // await deleteSource({ source_id: row.source_id })
         this.$message.success('删除成功')
+        this.$message.warn('But You cant really delete it, because we need this demo.')
         this.getList()
       })
     },
