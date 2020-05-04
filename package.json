@@ -26,6 +26,8 @@
     "url": "https://github.com/dongsuo/vue-data-board/issues"
   },
   "dependencies": {
+    "@sentry/browser": "^5.15.5",
+    "@sentry/integrations": "^5.15.5",
     "axios": "0.18.1",
     "core-js": "^3.6.4",
     "driver.js": "^0.9.6",
