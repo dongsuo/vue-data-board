@@ -104,30 +104,61 @@ export default {
         })
         return
       }
-      const legend = []
-      const yAxisData = []
+      let legend = []
+      let yAxisData = []
       const seriesObj = {}
-      this.schema.forEach((schema, index) => {
-        legend.push(schema.label || schema.name)
-        if (!schema.asxAxis) {
-          seriesObj[schema.name] = {
-            name: schema.label || schema.name,
-            data: [],
-            // showSymbol: false,
+      if (this.schema.filter(schema => schema.asxAxis).length === 2) {
+        const dimensions = this.schema.filter(schema => schema.asxAxis)
+        const xAxisName = dimensions[0].name
+        const legendName = dimensions[1].name
+        const valueName = this.schema.find(schema => !schema.asxAxis).name
+        yAxisData = this.data.map(item => {
+          legend.push(item[legendName])
+          return item[xAxisName]
+        })
+        yAxisData = Array.from(new Set(yAxisData))
+        legend = Array.from(new Set(legend))
+        legend = legend.map((legendItem, index) => {
+          const seriesData = yAxisData.map(xAxisValue => {
+            const item = data.find(dataItem => dataItem[legendName] === legendItem && dataItem[xAxisName] === xAxisValue)
+            if (item) {
+              return item[valueName]
+            } else {
+              return '-'
+            }
+          })
+          legendItem += ''
+          seriesObj[legendItem] = {
+            name: legendItem,
+            data: seriesData,
             type: 'bar'
           }
-        }
-        data.forEach(item => {
-          if (schema.asxAxis) {
-            yAxisData.push(item[schema.name])
-          } else {
-            seriesObj[schema.name].data.push(item[schema.name])
-          }
+          return legendItem
         })
-      })
+      } else {
+        this.schema.forEach((schema, index) => {
+          legend.push(schema.label || schema.name)
+          if (!schema.asxAxis) {
+            seriesObj[schema.name] = {
+              name: schema.label || schema.name,
+              data: [],
+              // showSymbol: false,
+              type: 'bar'
+            }
+          }
+          data.forEach(item => {
+            if (schema.asxAxis) {
+              yAxisData.push(item[schema.name])
+            } else {
+              seriesObj[schema.name].data.push(item[schema.name])
+            }
+          })
+        })
+      }
       const option = {
         legend: {
-          // type: 'scroll',
+          bottom: 0,
+          type: 'scroll',
           data: legend
         },
         // color: ['#4097ff'],
@@ -137,72 +168,6 @@ export default {
             saveAsImage: {
               show: true
             },
-            myBarChart: {
-              show: true,
-              title: '饼图',
-              icon: 'path://M27.255467 459.8016A27.2128 27.2128 0 0 0 0 487.005867v508.023466a27.2128 27.2128 0 0 0 27.255467 27.204267H276.138667a27.2128 27.2128 0 0 0 27.264-27.204267V486.997333a27.2128 27.2128 0 0 0-27.264-27.204266H27.255467z m221.627733 508.023467H54.2976V513.988267h194.5856v453.8368zM389.393067 27.195733C389.393067 12.168533 401.578667 0.2304 416.426667 0h249.105066a27.2128 27.2128 0 0 1 27.264 27.204267v967.825066a27.2128 27.2128 0 0 1-27.264 27.204267H416.648533a27.2128 27.2128 0 0 1-27.255466-27.204267V27.204267z m54.2976 27.2128v913.6384h194.5856V54.408533H443.690667z m611.012266 967.594667v0.2304H805.819733a27.2128 27.2128 0 0 1-27.264-27.204267V343.031467a27.2128 27.2128 0 0 1 27.264-27.204267h248.8832a27.2128 27.2128 0 0 1 27.255467 27.204267v651.776a27.2128 27.2128 0 0 1-27.255467 27.204266z m-221.627733-651.776v597.819733h194.5856V370.235733H833.0752z',
-              onclick: () => {
-                this.renderChart(this.data)
-              }
-            },
-            myPieChart: {
-              show: true,
-              title: '饼图',
-              icon: 'path://M902.573115 538.712435l60.111478 4.035763C946.843521 778.856364 748.861121 963.768529 511.970002 963.768529 262.851599 963.768529 60.231471 761.148401 60.231471 512.029998c0-235.205218 183.526247-433.066625 417.888514-450.473605l4.456739 60.051482C279.535621 136.665992 120.463942 308.145945 120.463942 512.029998c0 215.870351 175.635709 391.50706 391.50606 391.50706 205.329969 0 376.869918-160.216612 390.603113-364.824623zM1023.940004 451.737531v30.116235l-30.176232 1.02394h-450.653595V0L573.286409 0.059996C821.801848 0.601965 1023.940004 203.282089 1023.940004 451.737531z m-61.075422-29.091295C949.434369 231.711423 795.661379 76.735504 603.341648 61.556393v361.088843H962.863582z',
-              onclick: () => {
-                // console.log(this.data, this.schema, 'hello piechart')
-                const nameField = this.schema.find(item => item.asxAxis).name
-                const valueField = this.schema.find(item => !item.asxAxis).name
-                const pieSeriesData = this.data.map(item => {
-                  const obj = {
-                    name: item[nameField],
-                    value: item[valueField]
-                  }
-                  return obj
-                })
-                // console.log(pieSeriesData)
-                this.chart.setOption({
-                  legend: {
-                    show: true,
-                    data: pieSeriesData.map(item => item.name),
-                    bottom: 0
-                  },
-                  xAxis: {
-                    show: false
-                  },
-                  yAxis: {
-                    show: false,
-                    silent: true
-                  },
-                  tooltip: {
-                    trigger: 'item',
-                    axisPointer: {
-                      type: 'none'
-                    }
-                  },
-                  series: [{
-                    type: 'pie',
-                    radius: '65%',
-                    center: ['50%', '47%'],
-                    data: pieSeriesData,
-                    label: {
-                      formatter: '{b}: {d}%'
-                    },
-                    itemStyle: {
-                      emphasis: {
-                        shadowBlur: 10,
-                        shadowOffsetX: 0,
-                        shadowColor: 'rgba(0, 0, 0, 0.5)'
-                      }
-                    }
-                  }]
-                })
-              }
-            },
-            // magicType: {
-            //   show: true,
-            //   type: ['bar']
-            // },
             restore: {
               show: true
             },
