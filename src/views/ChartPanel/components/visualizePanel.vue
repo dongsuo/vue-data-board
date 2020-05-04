@@ -6,7 +6,7 @@
         <el-form-item label="图表类型:">
           <div class="chart-type-list">
             <span v-for="item in chartTypeList" :key="item.type" :class="{activedIcon :item.type===chartType, disabledIcon: !isUsable(item)}" @click="switchChartType(item)">
-              <el-tooltip :content="item.matchRule.desc" placement="top">
+              <el-tooltip :content="item.name +': '+item.matchRule.desc" placement="top">
                 <svg-icon class="icon" :icon-class="isUsable(item)? item.icon : (item.icon + '_disabled')" />
               </el-tooltip>
             </span>

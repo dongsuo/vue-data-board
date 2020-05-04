@@ -80,27 +80,57 @@ export default {
     },
     renderChart(data) {
       if (!this.$refs.chart) return
-      const legend = []
+      let legend = []
       const xAxisData = []
       const seriesObj = {}
-      this.schema.forEach((schema, index) => {
-        legend.push(schema.label || schema.name)
-        if (!schema.asxAxis) {
-          seriesObj[schema.name] = {
-            name: schema.label || schema.name,
+      const dimensions = this.schema.filter(schema => schema.asxAxis)
+      const dataSchema = this.schema.filter(schema => !schema.asxAxis)[0]
+      if (dimensions.length === 2) {
+        legend = Array.from(new Set(data.map(item => item[dimensions[1].name])))
+        legend.forEach(item => {
+          seriesObj[item] = {
+            name: item,
             data: [],
             // showSymbol: false,
             type: 'line'
           }
-        }
+        })
+
         data.forEach(item => {
-          if (schema.asxAxis) {
-            xAxisData.push(item[schema.name])
-          } else {
-            seriesObj[schema.name].data.push(item[schema.name])
+          if (!xAxisData.includes(item[dimensions[0].name])) {
+            xAxisData.push(item[dimensions[0].name])
           }
         })
-      })
+        xAxisData.forEach((xAxis, index) => {
+          legend.forEach(item => {
+            const dataItem = data.find(d => {
+              return d[dimensions[0].name] === xAxis && d[dimensions[1].name] === item
+            })
+            seriesObj[item].data[index] = dataItem ? dataItem[dataSchema.name] : undefined
+          })
+        })
+      } else {
+        this.schema.forEach((schema, index) => {
+          legend.push(schema.label || schema.name)
+          if (!schema.asxAxis) {
+            seriesObj[schema.name] = {
+              name: schema.label || schema.name,
+              data: [],
+              // showSymbol: false,
+              type: 'line'
+            }
+          }
+          data.forEach(item => {
+            if (schema.asxAxis && !xAxisData.includes(item[schema.name])) {
+              xAxisData.push(item[schema.name])
+            } else {
+              seriesObj[schema.name].data.push(item[schema.name])
+            }
+          })
+        })
+      }
+
+      console.log(seriesObj)
       const option = {
         legend: {
           bottom: 0,
