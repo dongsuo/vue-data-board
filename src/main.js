@@ -13,11 +13,13 @@ import './icons'
 
 Vue.config.productionTip = false
 
-Sentry.init({
-  release: 'my-project-name@' + process.env.npm_package_version,
-  dsn: 'https://9d8ee0ea1a2749949dd1e641b0f7c071@o286322.ingest.sentry.io/5217806',
-  integrations: [new VueIntegration({ Vue, attachProps: true })]
-})
+if (process.env.NODE_ENV !== 'development') {
+  Sentry.init({
+    release: 'vislib@' + process.env.npm_package_version,
+    dsn: 'https://9d8ee0ea1a2749949dd1e641b0f7c071@o286322.ingest.sentry.io/5217806',
+    integrations: [new VueIntegration({ Vue, attachProps: true })]
+  })
+}
 
 Vue.use(VueRouter)
 Vue.use(ElementUI)
