@@ -33,7 +33,7 @@ router.beforeEach(async(to, from, next) => {
     next()
   } else {
     try {
-      await store.dispatch('GetUserInfo')
+      await store.dispatch('user/GetUserInfo')
       next()
     } catch (err) {
       next(`/login?redirect=${to.path}`) // 否则全部重定向到登录页

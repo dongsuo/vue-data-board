@@ -15,7 +15,6 @@ export default {
     }
   },
   created() {
-    console.log(this.$route.params.id)
     getdDashboardById(this.$route.params.id).then(resp => {
       this.currentDashboard = resp.data
     })

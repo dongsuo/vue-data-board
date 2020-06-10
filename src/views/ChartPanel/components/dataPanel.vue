@@ -1,24 +1,24 @@
 <template>
   <div>
     <el-form label-position="top" class="panel" style="text-align:left;">
-      <el-form-item v-show="dataSrcVisible" label="数据源:">
-        <el-select v-model="selectedBase" size="mini" filterable placeholder="选择数据源" style="width:200px;" clearable @change="handleBaseChange">
+      <el-form-item v-show="dataSrcVisible" :label="$t('common.dataSource')+':'">
+        <el-select v-model="selectedBase" size="mini" filterable :placeholder="$t('dataSource.sourcePlaceholder')" style="width:200px;" clearable @change="handleBaseChange">
           <el-option v-for="item in baseList" :key="item.source_id" :label="item.base_alias || item.database" :value="item.source_id" />
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-select v-show="dataSrcVisible" v-model="selectedTable" :disabled="!selectedBase" size="mini" filterable placeholder="选择数据源" style="width:200px;" clearable @change="handleDataSrcChange">
+        <el-select v-show="dataSrcVisible" v-model="selectedTable" :disabled="!selectedBase" size="mini" filterable :placeholder="$t('dataSource.tablePlaceholder')" style="width:200px;" clearable @change="handleDataSrcChange">
           <el-option v-for="item in tableList" :key="item.table" :label="item.table_alias || item.table" :value="item.table" />
         </el-select>
       </el-form-item>
 
-      <el-form-item v-show="!dataSrcVisible" label="当前表：">
+      <el-form-item v-show="!dataSrcVisible" :label="$t('dataSource.table')+':'">
         <span style="font-size: 12px;margin-right: 5px;">{{ selectedBaseName }}/{{ selectedTableName }}</span>
         <el-button type="text" size="mini" @click="editDataSrc">
-          修改
+          {{ $t('common.edit') }}
         </el-button>
       </el-form-item>
-      <el-form-item label="字段：">
+      <el-form-item :label="$t('dataSource.fields')+':'">
         <draggable v-model="tableSchema" v-loading="schemaLoading" :group="{name: 'col',pull: 'clone', put: false}" :move="handleMove">
           <div v-for="col in tableSchema" :key="col.Column" class="drag-list-item">
             <i class="el-icon-rank" style="font-size: 12px;color:#409EFF;" />
@@ -108,7 +108,6 @@ export default {
       this.dataSrcVisible = false
       this.fetchSchema()
       store.setAllColsAction([])
-      console.log(this.selectedTable, this.selectedBase)
       this.$emit('change', {
         table: this.selectedTable,
         source_id: this.selectedBase
@@ -133,23 +132,12 @@ export default {
         store.setAllColsAction(this.tableSchema)
       })
     },
-    handleCloseDialog(done) {
-      if (this.selectedTable) {
-        done()
-      } else {
-        this.$message({
-          type: 'warning',
-          message: 'You Need Select Data Source First.'
-        })
-        done()
-      }
-    },
     handleMove(evt, originalEvent) {
       if (this.allSelected.find(item => item.Column === evt.draggedContext.element.Column)) {
         if (!this.existWarning) {
           this.existWarning = this.$message({
             type: 'warning',
-            message: 'Field Already Existed',
+            message: this.$t('chart.fieldExisted'),
             onClose: (instance) => {
               this.existWarning = null
             }

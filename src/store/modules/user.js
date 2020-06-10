@@ -2,6 +2,7 @@ import { getToken, setToken } from '@/utils/auth'
 import { getUserInfo, logUserOut } from '@/api/user'
 
 const user = {
+  namespaced: true,
   state: {
     username: undefined,
     token: getToken(),

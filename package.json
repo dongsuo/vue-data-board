@@ -9,6 +9,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --modern",
+    "analyze": "vue-cli-service build --preview --report",
     "lint": "vue-cli-service lint"
   },
   "keywords": [
@@ -37,6 +38,7 @@
     "js-cookie": "^2.2.0",
     "vue": "^2.6.11",
     "vue-grid-layout": "^2.3.4",
+    "vue-i18n": "^8.17.5",
     "vue-router": "^3.1.6",
     "vuedraggable": "^2.21.0",
     "vuex": "^3.1.1",

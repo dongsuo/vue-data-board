@@ -65,13 +65,6 @@ export default {
         this.chart.resize()
       }
     },
-    validateData(data) {
-      if (!Array.isArray(data)) {
-        this.$message({
-          message: '线图的数据格式必须为数组，请检查你的数据格式'
-        })
-      }
-    },
     renderChart(data) {
       if (!this.$refs.chart || !data[0]) return
       const legend = []
