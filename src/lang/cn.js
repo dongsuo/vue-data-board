@@ -117,5 +117,36 @@ export default {
     fieldInputDesc: '字段是指查询数据的内容，如个数、总和等，字段可以有多个，但是不宜过多以免影响可视化效果',
     vizPanel: '可视化面板',
     vizPanelDesc: '这里是可视化面板，可以在此对数据进行可视化，选择不同的图表类型和样式等等'
+  },
+  chartType: {
+    table: '表格',
+    tableDesc: '任意维度和数值',
+    line: '折线图',
+    lineDesc: '1 或 2个维度;1或多个数值',
+    bar: '柱状图',
+    barDesc: '1 或 2个维度;1或多个数值',
+    stackBar: '堆积柱状图',
+    stackBarDesc: '1 或 2个维度;2或多个数值',
+    pie: '饼图',
+    pieDesc: '1个维度1个数值;0个维度多个数值',
+    horizontalBar: '条形图',
+    horizontalBarDesc: '1个维度;1或多个数值'
+  },
+  config: {
+    is: '等于',
+    greater: '大于',
+    less: '小于',
+    greaterOrEqual: '大于等于',
+    lessorEqual: '小于等于',
+    isNot: '不等于',
+    between: '区间',
+    in: 'In',
+    like: '包含',
+    sum: '合计',
+    avg: '平均',
+    max: '最大值',
+    min: '最小值',
+    count: '计数',
+    none: '-'
   }
 }

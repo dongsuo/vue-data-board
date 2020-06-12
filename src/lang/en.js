@@ -117,5 +117,36 @@ export default {
     fieldInputDesc: 'The field refers to the content of the query data, such as the number, sum, etc. There can be multiple fields, but it should not be too much so as not to affect the visualization effect.',
     vizPanel: 'Visualization panel',
     vizPanelDesc: 'Here is the visualization panel, where you can visualize the data, choose different chart types and styles, etc.'
+  },
+  chartType: {
+    table: 'Table',
+    tableDesc: 'Any dimensions and values',
+    line: 'Line Chart',
+    lineDesc: '1 or 2 dimensions;1+ values',
+    bar: 'Bar Chart',
+    barDesc: '1 or 2 dimensions;1+ values',
+    stackBar: 'Stacked Bar Chart',
+    stackBarDesc: '1 or 2 dimensions;2+ values',
+    pie: 'Pie Chart',
+    pieDesc: '1 dimension and 1 value;Or 0 dimension and multiple values',
+    horizontalBar: 'Horizontal Bar Chart',
+    horizontalBarDesc: '1 dimension;1+ values'
+  },
+  config: {
+    is: 'Is ',
+    greater: 'Greater',
+    less: 'Less',
+    greaterOrEqual: 'Greater Or Equal',
+    lessorEqual: 'Less or Equal',
+    isNot: 'Is Not',
+    between: 'Between',
+    in: 'In',
+    like: 'Like',
+    sum: 'Sum',
+    avg: 'Avg',
+    max: 'Max',
+    min: 'Min',
+    count: 'Count',
+    none: '-'
   }
 }

@@ -7,7 +7,7 @@
       {{ $t('chart.addFilters') }}
     </el-button>
 
-    <el-dialog :visible="visible" :title="$t('chart.addFilters')">
+    <el-dialog :visible="visible" width="500px" :title="$t('chart.addFilters')">
       <el-form label-width="150px">
         <el-form-item :label="$t('chart.filterField')" class="el-form-item">
           <el-select v-model="filteCol" size="mini" :placeholder="$t('chart.selectFilterField')" style="width: 220px;">
@@ -17,7 +17,7 @@
 
         <el-form-item :label="$t('chart.filterOperator')" class="el-form-item">
           <el-select v-model="filterOperator" size="mini" :placeholder="$t('chart.selectFilterOperator')" style="width: 220px;">
-            <el-option v-for="item in filterOperatorOpts" :key="item.name" :label="item.name" :value="item.operator" />
+            <el-option v-for="item in filterOperatorOpts" :key="item.name" :label="`${item.name} (${item.operator})`" :value="item.operator" />
           </el-select>
         </el-form-item>
 
@@ -45,7 +45,7 @@
   </el-form-item>
 </template>
 <script>
-import { filterOperator, dataType } from '@/utils/configs'
+import { getFilterOperator, dataType } from '@/utils/configs'
 import { buildFilterSentence } from '@/utils/buildSentence'
 import store from '../store'
 
@@ -61,7 +61,7 @@ export default {
   data() {
     return {
       visible: false,
-      filterOperatorOpts: filterOperator,
+      filterOperatorOpts: getFilterOperator(),
       filterStrs: [],
       filteCol: undefined,
       filterOperator: undefined,
@@ -75,8 +75,11 @@ export default {
   },
   computed: {
     currentOperatorParamNum() {
-      const a = filterOperator.find(item => item.operator === this.filterOperator)
+      const a = getFilterOperator().find(item => item.operator === this.filterOperator)
       return a ? a.paramNum : 1
+    },
+    lang() {
+      return this.$store.state.app.lang
     }
   },
   watch: {
@@ -85,6 +88,9 @@ export default {
       handler(value) {
         this.currentFilters = value
       }
+    },
+    lang(val) {
+      this.filterOperatorOpts = getFilterOperator()
     }
   },
   methods: {
@@ -146,7 +152,7 @@ export default {
       return buildFilterSentence(item)
     },
     operatorParamNum(operator) {
-      const a = filterOperator.find(item => item.operator === operator)
+      const a = getFilterOperator().find(item => item.operator === operator)
       return a ? a.paramNum : 1
     },
     needQuotation(col) {
