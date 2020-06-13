@@ -123,7 +123,6 @@ export default {
         })
       }
 
-      console.log(seriesObj)
       const option = {
         legend: {
           bottom: 0,

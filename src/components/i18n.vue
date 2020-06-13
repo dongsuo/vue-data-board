@@ -44,6 +44,7 @@ export default {
   position: fixed;
   bottom: 100px;
   right: 25px;
+  z-index: 99;
   .lang-label {
     display: inline-block;
     text-align: center;

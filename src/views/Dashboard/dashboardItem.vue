@@ -174,6 +174,7 @@ export default {
         this.loading = false
         this.charts = resp.data || []
         let filterStrs = []
+        console.log(this.dashboard.content)
         const layout = (this.dashboard.content && this.dashboard.content.layout) || []
         this.charts.forEach((chart, index) => {
           this.$set(this.results, chart.chart_id, [])
@@ -193,6 +194,7 @@ export default {
             limit: chart.content.limit
           })
           this.exeSql(sqlSentence, chart, index)
+          console.log(layout.find(layoutItem => layoutItem.id === chart.chart_id))
           if (!layout.find(layoutItem => layoutItem.id === chart.chart_id)) {
             this.generatePosition(chart, layout, index)
           }
@@ -315,6 +317,7 @@ export default {
       })
     },
     handleLayoutChange() {
+      if (this.mode === 'view') return
       this.dashboard.content = this.dashboard.content || {}
       this.dashboard.content.layout = this.layout
       updateDashboard(this.dashboard)
