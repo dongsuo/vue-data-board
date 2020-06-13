@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Message, MessageBox } from 'element-ui'
+import { Message } from 'element-ui'
 import Cookies from 'js-cookie'
 import store from '../store'
 
@@ -30,36 +30,13 @@ fetchInstance.interceptors.response.use(
         type: 'error',
         duration: 5 * 1000
       })
-
-      // 40003:登录失败
-      if (res.code === 40003) {
-        MessageBox.confirm('你已被登出，可以取消继续留在该页面，或者重新登录', '确定登出', {
-          confirmButtonText: '重新登录',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          store.dispatch('FedLogOut').then(() => {
-            location.reload()// 为了重新实例化vue-router对象 避免bug
-          })
-        })
-      } else {
-        // 排除登出的请求错误
-        // Raven.captureException(requestErrorFormat(response))
-        console.log('err:' + requestErrorFormat(response))// for debug
-      }
       return Promise.reject('request error')
     } else {
       return response.data
     }
   },
   error => {
-    if (error.code === 429) {
-      Message({
-        message: '请求过于频繁，请稍后再试',
-        type: 'error',
-        duration: 5 * 1000
-      })
-    } else if (error.message !== 'cancel') {
+    if (error.message !== 'cancel') {
       console.log('err:' + error)// for debug
       Message({
         message: error.message,
@@ -74,11 +51,3 @@ fetchInstance.interceptors.response.use(
 )
 
 export default fetchInstance
-
-function requestErrorFormat(res) {
-  const o = {
-    url: res.request && res.request.responseURL,
-    res: res.request && res.request.response
-  }
-  return JSON.stringify(o)
-}

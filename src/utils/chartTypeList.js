@@ -1,3 +1,4 @@
+import i18n from '@/i18n'
 import { sqlFunc } from './configs'
 
 function dataTransfer(data, schema) {
@@ -20,11 +21,11 @@ function dataTransfer(data, schema) {
 }
 
 const chartTypeList = [
-  { name: '表格',
+  { name: i18n.t('chartType.table'),
     icon: 'chart_table',
     type: 'table',
     matchRule: {
-      desc: '任意维度和数值',
+      desc: i18n.t('chartType.tableDesc'),
       isUsable(dimensions, calculs) {
         return true
       }
@@ -46,22 +47,22 @@ const chartTypeList = [
       return chartData
     }
   },
-  { name: '折线图',
+  { name: i18n.t('chartType.line'),
     icon: 'chart_line',
     type: 'line',
     matchRule: {
-      desc: '1 或 2个维度;1或多个数值',
+      desc: i18n.t('chartType.lineDesc'),
       isUsable(dimensions, calculs) {
         return (dimensions.length === 1 || dimensions.length === 2) && (calculs.length >= 1)
       }
     },
     componentName: 'lineChart', dataTransfer
   },
-  { name: '柱状图',
+  { name: i18n.t('chartType.bar'),
     icon: 'chart_bar',
     type: 'bar',
     matchRule: {
-      desc: '1 或 2个维度;1或多个数值',
+      desc: i18n.t('chartType.barDesc'),
       isUsable(dimensions, calculs) {
         return (dimensions.length === 1 || dimensions.length === 2) && (calculs.length >= 1)
       }
@@ -69,11 +70,11 @@ const chartTypeList = [
     componentName: 'BarChart',
     dataTransfer
   },
-  { name: '堆积柱状图',
+  { name: i18n.t('chartType.stackBar'),
     icon: 'stack_bar',
     type: 'stackBar',
     matchRule: {
-      desc: '1 或 2个维度;2或多个数值',
+      desc: i18n.t('chartType.stackBarDesc'),
       isUsable(dimensions, calculs) {
         return (dimensions.length === 1 || dimensions.length === 2) && (calculs.length >= 2)
       }
@@ -81,11 +82,11 @@ const chartTypeList = [
     componentName: 'StackBarChart',
     dataTransfer
   },
-  { name: '饼图',
+  { name: i18n.t('chartType.pie'),
     icon: 'chart_pie',
     type: 'pie',
     matchRule: {
-      desc: '1个维度1个数值;0个维度多个数值',
+      desc: i18n.t('chartType.pieDesc'),
       isUsable(dimensions, calculs) {
         return (dimensions.length === 1 && calculs.length === 1) || (dimensions.length === 0 && calculs.length >= 1)
       }
@@ -93,11 +94,11 @@ const chartTypeList = [
     componentName: 'PieChart',
     dataTransfer
   },
-  { name: '条形图',
+  { name: i18n.t('chartType.horizontalBar'),
     icon: 'horizontal_bar',
     type: 'horizontalBar',
     matchRule: {
-      desc: '1个维度;1或多个数值',
+      desc: i18n.t('chartType.horizontalBarDesc'),
       isUsable(dimensions, calculs) {
         return (dimensions.length === 1 || dimensions.length === 2) && (calculs.length >= 1)
       }

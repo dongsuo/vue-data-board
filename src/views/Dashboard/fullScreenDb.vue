@@ -15,8 +15,8 @@ export default {
     }
   },
   created() {
-    console.log(this.$route.params.id)
     getdDashboardById(this.$route.params.id).then(resp => {
+      resp.data.content = JSON.parse(resp.data.content)
       this.currentDashboard = resp.data
     })
   }

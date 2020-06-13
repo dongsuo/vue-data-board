@@ -1,9 +1,9 @@
 <template>
   <div class="container">
     <img src="../assets/logo.png">
-    <h1>A Data Analysis Board in Vue.</h1>
+    <h1>{{ $t('home.slogan') }}</h1>
     <el-button type="success" size="large" @click="$router.push('/chartpanel/create')">
-      Get Start
+      {{ $t('home.start') }}
     </el-button>
   </div>
 </template>

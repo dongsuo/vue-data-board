@@ -1,11 +1,11 @@
 <template>
-  <el-form-item label="排序">
+  <el-form-item :label="$t('chart.order')">
     <draggable v-model="orderByStrs" :group="{name: 'orderBy',pull: false, put: false}" style="display: inline-block;">
       <el-tag v-for="(item,index) in orderByStrs" :key="index" closable size="small" @close="handleCloseOrderBy">
         {{ item }}
       </el-tag>
     </draggable>
-    <el-cascader v-model="orderBy" :options="orderByOption" :disabled="orderByOption.length===0" size="mini" placeholder="选择排序方式" style="width: 120px;" @change="handleOrderByChange" />
+    <el-cascader v-model="orderBy" :options="orderByOption" :disabled="orderByOption.length===0" size="mini" :placeholder="$t('chart.selectOrderBy')" style="width: 150px;" @change="handleOrderByChange" />
   </el-form-item>
 </template>
 <script>
@@ -44,10 +44,10 @@ export default {
           label: col.Column,
           children: [{
             value: 'desc',
-            label: '降序'
+            label: this.$t('chart.descend')
           }, {
             value: 'asc',
-            label: '升序'
+            label: this.$t('chart.ascend')
           }]
         }
       })

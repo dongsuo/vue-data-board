@@ -7,10 +7,10 @@
       </div>
       <div v-show="mode === 'edit'">
         <el-button type="primary" size="mini" @click="handleShare">
-          分享
+          {{ $t('common.share') }}
         </el-button>
         <el-button type="primary" size="mini" @click="handleLinkChart">
-          添加图表
+          {{ $t('dashboard.addChart') }}
         </el-button>
       </div>
     </div>
@@ -59,36 +59,36 @@
     </grid-layout>
     <div v-if="charts.length === 0 && mode === 'edit'" v-loading="loading" class="welcome-container">
       <el-button type="primary" size="mini" @click="handleLinkChart">
-        添加图表
+        {{ $t('dashboard.addChart') }}
       </el-button>
       <div>
         <el-link type="info" :underline="false">
           <router-link to="/chartpanel/create">
-            Dashboard Is Empty，Go Create Your First Chart!
+            {{ $t('dashboard.emptyDashboardTip') }}
           </router-link>
         </el-link>
       </div>
     </div>
-    <el-dialog title="我的图表" :visible.sync="showChartList">
+    <el-dialog :title="$t('chart.myChart')" :visible.sync="showChartList">
       <el-button type="primary" size="mini" @click="$router.push('/chartpanel/create')">
-        Create New Chart
+        {{ $t('chart.createNewChart') }}
       </el-button>
       <el-table :data="myChartList">
-        <el-table-column label="名称" width="200" prop="chart_name" />
-        <el-table-column label="描述" prop="desc" />
-        <el-table-column label="操作" align="center">
+        <el-table-column :label="$t('common.name')" width="200" prop="chart_name" />
+        <el-table-column :label="$t('common.desc')" prop="desc" />
+        <el-table-column :label="$t('common.operation')" align="center">
           <template slot-scope="scope">
             <el-button size="mini" type="primary" :disabled="isExisted(scope.row)" @click="linkChart(scope.row)">
-              添加
+              {{ $t('common.add') }}
             </el-button>
             <el-button size="mini" type="warning" @click="$router.push(`/chartpanel/${scope.row.chart_id}`)">
-              编辑
+              {{ $t('common.edit') }}
             </el-button>
           </template>
         </el-table-column>
       </el-table>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" size="small" @click="showChartList = false">关 闭</el-button>
+        <el-button type="primary" size="small" @click="showChartList = false">{{ $t('common.close') }}</el-button>
       </span>
     </el-dialog>
   </div>
@@ -174,6 +174,7 @@ export default {
         this.loading = false
         this.charts = resp.data || []
         let filterStrs = []
+        console.log(this.dashboard.content)
         const layout = (this.dashboard.content && this.dashboard.content.layout) || []
         this.charts.forEach((chart, index) => {
           this.$set(this.results, chart.chart_id, [])
@@ -193,6 +194,7 @@ export default {
             limit: chart.content.limit
           })
           this.exeSql(sqlSentence, chart, index)
+          console.log(layout.find(layoutItem => layoutItem.id === chart.chart_id))
           if (!layout.find(layoutItem => layoutItem.id === chart.chart_id)) {
             this.generatePosition(chart, layout, index)
           }
@@ -260,7 +262,7 @@ export default {
       const h = this.$createElement
       const link = `http://${location.host}/#/fullscreendb/${this.dashboard.dashboard_id}`
       this.$msgbox({
-        title: '分享链接',
+        title: this.$t('dashboard.shareLink'),
         message: h('p', null, [
           h('a', { style: 'color: #205cd8', attrs: { href: link, target: '_blank' }}, link)
         ])
@@ -282,7 +284,7 @@ export default {
         this.getList()
         this.$message({
           type: 'success',
-          message: '添加成功！'
+          message: this.$t('common.saveSuccess')
         })
       })
     },
@@ -293,9 +295,7 @@ export default {
       this.$router.push(`/chartpanel/${chart.chart_id}`)
     },
     handleDelete(chart) {
-      this.$confirm('该操作将从该 Dashboard 中删除该图表，并不会删除原图表，确认继续?', '提示', {
-        confirmButtonText: 'Confirm',
-        cancelButtonText: 'Cancel',
+      this.$confirm(this.$t('dashboard.removeChartConfirm'), this.$t('common.confirm'), {
         type: 'warning'
       }).then(() => {
         // deleteChart(index)
@@ -311,17 +311,16 @@ export default {
           this.getList()
           this.$message({
             type: 'success',
-            message: '删除成功!'
+            message: this.$t('common.deleteSuccess')
           })
         })
       })
     },
     handleLayoutChange() {
+      if (this.mode === 'view') return
       this.dashboard.content = this.dashboard.content || {}
       this.dashboard.content.layout = this.layout
-      updateDashboard(this.dashboard).then(() => {
-        console.log('layout saved')
-      })
+      updateDashboard(this.dashboard)
     },
     handleResize(i, newH, newW, newHPx, newWPx) {
       this.$refs[`chartInstance${i}`][0].$children[0].$emit('resized')
@@ -329,7 +328,7 @@ export default {
     exeSql(sqlSentence, item, index) {
       this.$set(this.chartLoading, item.chart_id, true)
       if (!sqlSentence) {
-        this.$message.warning(`图表：${item.chart_name} 查询语句异常`)
+        this.$message.warning(this.$t('dashboard.chartQueryException', item.chart_name))
         this.$set(this.chartLoading, item.chart_id, false)
         return
       }

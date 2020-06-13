@@ -71,13 +71,6 @@ export default {
         this.chart.resize()
       }
     },
-    validateData(data) {
-      if (!Array.isArray(data)) {
-        this.$message({
-          message: '线图的数据格式必须为数组，请检查你的数据格式'
-        })
-      }
-    },
     renderChart(data) {
       if (!this.$refs.chart) return
       let legend = []
@@ -130,7 +123,6 @@ export default {
         })
       }
 
-      console.log(seriesObj)
       const option = {
         legend: {
           bottom: 0,

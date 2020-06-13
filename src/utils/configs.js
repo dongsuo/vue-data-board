@@ -1,23 +1,33 @@
+import i18n from '@/i18n'
+
 export const sqlFunc = {
-  sum: '合计',
-  avg: '平均',
-  max: '最大值',
-  min: '最小值',
-  count: '计数',
-  none: '无'
+  sum: i18n.t('config.sum'),
+  avg: i18n.t('config.avg'),
+  max: i18n.t('config.max'),
+  min: i18n.t('config.min'),
+  count: i18n.t('config.count'),
+  none: i18n.t('config.none')
 }
 
 export const filterOperator = [
-  { operator: '=', name: '等于', paramNum: 1 },
-  { operator: '>', name: '大于', paramNum: 1 },
-  { operator: '<', name: '小于', paramNum: 1 },
-  { operator: '>=', name: '大于等于', paramNum: 1 },
-  { operator: '<=', name: '小于等于', paramNum: 1 },
-  { operator: '!=', name: '不等于', paramNum: 1 },
-  { operator: 'BETWEEN', name: '区间', paramNum: 2 },
-  { operator: 'in', name: 'In', paramNum: -1 },
-  { operator: 'like', name: ' 匹配', paramNum: 1 }
+  { operator: '=', name: 'config.is', paramNum: 1 },
+  { operator: '>', name: 'config.greater', paramNum: 1 },
+  { operator: '<', name: 'config.less', paramNum: 1 },
+  { operator: '>=', name: 'config.greaterOrEqual', paramNum: 1 },
+  { operator: '<=', name: 'config.lessorEqual', paramNum: 1 },
+  { operator: '!=', name: 'config.isNot', paramNum: 1 },
+  { operator: 'BETWEEN', name: 'config.between', paramNum: 2 },
+  { operator: 'IN', name: 'config.in', paramNum: -1 },
+  { operator: 'LIKE', name: 'config.like', paramNum: 1 }
 ]
+
+export function getFilterOperator() {
+  return filterOperator.map(item => {
+    const i18nItem = { ...item }
+    i18nItem.name = i18n.t(item.name)
+    return i18nItem
+  })
+}
 
 export const dataType = [
   { name: 'tinyint', needQuotation: false, availableFunc: ['sum', 'avg', 'max', 'min', 'count', 'none'] },

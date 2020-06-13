@@ -4,20 +4,20 @@
     <!-- <h1>A Data Analysis Board in Vue.</h1> -->
     <el-form class="form-wrapper">
       <el-form-item>
-        <el-input v-model="user.email" type="email" placeholder="请输入邮箱" />
+        <el-input v-model="user.email" type="email" :placeholder=" $t('auth.emailPlaceholder')" />
       </el-form-item>
       <el-form-item>
-        <el-input v-model="user.userName" type="text" placeholder="请输入用户名" />
+        <el-input v-model="user.userName" type="text" :placeholder=" $t('auth.usernamePlaceholder')" />
       </el-form-item>
       <el-form-item>
-        <el-input v-model="user.password" type="password" placeholder="请输入密码" />
+        <el-input v-model="user.password" type="password" :placeholder=" $t('auth.passwordPlaceholder')" />
       </el-form-item>
       <el-button :loading="loading" type="primary" @click="handleLogin">
-        注册
+        {{ $t('auth.signIn') }}
       </el-button>
       <el-divider />
       <el-button type="text" size="mini" @click="$router.push('/login')">
-        已有账号？去登录
+        {{ $t('auth.toSignIn') }}
       </el-button>
     </el-form>
   </div>
@@ -41,7 +41,7 @@ export default {
         this.loading = false
         this.$message({
           type: 'success',
-          message: '注册成功，请登录'
+          message: this.$t('auth.signUpSuccess')
         })
         this.$router.push('/login')
       }).catch(() => {

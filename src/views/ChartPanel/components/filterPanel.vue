@@ -1,51 +1,51 @@
 <template>
-  <el-form-item label="筛选">
+  <el-form-item :label="$t('chart.filters')">
     <el-tag v-for="(item,index) in currentFilters" :key="index" closable @close="handleClosefilter(index)" @click="handleEditFilter(item)">
       {{ generateFilterSentence(item) }}
     </el-tag>
-    <el-button :disabled="disabled" type="primary" size="mini" style="width: 120px;" @click="visible=true">
-      添加筛选条件
+    <el-button :disabled="disabled" type="primary" size="mini" style="width: 150px;" @click="visible=true">
+      {{ $t('chart.addFilters') }}
     </el-button>
 
-    <el-dialog :visible="visible" title="添加筛选项">
+    <el-dialog :visible="visible" width="500px" :title="$t('chart.addFilters')">
       <el-form label-width="150px">
-        <el-form-item label="请选择筛选字段" class="el-form-item">
-          <el-select v-model="filteCol" size="mini" placeholder="选择筛选字段">
+        <el-form-item :label="$t('chart.filterField')" class="el-form-item">
+          <el-select v-model="filteCol" size="mini" :placeholder="$t('chart.selectFilterField')" style="width: 220px;">
             <el-option v-for="item in sharedState.allCols" :key="item.Column" :label="item.Column" :value="item.Column" />
           </el-select>
         </el-form-item>
 
-        <el-form-item label="请选择筛选方式" class="el-form-item">
-          <el-select v-model="filterOperator" size="mini" placeholder="选择筛选方式">
-            <el-option v-for="item in filterOperatorOpts" :key="item.name" :label="item.name" :value="item.operator" />
+        <el-form-item :label="$t('chart.filterOperator')" class="el-form-item">
+          <el-select v-model="filterOperator" size="mini" :placeholder="$t('chart.selectFilterOperator')" style="width: 220px;">
+            <el-option v-for="item in filterOperatorOpts" :key="item.name" :label="`${item.name} (${item.operator})`" :value="item.operator" />
           </el-select>
         </el-form-item>
 
-        <el-form-item v-if="currentOperatorParamNum===-1" label="请输入判断条件值" class="el-form-item">
+        <el-form-item v-if="currentOperatorParamNum===-1" :label="$t('chart.comparedValue')" class="el-form-item">
           <el-tag v-for="(item,index) in arrValue" :key="index" closable @close="handleRemove">
             {{ item }}
           </el-tag>
-          <el-input v-model="value3" size="mini" type="text" style="width: 200px;" />
+          <el-input v-model="value3" size="mini" type="text" style="width: 220px;" />
           <el-button size="mini" type="primary" @click="handleAdd">
             Add
           </el-button>
         </el-form-item>
 
-        <el-form-item v-else label="请输入判断条件值" class="el-form-item">
-          <el-input v-model="value1" size="mini" type="text" style="width: 200px;" />
+        <el-form-item v-else :label="$t('chart.comparedValue')" class="el-form-item">
+          <el-input v-model="value1" size="mini" type="text" style="width: 220px;" />
           <span v-show="currentOperatorParamNum===2">~</span>
-          <el-input v-show="currentOperatorParamNum===2" v-model="value2" style="width: 200px;" type="text" />
+          <el-input v-show="currentOperatorParamNum===2" v-model="value2" style="width: 220px;" type="text" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button size="mini" @click="visible=false">Cancel</el-button>
-        <el-button size="mini" type="primary" @click="handleConfirm">Confirm</el-button>
+        <el-button size="mini" @click="visible=false">{{ $t('common.cancel') }}</el-button>
+        <el-button size="mini" type="primary" @click="handleConfirm">{{ $t('common.confirm') }}</el-button>
       </span>
     </el-dialog>
   </el-form-item>
 </template>
 <script>
-import { filterOperator, dataType } from '@/utils/configs'
+import { getFilterOperator, dataType } from '@/utils/configs'
 import { buildFilterSentence } from '@/utils/buildSentence'
 import store from '../store'
 
@@ -61,7 +61,7 @@ export default {
   data() {
     return {
       visible: false,
-      filterOperatorOpts: filterOperator,
+      filterOperatorOpts: getFilterOperator(),
       filterStrs: [],
       filteCol: undefined,
       filterOperator: undefined,
@@ -75,8 +75,11 @@ export default {
   },
   computed: {
     currentOperatorParamNum() {
-      const a = filterOperator.find(item => item.operator === this.filterOperator)
+      const a = getFilterOperator().find(item => item.operator === this.filterOperator)
       return a ? a.paramNum : 1
+    },
+    lang() {
+      return this.$store.state.app.lang
     }
   },
   watch: {
@@ -85,6 +88,9 @@ export default {
       handler(value) {
         this.currentFilters = value
       }
+    },
+    lang(val) {
+      this.filterOperatorOpts = getFilterOperator()
     }
   },
   methods: {
@@ -111,7 +117,7 @@ export default {
       if (!this.filteCol || !this.filterOperator) {
         this.$message({
           type: 'warning',
-          message: '筛选字段和筛选方式不可为空'
+          message: this.$t('chart.filterCantBeEmpty')
         })
         return
       }
@@ -146,7 +152,7 @@ export default {
       return buildFilterSentence(item)
     },
     operatorParamNum(operator) {
-      const a = filterOperator.find(item => item.operator === operator)
+      const a = getFilterOperator().find(item => item.operator === operator)
       return a ? a.paramNum : 1
     },
     needQuotation(col) {

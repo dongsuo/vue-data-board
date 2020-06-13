@@ -4,21 +4,21 @@
     <!-- <h1>A Data Analysis Board in Vue.</h1> -->
     <el-form class="form-wrapper">
       <el-form-item>
-        <el-input v-model="user.userName" type="text" placeholder="请输入用户名" />
+        <el-input v-model="user.userName" type="text" :placeholder=" $t('auth.usernamePlaceholder')" />
       </el-form-item>
       <el-form-item>
-        <el-input v-model="user.password" type="password" placeholder="请输入密码" />
+        <el-input v-model="user.password" type="password" :placeholder=" $t('auth.passwordPlaceholder')" />
       </el-form-item>
       <el-button :loading="loading" type="primary" @click="handleLogin">
-        登录
+        {{ $t('auth.signIn') }}
       </el-button>
       <el-divider />
       <div style="display: flex;">
         <el-button type="text" size="mini" style="text-align:left;" @click="useTestAccount">
-          不想注册？点我使用测试账号
+          {{ $t('auth.useTestAccount') }}
         </el-button>
         <el-button type="text" size="mini" style="text-align:right;" @click="$router.push('/signup')">
-          没有账号？去注册<i class="el-icon-right" />
+          {{ $t('auth.toSignUp') }}<i class="el-icon-right" />
         </el-button>
       </div>
     </el-form>
@@ -26,6 +26,7 @@
 </template>
 <script>
 import { login } from '@/api/user'
+
 export default {
   data() {
     return {

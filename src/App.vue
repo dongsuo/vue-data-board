@@ -13,21 +13,21 @@
           <img src="./assets/logo-simple.png" style="height: 45px;">
         </el-menu-item>
         <el-menu-item index="/dashboard">
-          仪表盘
+          {{ $t('common.dashboard') }}
         </el-menu-item>
         <el-menu-item index="/chartpanel/create">
-          图表
+          {{ $t('common.chart') }}
         </el-menu-item>
         <el-menu-item index="/source">
-          数据源
+          {{ $t('common.dataSource') }}
         </el-menu-item>
       </el-menu>
       <div class="nav-bar-left">
         <a class="nav-bar-link" target="_blank" href="https://github.com/dongsuo/vue-data-board">
-          源码
+          Github
         </a>
         <a class="nav-bar-link" target="_blank" href="https://docs.vislib.best">
-          文档
+          {{ $t('navbar.document') }}
         </a>
         <el-dropdown class="avatar-container right-menu-item" szie="mini" trigger="hover">
           <div class="avatar-wrapper">
@@ -36,33 +36,34 @@
           <el-dropdown-menu slot="dropdown">
             <router-link to="/">
               <el-dropdown-item>
-                首页
+                {{ $t('navbar.home') }}
               </el-dropdown-item>
             </router-link>
             <el-dropdown-item divided>
-              <span style="display:block;" @click="logout">退出登录</span>
+              <span style="display:block;" @click="logout"> {{ $t('auth.logout') }}</span>
             </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
     </div>
-
+    <i18n />
     <router-view />
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import i18n from '@/components/i18n'
 
 export default {
   name: 'App',
+  components: { i18n },
   computed: {
     ...mapGetters([
       'avatar',
       'username'
     ]),
     defaultActive() {
-      console.log(this.$route.path)
       return this.$route.path
     },
     activeMenu() {

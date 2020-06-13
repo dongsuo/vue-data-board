@@ -2,7 +2,7 @@
   <div v-loading="loading" class="container">
     <el-card body-style="padding: 0px;" class="dashboard-list" shadow="never">
       <div slot="header">
-        <span>仪表盘</span>
+        <span>{{ $t('common.dashboard') }}</span>
         <i class="el-icon-plus" @click="addDashboard" />
       </div>
       <ul>
@@ -23,7 +23,7 @@
                     target: item
                   }"
                 >
-                  编辑
+                  {{ $t('common.edit') }}
                 </el-dropdown-item>
                 <el-dropdown-item
                   :command="{
@@ -31,7 +31,7 @@
                     target: item
                   }"
                 >
-                  删除
+                  {{ $t('common.delete') }}
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -41,18 +41,18 @@
       </ul>
     </el-card>
     <dashboardItem :dashboard="currentDashboard" mode="edit" />
-    <el-dialog title="编辑/新建看板" :visible.sync="editDialogVisible">
-      <el-form label-width="100px;">
-        <el-form-item label=" 看板名称：">
-          <el-input v-model="dbObj.name" size="small" style="width: 250px;" placeholder="请输入看板名称" />
+    <el-dialog :title="$t('dashboard.addOrEditDashboard')" width="750px" :visible.sync="editDialogVisible">
+      <el-form label-width="160px">
+        <el-form-item :label="$t('dashboard.dashboardName')">
+          <el-input v-model="dbObj.name" size="small" style="width: 450px;" :placeholder="$t('dashboard.dashboardNamePlaceholder')" />
         </el-form-item>
-        <el-form-item label=" 看板描述：">
-          <el-input v-model="dbObj.desc" size="small" style="width: 250px;" placeholder="请输入描述" />
+        <el-form-item :label="$t('dashboard.dashboardDesc')">
+          <el-input v-model="dbObj.desc" type="textarea" :rows="5" size="small" style="width: 450px;" :placeholder="$t('dashboard.dashboardDescPlaceholder')" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" size="small" @click="editDialogVisible = false">取消</el-button>
-        <el-button type="primary" size="small" @click="handleSubmit">确定</el-button>
+        <el-button type="primary" size="small" @click="editDialogVisible = false"> {{ $t('common.cancel') }}</el-button>
+        <el-button type="primary" size="small" @click="handleSubmit"> {{ $t('common.confirm') }}</el-button>
       </span>
     </el-dialog>
   </div>
@@ -146,17 +146,15 @@ export default {
       const data = {
         order: this.dashboardList.map(item => item.dashboard_id)
       }
-      dbOrder(data).then(() => {
-        console.log('order')
-      })
+      dbOrder(data)
     },
     deleteDashboard(db) {
-      this.$confirm(`确定要删除${db.name}仪表盘吗？`, '提示').then(() => {
+      this.$confirm(this.$t('dashboard.deleteConfirm', db.name), this.$t('common.confirm')).then(() => {
         deleteDashboard({ dashboard_id: db.dashboard_id }).then(() => {
           this.getList()
           this.$message({
             type: 'success',
-            message: '删除成功！'
+            message: this.$t('common.deleteSuccess')
           })
         })
       })
