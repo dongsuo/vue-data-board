@@ -17,6 +17,7 @@ const routes = [
 export const menuRoutes = routes
 
 const router = new VueRouter({
+  mode: 'history',
   routes
 })
 
