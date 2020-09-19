@@ -116,7 +116,7 @@ export default {
       this.$confirm(this.$t('dataSource.deleteConfirm'), this.$t('common.confirm')).then(async() => {
         // await deleteSource({ source_id: row.source_id })
         this.$message.success(this.$t('common.deleteSuccess'))
-        this.$message.warn('But You cant really delete it, because we need this demo.')
+        this.$message.warning('But You cant really delete it, because we need this demo.')
         this.getList()
       })
     },
