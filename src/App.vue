@@ -74,7 +74,7 @@ export default {
   },
   methods: {
     logout() {
-      this.$store.dispatch('FedLogOut').then(() => {
+      this.$store.dispatch('user/FedLogOut').then(() => {
         location.reload()// In order to re-instantiate the vue-router object to avoid bugs
       })
     },
