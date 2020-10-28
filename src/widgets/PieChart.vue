@@ -142,15 +142,6 @@ export default {
           feature: {
             saveAsImage: {
               show: true
-            },
-            magicType: {
-              type: ['line', 'bar']
-            },
-            restore: {
-              show: true
-            },
-            dataZoom: {
-              show: true
             }
           }
         },
