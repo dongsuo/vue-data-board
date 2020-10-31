@@ -31,16 +31,16 @@
         <div class="form-wrapper">
           <el-form id="formPanel" size="mini" class="analysis-form">
             <el-form-item id="dimensionInput" :label="$t('chart.dimensions')">
-              <draggable v-model="sharedState.dimensions" :group="{name: 'col',pull: true, put: true}" class="draggable-wrapper" @change="handleDimensionChange">
-                <el-tag v-for="col in sharedState.dimensions" :key="col.Column" class="draggable-item" size="small" closable @close="handleCloseDimensionTag(col)">
+              <draggable v-model="dimensions" :group="{name: 'col',pull: true, put: true}" class="draggable-wrapper" @change="handleDimensionChange">
+                <el-tag v-for="col in dimensions" :key="col.Column" class="draggable-item" size="small" closable @close="handleCloseDimensionTag(col)">
                   {{ col.Column }}
                 </el-tag>
               </draggable>
             </el-form-item>
 
             <el-form-item id="fieldInput" :label="$t('chart.values')">
-              <draggable v-model="sharedState.caculCols" :group="{name: 'col',pull: true, put: true}" class="draggable-wrapper" @change="handleColChange">
-                <el-tag v-for="col in sharedState.caculCols" :key="col.Column" size="small" closable class="selected-field" @close="handleCloseColTag(col)">
+              <draggable v-model="caculCols" :group="{name: 'col',pull: true, put: true}" class="draggable-wrapper" @change="handleColChange">
+                <el-tag v-for="col in caculCols" :key="col.Column" size="small" closable class="selected-field" @close="handleCloseColTag(col)">
                   <el-select v-model="col.calculFunc" class="draggable-item" size="mini" closable style="background: rgba(0,0,0,0);">
                     <el-option v-for="(item, optIndex) in col.availableFunc" :key="optIndex" :label="`${col.Column}(${item.name})`" :value="item.func" />
                   </el-select>
@@ -140,7 +140,6 @@ import { parseTime } from '@/utils'
 import { buildSqlSentence } from '@/utils/buildSentence'
 
 import steps from './guideSteps'
-import store from './store'
 
 const driver = new Driver()
 
@@ -157,7 +156,6 @@ export default {
       filterStr: undefined,
       editLimit: false,
       currentFilters: [],
-      sharedState: store.state,
       chartType: 'table',
       chartName: undefined,
       chartDesc: undefined,
@@ -171,14 +169,29 @@ export default {
     }
   },
   computed: {
+    caculCols: {
+      get() {
+        return this.$store.state.chart.caculCols
+      }, set(value) {
+        this.$store.commit('chart/SET_CACUL_COLS', value)
+      }
+    },
+    dimensions: {
+      get() {
+        return this.$store.state.chart.dimensions
+      },
+      set(value) {
+        this.$store.commit('chart/SET_DIMENSIONS', value)
+      }
+    },
     allSelected() {
-      return store.state.dimensions.concat(store.state.caculCols)
+      return this.dimensions.concat(this.caculCols)
     },
     sqlSentence() {
       return buildSqlSentence({
         dataSrc: this.dataSrc.table,
-        selectedCalcul: this.sharedState.caculCols,
-        selectedDimension: this.sharedState.dimensions,
+        selectedCalcul: this.caculCols,
+        selectedDimension: this.dimensions,
         orderByStrs: this.orderByStrs,
         filterStr: this.filterStr,
         limit: this.limit
@@ -208,15 +221,15 @@ export default {
             this.limit = content.limit || 200
             this.currentFilters = content.filters
             this.orderByStrs = content.orderByStrs
-            store.setCaculColsAction(content.selectedCalcul)
-            store.setDimensionsAction(content.selectedDimension)
+            this.$store.commit('chart/SET_CACUL_COLS', content.selectedCalcul)
+            this.$store.commit('chart/SET_DIMENSIONS', content.selectedDimension)
             this.$refs.dataPanel.initWithDataSrc(this.dataSrc)
           })
         } else {
           this.chartName = undefined
           this.chartDesc = undefined
-          store.setCaculColsAction([])
-          store.setDimensionsAction([])
+          this.$store.commit('chart/SET_CACUL_COLS', [])
+          this.$store.commit('chart/SET_DIMENSIONS', [])
           this.$nextTick(() => {
             this.$refs.dataPanel.initWithDataSrc()
           })
@@ -238,26 +251,26 @@ export default {
     },
     handleDataSrcChange(value) {
       this.dataSrc = value
-      store.setCaculColsAction([])
-      store.setDimensionsAction([])
+      this.$store.commit('chart/SET_CACUL_COLS', [])
+      this.$store.commit('chart/SET_DIMENSIONS', [])
       this.filterStr = undefined
       this.orderByStrs = []
     },
     handleColChange(evt) {
       if (evt.added) {
-        store.addCaculColAction(evt.added.element)
+        this.$store.commit('chart/ADD_CACUL_COL', evt.added.element)
       }
     },
     handleDimensionChange(evt) {
       if (evt.added) {
-        store.addDimensionAction(evt.added.element)
+        this.$store.commit('chart/ADD_DIMENSION_COL', evt.added.element)
       }
     },
     handleCloseColTag(col) {
-      store.deleteCaculColAction(col)
+      this.$store.commit('chart/DELETE_CACUL_COL', col)
     },
     handleCloseDimensionTag(col) {
-      store.deleteDimensionAction(col)
+      this.$store.commit('chart/DELETE_DIMENSION_COL', col)
     },
     handleAddFilter(value) {
       this.filterStr = value
@@ -276,8 +289,8 @@ export default {
         source_id: this.dataSrc.source_id,
         orderByStrs: this.orderByStrs,
         limit: this.limit,
-        selectedCalcul: this.sharedState.caculCols,
-        selectedDimension: this.sharedState.dimensions,
+        selectedCalcul: this.caculCols,
+        selectedDimension: this.dimensions,
         chartType: this.chartType,
         filters: this.currentFilters
       }
