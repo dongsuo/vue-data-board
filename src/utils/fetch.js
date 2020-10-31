@@ -4,7 +4,7 @@ import Cookies from 'js-cookie'
 import store from '../store'
 
 let baseURL = process.env.VUE_APP_BASE_API
-if (process.env.ENV === 'production') {
+if (process.env.NODE_ENV === 'production') {
   baseURL = `//api.${location.host}/api`
 }
 
