@@ -3,8 +3,13 @@ import { Message } from 'element-ui'
 import Cookies from 'js-cookie'
 import store from '../store'
 
+let baseURL = process.env.VUE_APP_BASE_API
+if (process.env.ENV === 'production') {
+  baseURL = `//api.${location.host}/api`
+}
+
 const fetchInstance = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API
+  baseURL
   // timeout: 2000,
 })
 
