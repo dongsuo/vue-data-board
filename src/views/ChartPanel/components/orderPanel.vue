@@ -10,7 +10,6 @@
 </template>
 <script>
 import draggable from 'vuedraggable'
-import store from '../store'
 
 export default {
   components: { draggable },
@@ -26,15 +25,28 @@ export default {
     }
   },
   computed: {
+    caculCols() {
+      return this.$store.state.chart.caculCols
+    },
+    dimensions() {
+      return this.$store.state.chart.dimensions
+    },
     allSelected() {
-      return store.state.caculCols.concat(store.state.dimensions)
+      return this.dimensions.concat(this.caculCols)
     },
     orderByStrs: {
       set(value) {
         this.$emit('input', value)
       },
       get() {
-        return this.value
+        const orderByStrs = [...this.value]
+        orderByStrs.forEach((orderByStr, index) => {
+          const colName = orderByStr.split(' ')[0]
+          if (!this.allSelected.findIndex(col => col.Column === colName)) {
+            orderByStrs.splice(index, 1)
+          }
+        })
+        return orderByStrs
       }
     },
     orderByOption() {
@@ -53,23 +65,7 @@ export default {
       })
     }
   },
-  watch: {
-    'store.state.dimensions': function(value) {
-      this.watchHandler(value)
-    },
-    'store.state.caculCols': function(value) {
-      this.watchHandler(value)
-    }
-  },
   methods: {
-    watchHandler(cols) {
-      this.orderByStrs.forEach((orderByStr, index) => {
-        const colName = orderByStr.split(' ')[0]
-        if (!cols.findIndex(col => col.Column === colName)) {
-          this.orderByStrs.splice(index, 1)
-        }
-      })
-    },
     handleOrderByChange(value) {
       this.orderBy = []
       const index = this.orderByStrs.findIndex(orderBy => orderBy.indexOf(value[0]) >= 0)

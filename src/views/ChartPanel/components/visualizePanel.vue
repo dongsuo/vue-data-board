@@ -26,7 +26,6 @@ import HorizontalBar from '@/widgets/horizontalBar'
 import PieChart from '@/widgets/PieChart'
 
 import chartTypeList from '@/utils/chartTypeList'
-import store from '../store'
 
 export default {
   components: { lineChart, DataTable, BarChart, StackBarChart, PieChart, HorizontalBar },
@@ -58,8 +57,14 @@ export default {
     }
   },
   computed: {
+    caculCols() {
+      return this.$store.state.chart.caculCols
+    },
+    dimensions() {
+      return this.$store.state.chart.dimensions
+    },
     allSelected() {
-      return store.state.caculCols.concat(store.state.dimensions)
+      return this.dimensions.concat(this.caculCols)
     },
     chartData() {
       return this.currentType.dataTransfer ? this.currentType.dataTransfer(this.data, this.schema) : this.data
@@ -72,7 +77,7 @@ export default {
     allSelected: {
       deep: true,
       handler() {
-        if (!this.currentType.matchRule.isUsable(store.state.dimensions, store.state.caculCols)) {
+        if (!this.currentType.matchRule.isUsable(this.dimensions, this.caculCols)) {
           this.$emit('update:chartType', 'table')
         }
       }
@@ -80,10 +85,10 @@ export default {
   },
   methods: {
     isUsable(chart) {
-      return chart.matchRule.isUsable(store.state.dimensions, store.state.caculCols)
+      return chart.matchRule.isUsable(this.dimensions, this.caculCols)
     },
     switchChartType(chart) {
-      if (!chart.matchRule.isUsable(store.state.dimensions, store.state.caculCols)) {
+      if (!chart.matchRule.isUsable(this.dimensions, this.caculCols)) {
         return
       }
       this.$emit('update:chartType', chart.type)

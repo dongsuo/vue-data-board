@@ -33,7 +33,6 @@
 import { sourceList, linkedTablesByBase } from '@/api/source'
 import draggable from 'vuedraggable'
 import exeSql from '@/api/exeSql'
-import store from '../store'
 
 export default {
   components: { draggable },
@@ -58,8 +57,14 @@ export default {
     }
   },
   computed: {
+    caculCols() {
+      return this.$store.state.chart.caculCols
+    },
+    dimensions() {
+      return this.$store.state.chart.dimensions
+    },
     allSelected() {
-      return store.state.dimensions.concat(store.state.caculCols)
+      return this.dimensions.concat(this.caculCols)
     },
     selectedBaseName() {
       const selectedBase = this.baseList.find(item => item.source_id === this.selectedBase)
@@ -107,7 +112,7 @@ export default {
     handleDataSrcChange() {
       this.dataSrcVisible = false
       this.fetchSchema()
-      store.setAllColsAction([])
+      this.$store.commit('chart/SET_ALL_COLS', [])
       this.$emit('change', {
         table: this.selectedTable,
         source_id: this.selectedBase
@@ -129,7 +134,7 @@ export default {
             id: index
           }
         })
-        store.setAllColsAction(this.tableSchema)
+        this.$store.commit('chart/SET_ALL_COLS', this.tableSchema)
       })
     },
     handleMove(evt, originalEvent) {
