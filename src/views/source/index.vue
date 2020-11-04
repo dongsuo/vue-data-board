@@ -3,10 +3,10 @@
     <el-button type="primary" icon="el-icon-plus" size="small" class="add-source-btn" @click="dialogVisible=true">
       {{ $t('dataSource.addDataSource') }}
     </el-button>
-    <el-table :data="list" border highlight-current-row stripe class="source-table">
+    <el-table v-loading="loading" :data="list" border highlight-current-row stripe class="source-table">
       <el-table-column :label="$t('dataSource.baseName')" prop="base_alias" align="center" width="200px" />
-      <el-table-column :label="$t('dataSource.host')" prop="host" />
-      <el-table-column :label="$t('dataSource.port')" prop="port" />
+      <el-table-column :label="$t('dataSource.host')" prop="host" width="120px" />
+      <el-table-column :label="$t('dataSource.port')" prop="port" width="60px" />
       <el-table-column :label="$t('dataSource.user')" prop="username" />
       <el-table-column :label="$t('dataSource.dataBase')" prop="database" />
       <el-table-column :label="$t('dataSource.createdAt')" prop="created_at" width="155px">
@@ -15,7 +15,7 @@
         </template>
       </el-table-column>
       <!-- <el-table-column label="status" prop="status" /> -->
-      <el-table-column :label="$t('common.operation')" align="center" width="290px">
+      <el-table-column :label="$t('common.operation')" align="center" width="230px">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handleAddTable(scope.row)">
             {{ $t('dataSource.manageTables') }}
@@ -96,7 +96,8 @@ export default {
         database: ''
       },
       showTableDialog: false,
-      source_id: undefined
+      source_id: undefined,
+      loading: false
     }
   },
   created() {
@@ -105,8 +106,10 @@ export default {
   methods: {
     parseTime,
     async getList() {
+      this.loading = true
       const { data } = await sourceList()
       this.list = data
+      this.loading = false
     },
     handleEdit(row) {
       this.formData = { ...row }
