@@ -258,7 +258,7 @@ export default {
     },
     handleShare() {
       const h = this.$createElement
-      const link = `http://${location.host}/#/fullscreendb/${this.dashboard.dashboard_id}`
+      const link = `http://${location.host}/fullscreendb/${this.dashboard.dashboard_id}`
       this.$msgbox({
         title: this.$t('dashboard.shareLink'),
         message: h('p', null, [
