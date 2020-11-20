@@ -4,27 +4,11 @@
   "private": true,
   "description": "A Data Analysis Board. A magical DIY databoard tool built with Vue.js. An out-of-box data solution for enterprise data analysis. Support self defined databoard and data report.",
   "author": "DongSuo <xuxiaofei1.0@outlook.com>",
-  "homepage": "https://vislib.best",
-  "license": "MIT",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --modern",
-    "analyze": "vue-cli-service build --preview --report",
-    "lint": "vue-cli-service lint"
-  },
-  "keywords": [
-    "vue",
-    "databoard",
-    "element-ui",
-    "boilerplate",
-    "data-analysis"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/dongsuo/vue-data-board.git"
-  },
-  "bugs": {
-    "url": "https://github.com/dongsuo/vue-data-board/issues"
+    "lint": "vue-cli-service lint",
+    "analyze": "vue-cli-service build --preview --report"
   },
   "dependencies": {
     "@sentry/browser": "^5.15.5",
@@ -45,9 +29,9 @@
     "xlsx": "^0.15.5"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^4.2.3",
-    "@vue/cli-plugin-eslint": "^4.2.3",
-    "@vue/cli-service": "^4.2.3",
+    "@vue/cli-plugin-babel": "~4.5.9",
+    "@vue/cli-plugin-eslint": "~4.5.9",
+    "@vue/cli-service": "~4.5.9",
     "babel-eslint": "^10.0.1",
     "eslint": "^6.8.0",
     "eslint-plugin-vue": "^6.2.1",
@@ -79,5 +63,21 @@
   "browserslist": [
     "> 1%",
     "last 2 versions"
-  ]
+  ],
+  "bugs": {
+    "url": "https://github.com/dongsuo/vue-data-board/issues"
+  },
+  "homepage": "https://v11nlab.com",
+  "keywords": [
+    "vue",
+    "databoard",
+    "element-ui",
+    "boilerplate",
+    "data-analysis"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dongsuo/vue-data-board.git"
+  }
 }
