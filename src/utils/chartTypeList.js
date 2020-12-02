@@ -105,6 +105,18 @@ const chartTypeList = [
     },
     componentName: 'HorizontalBar',
     dataTransfer
+  },
+  { name: i18n.t('chartType.scatter'),
+    icon: 'scatter',
+    type: 'scatter',
+    matchRule: {
+      desc: i18n.t('chartType.scatterDesc'),
+      isUsable(dimensions, calculs) {
+        return (dimensions.length === 0 || dimensions.length === 1) && calculs.length === 2
+      }
+    },
+    componentName: 'ScatterChart',
+    dataTransfer
   }
 ]
 

@@ -24,11 +24,12 @@ import BarChart from '@/widgets/BarChart'
 import StackBarChart from '@/widgets/StackBarChart'
 import HorizontalBar from '@/widgets/horizontalBar'
 import PieChart from '@/widgets/PieChart'
+import ScatterChart from '@/widgets/ScatterChart'
 
 import chartTypeList from '@/utils/chartTypeList'
 
 export default {
-  components: { lineChart, DataTable, BarChart, StackBarChart, PieChart, HorizontalBar },
+  components: { lineChart, DataTable, BarChart, StackBarChart, PieChart, HorizontalBar, ScatterChart },
   props: {
     data: {
       type: Array,

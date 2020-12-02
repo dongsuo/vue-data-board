@@ -126,11 +126,13 @@ export default {
     bar: '柱状图',
     barDesc: '1 或 2个维度;1或多个数值',
     stackBar: '堆积柱状图',
-    stackBarDesc: '1 或 2个维度;2或多个数值',
+    stackBarDesc: '1 或 2 个维度;2 或多个数值',
     pie: '饼图',
     pieDesc: '1个维度1个数值;0个维度多个数值',
     horizontalBar: '条形图',
-    horizontalBarDesc: '1个维度;1或多个数值'
+    horizontalBarDesc: '1个维度;1或多个数值',
+    scatter: '散点图',
+    scatterDesc: '0 或 1 个维度;2 个数值'
   },
   config: {
     is: '等于',

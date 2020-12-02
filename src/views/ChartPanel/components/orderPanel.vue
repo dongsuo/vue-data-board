@@ -74,9 +74,11 @@ export default {
       } else {
         this.orderByStrs.push(`${value[0]} ${value[1]}`)
       }
+      this.orderByStrs = [...this.orderByStrs]
     },
     handleCloseOrderBy(value) {
       this.orderByStrs.splice(this.orderByStrs.indexOf(value), 1)
+      this.orderByStrs = [...this.orderByStrs]
     }
   }
 }

@@ -130,7 +130,9 @@ export default {
     pie: 'Pie Chart',
     pieDesc: '1 dimension and 1 value;Or 0 dimension and multiple values',
     horizontalBar: 'Horizontal Bar Chart',
-    horizontalBarDesc: '1 dimension;1+ values'
+    horizontalBarDesc: '1 dimension;1+ values',
+    scatter: 'Scatter',
+    scatterDesc: '0 or 1 dimensions and 2 values'
   },
   config: {
     is: 'Is ',
