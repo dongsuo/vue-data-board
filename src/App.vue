@@ -26,7 +26,7 @@
         <a class="nav-bar-link" target="_blank" href="https://github.com/dongsuo/vue-data-board">
           Github
         </a>
-        <a class="nav-bar-link" target="_blank" href="https://docs.vislib.best">
+        <a class="nav-bar-link" target="_blank" href="https://docs.v11nlab.com">
           {{ $t('navbar.document') }}
         </a>
         <el-dropdown class="avatar-container right-menu-item" szie="mini" trigger="hover">
