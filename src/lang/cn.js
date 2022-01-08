@@ -38,7 +38,7 @@ export default {
     home: '首页'
   },
   home: {
-    slogan: '基于Vue的数据可视化分析.',
+    slogan: '极简的数据可视化分析工具.',
     start: '开始'
   },
   dashboard: {

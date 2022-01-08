@@ -38,7 +38,7 @@ export default {
     home: 'Home'
   },
   home: {
-    slogan: 'A Data Analysis Board in Vue.',
+    slogan: 'A Dead Easy Data Visualization Analysis Tool.',
     start: 'Get Start'
   },
   dashboard: {
