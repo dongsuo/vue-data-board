@@ -2,7 +2,7 @@
   <div ref="chart" :style="chartStyle" />
 </template>
 <script>
-import echarts from 'echarts'
+import * as echarts from 'echarts'
 require('echarts/theme/macarons')
 
 export default {
@@ -71,7 +71,6 @@ export default {
       }
     },
     renderChart(data) {
-      // console.log(this.$refs.chart)
       if (!this.$refs.chart) return
       if (data.length === 0 && this.chart) {
         this.chart.clear()

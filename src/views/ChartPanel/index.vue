@@ -101,7 +101,7 @@
     <el-dialog :title="$t('dashboard.dashboardList')" :visible.sync="showDashboards">
       <div style="text-align:center;">
         <el-select v-model="selectedDb" size="small">
-          <el-option v-for="item in dashboardList" :key="item.objectId" :label="item.name" :disabled="isDbDisbaled(item)" :value="item.objectId" />
+          <el-option v-for="item in dashboardList" :key="item.dashboard_id" :label="item.name" :disabled="isDbDisbaled(item)" :value="item.dashboard_id" />
         </el-select>
       </div>
       <span slot="footer" class="dialog-footer">
@@ -310,7 +310,6 @@ export default {
         })
       } else {
         createChart(data).then(resp => {
-          // console.log(resp)
           this.$router.replace(`/chartpanel/${resp.data.id}`)
           this.$message({
             type: 'success',
@@ -332,7 +331,7 @@ export default {
       })
     },
     isDbDisbaled(db) {
-      return !!this.linkedDbIds.find(id => id === db.objectId)
+      return !!this.linkedDbIds.find(id => id === db.dashboard_id)
     },
     linkDb() {
       const data = {
@@ -446,6 +445,7 @@ export default {
   min-height: 30px;
   border-bottom: 1px solid #E4E7ED;
   .draggable-item {
+    cursor: pointer;
     margin-right: 10px;
   }
   /deep/ .el-select--mini {

@@ -14,5 +14,4 @@ const i18n = new VueI18n({
     CN: { ...CN, ...zhLocale }
   }
 })
-console.log(i18n)
 export default i18n

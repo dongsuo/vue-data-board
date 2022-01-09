@@ -42,7 +42,6 @@ export default {
       this.loading = true
       login(this.user).then(resp => {
         this.loading = false
-        console.log(resp)
         this.$router.push(this.$route.query.redirect || '/')
       }).catch(() => {
         this.loading = false

@@ -2,7 +2,7 @@
   <div ref="chart" :style="chartStyle" />
 </template>
 <script>
-import echarts from 'echarts'
+import * as echarts from 'echarts'
 require('echarts/theme/macarons')
 import { labelFormatter } from './chartUtils'
 

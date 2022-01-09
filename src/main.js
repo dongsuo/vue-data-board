@@ -15,7 +15,7 @@ import i18n from './i18n'
 import './icons'
 
 Vue.config.productionTip = false
-console.log(process.env)
+
 if (process.env.NODE_ENV !== 'development') {
   Sentry.init({
     release: 'vislib@' + process.env.npm_package_version,
